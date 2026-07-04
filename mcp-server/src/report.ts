@@ -4,7 +4,8 @@ import type { DriftVerdict } from "./types.js";
 
 export type Visual =
   | { kind: "image"; dataUri: string }
-  | { kind: "frames"; dataUris: string[] };
+  | { kind: "frames"; dataUris: string[] }
+  | { kind: "video"; dataUri: string };
 
 const BADGE: Record<string, { label: string; color: string; bg: string }> = {
   accidental_regression: { label: "Accidental regression", color: "#FCA5A5", bg: "rgba(239,68,68,0.10)" },
@@ -20,6 +21,10 @@ function panel(title: string, v: Visual, id: string): string {
   if (v.kind === "image") {
     return `<figure class="panel"><figcaption>${title}</figcaption>
       <div class="stage"><img src="${v.dataUri}" alt="${title}"/></div></figure>`;
+  }
+  if (v.kind === "video") {
+    return `<figure class="panel"><figcaption>${title} <span class="live">▶ playing</span></figcaption>
+      <div class="stage"><video src="${v.dataUri}" autoplay loop muted playsinline></video></div></figure>`;
   }
   const frames = JSON.stringify(v.dataUris);
   return `<figure class="panel"><figcaption>${title} <span class="live">● playing</span></figcaption>
@@ -57,7 +62,12 @@ export function buildReportHtml(opts: {
         })
         .join("")}</pre>`
     : `<p class="nofix">✓ On-system — no fix needed.</p>`;
-  const modeLabel = opts.interaction ? `motion · ${escapeHtml(opts.interaction)}` : "static";
+  const modeLabel =
+    opts.interaction === "flow"
+      ? "user flow"
+      : opts.interaction
+        ? `motion · ${escapeHtml(opts.interaction)}`
+        : "static";
 
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -108,6 +118,7 @@ body{margin:0;font-family:'Inter',-apple-system,system-ui,sans-serif;background:
 .live{color:#F87171;font-size:9px;letter-spacing:.05em}
 .stage{background:#F9FAFB;border-radius:12px;border:1px solid #1B1F2A;display:grid;place-items:center;min-height:220px;overflow:hidden;padding:12px}
 .stage img{max-width:100%;display:block}
+.stage video{max-width:100%;display:block;border-radius:8px}
 .fix{padding:28px}
 .fix h3{color:#8A93A6;font-size:11px;text-transform:uppercase;letter-spacing:.09em;margin:0 0 12px}
 .diff{background:#11141C;border:1px solid #1B1F2A;border-radius:12px;padding:16px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.55;margin:0}

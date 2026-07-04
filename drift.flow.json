@@ -1,0 +1,15 @@
+{
+  "appDir": "sample-app",
+  "preview": "flow.html",
+  "viewport": { "width": 760, "height": 560 },
+  "steps": [
+    { "action": "hover", "selector": "#flow-start", "dwell": 650 },
+    { "action": "click", "selector": "#flow-start" },
+    { "action": "wait", "ms": 550 },
+    { "action": "type", "selector": "#flow-name", "text": "Ada Lovelace" },
+    { "action": "type", "selector": "#flow-email", "text": "ada@example.com" },
+    { "action": "hover", "selector": "#flow-continue", "dwell": 350 },
+    { "action": "click", "selector": "#flow-continue" },
+    { "action": "wait", "ms": 800 }
+  ]
+}

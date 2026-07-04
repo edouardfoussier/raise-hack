@@ -11,6 +11,7 @@ import { renderBeforeAfter } from "./render.js";
 import { captureInteractionFrames } from "./capture.js";
 import { getVerdict, getMotionVerdict } from "./vlm.js";
 import { buildReportHtml, writeAndOpenReport, type Visual } from "./report.js";
+import { reviewFlow, type FlowDef } from "./flow-review.js";
 import type { DriftVerdict } from "./types.js";
 
 type Content =
@@ -198,6 +199,84 @@ server.registerTool(
       return {
         isError: true,
         content: [{ type: "text", text: `Drift failed: ${err instanceof Error ? err.message : String(err)}` }],
+      };
+    }
+  },
+);
+
+server.registerTool(
+  "drift_flow",
+  {
+    title: "Drift — user-flow review",
+    description:
+      "Replay a whole USER FLOW through the app BEFORE (last commit) and AFTER (current edit) with a simulated moving " +
+      "cursor, judge the design-system drift across the entire journey, and open a side-by-side visual report where both " +
+      "flows play on loop. Reads a flow definition (drift.flow.json: appDir, preview, steps). Use to review what a change " +
+      "does across a full journey — not just one component.",
+    inputSchema: {
+      file: z.string().describe("The changed component/style file (absolute, or relative to the project root)."),
+      flow: z
+        .string()
+        .optional()
+        .describe("Path to the flow definition JSON. Defaults to DRIFT_FLOW env or drift.flow.json at the project root."),
+    },
+  },
+  async ({ file, flow }) => {
+    try {
+      const root = process.env.DRIFT_PROJECT_ROOT || process.cwd();
+      const absPath = path.isAbsolute(file) ? file : path.resolve(root, file);
+      if (!existsSync(absPath)) {
+        return { isError: true, content: [{ type: "text", text: `Drift: file not found at ${absPath}.` }] };
+      }
+      const flowPath = flow
+        ? path.isAbsolute(flow)
+          ? flow
+          : path.resolve(root, flow)
+        : process.env.DRIFT_FLOW || path.join(root, "drift.flow.json");
+      if (!existsSync(flowPath)) {
+        return {
+          isError: true,
+          content: [
+            { type: "text", text: `Drift: no flow definition at ${flowPath}. Create drift.flow.json with { appDir, preview, steps }.` },
+          ],
+        };
+      }
+      const flowDef = JSON.parse(await readFile(flowPath, "utf8")) as FlowDef;
+
+      const review = await reviewFlow(absPath, flowDef);
+      if (!review) {
+        return { content: [{ type: "text", text: `✓ No change vs the last commit for \`${file}\` — nothing to review.` }] };
+      }
+
+      const modelLabel = process.env.DRIFT_VLM_MODEL || "claude-sonnet-5";
+      const toVideo = async (p: string): Promise<Visual> => ({
+        kind: "video",
+        dataUri: `data:video/webm;base64,${(await readFile(p)).toString("base64")}`,
+      });
+      const html = buildReportHtml({
+        verdict: review.verdict,
+        filePath: review.fileRel,
+        model: modelLabel,
+        interaction: "flow",
+        before: await toVideo(review.beforeWebm),
+        after: await toVideo(review.afterWebm),
+      });
+      const reportPath = path.join(review.outDir, "flow-report.html");
+      await writeAndOpenReport(html, reportPath, process.env.DRIFT_OPEN !== "0");
+
+      const content: Content[] = [
+        { type: "text", text: headline(review.verdict) },
+        { type: "text", text: `🎬 Opened a side-by-side **user-flow** review (before/after play on loop) → ${reportPath}` },
+      ];
+      if (review.verdict.proposed_diff.trim()) {
+        content.push({ type: "text", text: `**Proposed fix**\n\`\`\`diff\n${review.verdict.proposed_diff}\n\`\`\`` });
+      }
+      content.push({ type: "text", text: directiveFor(review.verdict.classification, review.fileRel) });
+      return { content };
+    } catch (err) {
+      return {
+        isError: true,
+        content: [{ type: "text", text: `Drift flow failed: ${err instanceof Error ? err.message : String(err)}` }],
       };
     }
   },
