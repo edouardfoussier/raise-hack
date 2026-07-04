@@ -45,11 +45,11 @@ const REVIEW_PNG = path.join(CACHE, "moneyshot", "review-report.png");
 const RECEPTION = path.join(CACHE, "deja-reception", "reception.webm");
 
 const SCRIPT: string[] = [
-  "Hi, I'm Edouard — I built Scenario for RAISE-hack, remotely. Here's what it does.",
-  "AI agents ship UI five times faster than anyone can review it. Cursor shows you it runs — but did it stay on your design system?",
-  "Scenario replays your real UI before and after any change, and reasons in your design tokens. A button's padding drifted off the four-pixel scale, its color left the palette. Accidental regression, ninety-seven percent — and here's the one-line fix.",
-  "But it doesn't just review. Describe a flow, and its AI drives your real app — deterministically — filming the perfect demo. Real backend: watch the stock go sixty to seventy-two as the delivery lands.",
-  "Captions, voice-over powered by Gradium, a branded intro and outro — a share-ready video every time. In fact… this whole video was made by Scenario.",
+  "I'm Edouard — I built Scenario for RAISE-hack, remotely.",
+  "AI ships UI five times faster than anyone can review. Cursor shows you it runs — but did it stay on your design system?",
+  "Scenario replays your real UI before and after a change, reasoning in your design tokens. This padding drifted off the scale, the color left the palette — accidental regression, and here's the fix.",
+  "It doesn't just review. Describe a flow, and its AI drives your real app deterministically, filming the perfect demo. Watch the stock jump from sixty to seventy-two.",
+  "Captions, voice-over by Gradium, a branded intro and outro. And this whole video? Made by Scenario.",
   "Ship the demo, not just the code. Scenario — get scenar dot I O.",
 ];
 

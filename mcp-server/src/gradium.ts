@@ -19,8 +19,8 @@ const GRADIUM_BASE = "https://api.gradium.ai";
 const TTS_URL = `${GRADIUM_BASE}/api/post/speech/tts`;
 const VOICES_URL = `${GRADIUM_BASE}/api/voices/`;
 
-// Emma — Gradium flagship EN (from Keynoter default-voices.ts).
-const DEFAULT_EN_VOICE_ID = "YTpq7expH9539ERJ";
+// Edouard's cloned Gradium voice (override with GRADIUM_VOICE_ID).
+const VOICE_ID = process.env.GRADIUM_VOICE_ID || "5gI6AfyZkgLWq5aL";
 
 function apiKey(): string {
   const key = process.env.GRADIUM_API_KEY;
@@ -88,7 +88,7 @@ async function pickEnglishVoiceId(): Promise<string> {
 export async function ttsToFile(text: string, outPath: string): Promise<void> {
   let buf: Buffer;
   try {
-    buf = await ttsOnce(text, DEFAULT_EN_VOICE_ID);
+    buf = await ttsOnce(text, VOICE_ID);
   } catch (err) {
     // Flagship id may not exist on this account — discover one and retry.
     const voiceId = await pickEnglishVoiceId();
