@@ -23,4 +23,8 @@
   --font-size-md:        15px;
   --font-weight-regular: 400;
   --font-weight-medium:  560;
+
+  --motion-fast:    120ms;
+  --motion-slow:    240ms;
+  --ease-standard:  cubic-bezier(0.2, 0, 0, 1);
 }

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "drift": {
+      "command": "/Users/edouardfoussier/code/hackathons/raise-hack/drift/mcp-server/node_modules/.bin/tsx",
+      "args": ["/Users/edouardfoussier/code/hackathons/raise-hack/drift/mcp-server/src/index.ts"],
+      "env": {
+        "DRIFT_PROJECT_ROOT": "/Users/edouardfoussier/code/hackathons/raise-hack/drift",
+        "DRIFT_SELECTOR": "#demo-button"
+      }
+    }
+  }
+}

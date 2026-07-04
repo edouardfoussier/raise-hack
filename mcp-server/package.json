@@ -1,0 +1,25 @@
+{
+  "name": "drift-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Drift — an AI-native design-system consistency reviewer for Cursor (MCP server).",
+  "scripts": {
+    "server": "tsx src/index.ts",
+    "review": "tsx src/cli.ts",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.8",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@openrouter/ai-sdk-provider": "^2.10.0",
+    "ai": "^7.0.15",
+    "playwright": "^1.40.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

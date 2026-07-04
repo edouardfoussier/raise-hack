@@ -1,6 +1,6 @@
 /* Components — styled strictly from design tokens.
-   This is the file Drift watches: drift shows up when a value stops
-   coming from a token (e.g. a hardcoded padding that isn't on the scale). */
+   Drift shows up when a value stops coming from a token: a hardcoded padding,
+   an off-scale radius, a color off the palette, or motion off the motion scale. */
 
 .btn {
   font-family: var(--font-family);
@@ -11,7 +11,10 @@
   border: 1px solid transparent;
   line-height: 1.2;
   cursor: pointer;
-  transition: background 120ms ease, box-shadow 120ms ease;
+  transition:
+    background var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard);
 }
 
 .btn--primary {
@@ -20,12 +23,18 @@
 }
 .btn--primary:hover {
   background: var(--color-brand-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
 }
 
 .btn--secondary {
   background: var(--color-surface);
   color: var(--color-text);
   border-color: var(--color-border);
+}
+.btn--secondary:hover {
+  border-color: var(--color-text-muted);
+  transform: translateY(-1px);
 }
 
 .card {
