@@ -16,7 +16,8 @@
       "#__drift-kb .k{flex:1;max-width:34px;height:40px;background:#fff;border-radius:6px;box-shadow:0 1px 0 rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:17px;color:#111}" +
       "#__drift-kb .k.w{max-width:52px;font-size:12px}" +
       "#__drift-kb .k.g{background:#9aa2ad;color:#111}" +
-      "#__drift-kb .k.sp{flex:5;max-width:none;font-size:13px;color:#555}";
+      "#__drift-kb .k.sp{flex:5;max-width:none;font-size:13px;color:#555}" +
+      "#__drift-kb .k.press{background:#2dd4bf;color:#04322c;transform:translateY(-2px) scale(1.08);box-shadow:0 4px 10px rgba(0,0,0,.35);transition:transform .04s}";
     (document.head || document.documentElement).appendChild(s);
 
     var kb = document.createElement("div");
@@ -45,9 +46,59 @@
       }
       return false;
     }
-    document.addEventListener("focusin", function (e) { if (isField(e.target)) kb.classList.add("up"); }, true);
+    // Lift the focused field above the keyboard, the way iOS Safari does. iOS
+    // shrinks the viewport; we mimic that by padding the field's actual scroll
+    // container (apps often scroll an inner div, not the body) so even the last
+    // element can scroll clear of the keys, then we center the field.
+    var padded = null;
+    function scroller(el) {
+      var n = el.parentElement;
+      while (n && n !== document.documentElement) {
+        var s = getComputedStyle(n);
+        if (/(auto|scroll)/.test(s.overflowY + " " + s.overflow) && n.scrollHeight > n.clientHeight + 4) return n;
+        n = n.parentElement;
+      }
+      return document.scrollingElement || document.body;
+    }
+    function reveal(el) {
+      setTimeout(function () {
+        try {
+          padded = scroller(el);
+          padded.style.paddingBottom = kb.offsetHeight + 24 + "px";
+          var kbTop = window.innerHeight - kb.offsetHeight;
+          var r = el.getBoundingClientRect();
+          if (r.bottom > kbTop - 14) el.scrollIntoView({ block: "center", behavior: "smooth" });
+        } catch (_) {}
+      }, 80);
+    }
+    function unpad() {
+      if (padded) { padded.style.paddingBottom = ""; padded = null; }
+    }
+    document.addEventListener("focusin", function (e) {
+      if (isField(e.target)) { kb.classList.add("up"); reveal(e.target); }
+    }, true);
     document.addEventListener("focusout", function () {
-      setTimeout(function () { if (!isField(document.activeElement)) kb.classList.remove("up"); }, 60);
+      setTimeout(function () {
+        if (!isField(document.activeElement)) { kb.classList.remove("up"); unpad(); }
+      }, 60);
+    }, true);
+
+    // Flash the key being typed. Playwright's keyboard.type() dispatches real
+    // keydown events, so the video shows the iOS keys lighting up as they're hit.
+    function keyEl(k) {
+      if (k === " " || k === "Spacebar" || k === "Space") return kb.querySelector(".k.sp");
+      var ch = k.length === 1 ? k.toLowerCase() : "";
+      if (!/^[a-z]$/.test(ch)) return null;
+      var ks = kb.querySelectorAll(".k");
+      for (var i = 0; i < ks.length; i++) if (ks[i].textContent.trim() === ch) return ks[i];
+      return null;
+    }
+    document.addEventListener("keydown", function (e) {
+      if (!kb.classList.contains("up")) return;
+      var el = keyEl(e.key);
+      if (!el) return;
+      el.classList.add("press");
+      setTimeout(function () { el.classList.remove("press"); }, 150);
     }, true);
   }
 

@@ -26,12 +26,15 @@ const PWD = process.env.DEJA_PWD || ""; // real deja-bu password — set via env
 
 const STEPS: FlowStep[] = [
   { action: "wait", ms: 1600 },
-  { action: "click", selector: 'button:has-text("Reprendre")' },
-  { action: "wait", ms: 2800 },
-  { action: "hover", selector: 'button:has-text("Valider")', dwell: 1100 },
-  { action: "hover", selector: 'button:has-text("Corriger")', dwell: 700 },
-  { action: "hover", selector: 'button:has-text("Rien reçu")', dwell: 700 },
-  { action: "wait", ms: 500 },
+  { action: "click", selector: 'button:has-text("Reprendre")' }, // 👆 resume → checklist
+  { action: "wait", ms: 2600 },
+  { action: "hover", selector: 'button:has-text("Valider")', dwell: 1500 }, // ← the drift target (before/after), touch pointer on it
+  { action: "hover", selector: 'button:has-text("Rien reçu")', dwell: 600 },
+  { action: "click", selector: 'button:has-text("Corriger")' }, // reveal the correction UI
+  { action: "wait", ms: 700 },
+  { action: "type", selector: "textarea", text: "1 carton abîmé" }, // ⌨ iOS keyboard + key presses
+  { action: "wait", ms: 1800 },
+  { action: "wait", ms: 400 },
 ];
 const initScript = `try{localStorage.setItem('deja-bu:v1:auth-token', JSON.stringify(${JSON.stringify(PWD)}));}catch(e){}`;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -44,6 +47,8 @@ async function record(label: string): Promise<string> {
     device: "iPhone 13",
     readOnly: true,
     initScript,
+    pointer: "touch", // 👆 mobile tap indicator instead of a desktop arrow
+    keyboard: true, // ⌨ synthetic iOS keyboard on text-field focus
   });
 }
 async function frames(webm: string, dir: string, fps = 0.9): Promise<string[]> {

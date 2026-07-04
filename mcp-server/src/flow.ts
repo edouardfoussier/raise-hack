@@ -14,6 +14,7 @@ export type FlowStep =
   | { action: "hover"; selector: string; dwell?: number }
   | { action: "click"; selector: string }
   | { action: "type"; selector: string; text: string }
+  | { action: "scroll"; selector?: string; by?: number; dwell?: number }
   | { action: "wait"; ms: number };
 
 export interface RecordFlowOpts {
@@ -28,8 +29,23 @@ export interface RecordFlowOpts {
   verifyShot?: string;
 }
 
-async function moveTo(page: Page, selector: string, steps = 28): Promise<void> {
-  const box = await page.locator(selector).first().boundingBox();
+/** Smooth wheel scroll (broken into small increments so it reads as motion on video). */
+async function smoothScroll(page: Page, by: number): Promise<void> {
+  const n = 14;
+  for (let i = 0; i < n; i++) {
+    await page.mouse.wheel(0, by / n);
+    await page.waitForTimeout(28);
+  }
+}
+
+async function moveTo(page: Page, selector: string, steps = 28, timeout = 6000): Promise<void> {
+  // Fail fast (6s) instead of Playwright's 30s default so a missing selector in a
+  // tolerant live flow doesn't stall the whole recording.
+  const loc = page.locator(selector).first();
+  // Bring it into the viewport first — real screens scroll, and a target below the
+  // fold can't be tapped/focused (breaks the synthetic keyboard trigger).
+  await loc.scrollIntoViewIfNeeded({ timeout }).catch(() => {});
+  const box = await loc.boundingBox({ timeout });
   if (!box) throw new Error(`flow: selector not found or not visible: ${selector}`);
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps });
 }
@@ -79,6 +95,14 @@ export async function recordFlow(opts: RecordFlowOpts): Promise<string> {
           await page.waitForTimeout(140);
           await page.keyboard.type(s.text, { delay: 55 });
           await page.waitForTimeout(220);
+          break;
+        case "scroll":
+          if (s.selector) await page.locator(s.selector).first().scrollIntoViewIfNeeded({ timeout: 6000 }).catch(() => {});
+          else {
+            await page.mouse.move(vp.width * 0.5, vp.height * 0.5, { steps: 6 });
+            await smoothScroll(page, s.by ?? 500);
+          }
+          await page.waitForTimeout(s.dwell ?? 500);
           break;
         case "wait":
           await page.waitForTimeout(s.ms);
@@ -174,9 +198,20 @@ export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
             await moveTo(page, s.selector);
             await page.mouse.down();
             await page.mouse.up();
-            await page.waitForTimeout(140);
+            // Guarantee focus (→ focusin → synthetic keyboard) even if the tap
+            // landed on an occluding fixed element (e.g. a bottom nav bar).
+            await page.locator(s.selector).first().focus().catch(() => {});
+            await page.waitForTimeout(200);
             await page.keyboard.type(s.text, { delay: 55 });
             await page.waitForTimeout(220);
+            break;
+          case "scroll":
+            if (s.selector) await page.locator(s.selector).first().scrollIntoViewIfNeeded({ timeout: 6000 }).catch(() => {});
+            else {
+              await page.mouse.move(size.width * 0.5, size.height * 0.5, { steps: 6 });
+              await smoothScroll(page, s.by ?? 500);
+            }
+            await page.waitForTimeout(s.dwell ?? 500);
             break;
           case "wait":
             await page.waitForTimeout(s.ms);
