@@ -138,6 +138,8 @@ export interface LiveFlowOpts {
   viewport?: { width: number; height: number };
   /** JS source run before the page loads (e.g. to set an auth token in localStorage). */
   initScript?: string;
+  /** Extra HTTP headers sent on every request (e.g. a Vercel protection-bypass token). */
+  extraHTTPHeaders?: Record<string, string>;
   /** Abort all **\/api\/** requests (avoids 401 kicks when bypassing auth). */
   blockApi?: boolean;
   /** Playwright device descriptor name (e.g. "iPhone 13") for mobile emulation. */
@@ -162,9 +164,12 @@ export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
   try {
     const dev = opts.device ? devices[opts.device] : undefined;
     const size = dev?.viewport ?? vp;
-    const context = await browser.newContext(
-      dev ? { ...dev, recordVideo: { dir: videoDir, size } } : { viewport: vp, recordVideo: { dir: videoDir, size } },
-    );
+    const baseCtx = dev ? { ...dev } : { viewport: vp };
+    const context = await browser.newContext({
+      ...baseCtx,
+      recordVideo: { dir: videoDir, size },
+      ...(opts.extraHTTPHeaders ? { extraHTTPHeaders: opts.extraHTTPHeaders } : {}),
+    });
     if (opts.readOnly) {
       await context.route("**/api/**", (r) => (r.request().method() === "GET" ? r.continue() : r.abort()));
     } else if (opts.blockApi) {

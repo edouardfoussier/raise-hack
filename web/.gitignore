@@ -20,6 +20,9 @@
 # production
 /build
 
+# generated demo videos (produced at runtime by /api/generate)
+/public/generated/
+
 # misc
 .DS_Store
 *.pem

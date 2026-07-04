@@ -1,14 +1,15 @@
 "use client"
 
 import { Toaster as Sonner, type ToasterProps } from "sonner"
+import { useTheme } from "next-themes"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  // The app is dark-only; pin the toaster theme instead of depending on a
-  // next-themes provider.
+  // Follow the app's active theme so toasts read correctly in light and dark.
+  const { resolvedTheme } = useTheme()
   return (
     <Sonner
-      theme="dark"
+      theme={(resolvedTheme as ToasterProps["theme"]) ?? "light"}
       className="toaster group"
       icons={{
         success: (

@@ -10,6 +10,7 @@ import { GithubIcon } from "@/components/icons";
 import { SharePlayer } from "@/components/share/share-player";
 import { ShareCTA } from "@/components/share/share-cta";
 import { CopyLinkButton } from "@/components/share/copy-link-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { getProjectById, getVideoById, getVideoByShareId } from "@/lib/mock-data";
 import { formatDate, formatDuration, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -84,6 +85,7 @@ export default async function SharePage({ params }: PageProps) {
             <Logo />
           </Link>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <CopyLinkButton />
             <Link
               href="/sign-in"

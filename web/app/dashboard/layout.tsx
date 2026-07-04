@@ -5,6 +5,7 @@ import { Logo } from "@/components/logo";
 import { SidebarNav } from "@/components/dashboard/sidebar-nav";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
 import { UserMenu } from "@/components/dashboard/user-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
@@ -69,13 +70,14 @@ export default async function DashboardLayout({
           <Link href="/dashboard" className="md:hidden">
             <Logo showWordmark={false} />
           </Link>
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <Badge
               variant="outline"
               className="hidden capitalize sm:inline-flex"
             >
               {billing.plan} plan
             </Badge>
+            <ThemeToggle />
             <UserMenu user={user} />
           </div>
         </header>

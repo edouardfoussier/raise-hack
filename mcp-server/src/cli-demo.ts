@@ -9,19 +9,31 @@
  *   npx tsx src/cli-demo.ts
  *
  * Env overrides (all optional):
- *   DEMO_URL    — the app to demo (default: local sample-app/flow.html via file://)
- *   DEMO_GOAL   — natural-language goal the AI planner drives toward
- *   DEMO_TITLE  — brand word on the intro card (default "Scenario")
- *   DEMO_CTA    — outro call-to-action (default "Try it → getscenar.io")
+ *   DEMO_URL     — the app to demo (default: local sample-app/flow.html via file://)
+ *   DEMO_GOAL    — natural-language goal the AI planner drives toward
+ *   DEMO_TITLE   — brand word on the intro card (default "Scenario")
+ *   DEMO_CTA     — outro call-to-action (default "Try it → getscenar.io")
+ *   DEMO_HEADERS — JSON object of extra HTTP headers sent on every request
+ *                  (e.g. a Vercel protection-bypass token to reach a protected preview)
+ *   DEMO_INIT    — JS source run before each page loads (e.g. seed an auth token in localStorage)
+ *   DEMO_READONLY — "1" to allow GET /api but abort writes (never mutates the target app)
+ *   DEMO_VOICE   — "1" to narrate the demo with a Gradium voice-over (uses GRADIUM_VOICE_ID)
  */
 import "./env.js";
 import path from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { generateText, Output } from "ai";
 import { z } from "zod";
 import { agentFlow } from "./planner.js";
 import { recordLiveFlow, type FlowStep } from "./flow.js";
 import { selectPlannerModel } from "./providers.js";
 import { composeVideo } from "./compose.js";
+import { ttsToFile } from "./gradium.js";
+
+const pexecFile = promisify(execFile);
 
 const URL = process.env.DEMO_URL || "file://" + path.resolve(process.cwd(), "../sample-app/flow.html");
 const GOAL =
@@ -30,6 +42,28 @@ const GOAL =
 const TITLE = process.env.DEMO_TITLE || "Scenario";
 const CTA = process.env.DEMO_CTA || "Try it → getscenar.io";
 const BRAND = "#FF5A1F"; // flame orange
+
+/** Parse DEMO_HEADERS (JSON string) → extra HTTP headers, tolerating a bad/empty value. */
+function parseHeaders(): Record<string, string> | undefined {
+  const raw = process.env.DEMO_HEADERS?.trim();
+  if (!raw) return undefined;
+  try {
+    const obj = JSON.parse(raw);
+    if (obj && typeof obj === "object") {
+      const out: Record<string, string> = {};
+      for (const [k, v] of Object.entries(obj)) out[k] = String(v);
+      return Object.keys(out).length ? out : undefined;
+    }
+  } catch {
+    console.log("  ⚠ DEMO_HEADERS is not valid JSON — ignoring");
+  }
+  return undefined;
+}
+
+const EXTRA_HEADERS = parseHeaders();
+const INIT_SCRIPT = process.env.DEMO_INIT?.trim() || undefined;
+const READ_ONLY = process.env.DEMO_READONLY === "1";
+const VOICE = process.env.DEMO_VOICE === "1";
 
 /** A short human phrase describing a step, for the captioning prompt. */
 function describe(s: FlowStep): string {
@@ -65,6 +99,9 @@ async function main(): Promise<void> {
     url: URL,
     goal: GOAL,
     maxSteps: 10,
+    initScript: INIT_SCRIPT,
+    extraHTTPHeaders: EXTRA_HEADERS,
+    readOnly: READ_ONLY,
     onStep: (m) => console.log("  ·", m),
   });
   console.log(`\n✓ AI-generated ${steps.length} steps.`);
@@ -122,6 +159,9 @@ async function main(): Promise<void> {
     captions: true,
     outWebm: webm,
     viewport: { width: 760, height: 560 },
+    initScript: INIT_SCRIPT,
+    extraHTTPHeaders: EXTRA_HEADERS,
+    readOnly: READ_ONLY,
   });
   console.log(`✓ replay recorded.`);
 
@@ -138,9 +178,65 @@ async function main(): Promise<void> {
     outDir: composedDir,
   });
 
+  // ── Step E — VOICE-OVER (optional, Gradium narration muxed over the mp4) ──
+  if (VOICE) {
+    try {
+      console.log(`\n⧗ narrating with Gradium voice (GRADIUM_VOICE_ID)…`);
+      await narrateOver(result.mp4Path, captions, (result.introMs ?? 2200) / 1000);
+      console.log(`✓ voice-over muxed into final.mp4`);
+    } catch (e) {
+      console.log(`  ⚠ voice-over skipped — ${(e as Error).message.split("\n")[0]}`);
+    }
+  }
+
   console.log(`\n✅ done — ${result.totalSeconds.toFixed(1)}s @ ${result.width}×${result.height}`);
   console.log(`   mp4: ${result.mp4Path}`);
   console.log(`   gif: ${result.gifPath}`);
+}
+
+/**
+ * Synthesize a single narration WAV from the ordered captions and mux it over the
+ * finished mp4 (in place). A `leadIn` of silence is prepended so the voice starts
+ * roughly when the intro card ends and the real flow begins. Captions are joined
+ * into one natural sentence so the clone reads them as a flowing voice-over.
+ */
+async function narrateOver(mp4Path: string, captions: string[], leadIn: number): Promise<void> {
+  const script = captions
+    .map((c) => c.trim().replace(/[.]+$/, ""))
+    .filter(Boolean)
+    .join(". ")
+    .concat(".");
+  if (!script) return;
+
+  const work = await mkdtemp(path.join(tmpdir(), "scenario-vo-"));
+  try {
+    const voRaw = path.join(work, "vo.wav");
+    await ttsToFile(script, voRaw);
+
+    // Prepend lead-in silence so narration lands after the intro card.
+    const vo = path.join(work, "vo-lead.wav");
+    await pexecFile("ffmpeg", [
+      "-y", "-i", voRaw,
+      "-af", `adelay=${Math.round(leadIn * 1000)}:all=1,aresample=48000`,
+      "-ar", "48000", "-ac", "2",
+      vo,
+    ]);
+
+    // Mux over the video (keep video as-is; audio → AAC; keep full video length).
+    const out = path.join(work, "final-vo.mp4");
+    await pexecFile("ffmpeg", [
+      "-y", "-i", mp4Path, "-i", vo,
+      "-map", "0:v:0", "-map", "1:a:0",
+      "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+      "-movflags", "+faststart",
+      out,
+    ]);
+
+    // Replace the original mp4 with the narrated one.
+    await pexecFile("cp", [out, mp4Path]);
+  } finally {
+    await rm(work, { recursive: true, force: true });
+  }
 }
 
 /** Deterministic caption if the LLM under-delivers for a given step. */

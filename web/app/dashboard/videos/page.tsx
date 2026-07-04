@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { GenerateDemoForm } from "@/components/videos/generate-demo-form";
 import {
   VideoGallery,
   type VideoGalleryItem,
@@ -27,6 +28,8 @@ export default function VideosPage() {
           per-clip analytics.
         </p>
       </div>
+
+      <GenerateDemoForm />
 
       <VideoGallery items={items} />
     </div>

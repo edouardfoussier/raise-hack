@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Logo } from "@/components/logo";
 import { GithubIcon } from "@/components/icons";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { getFeaturedShareId } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Link
             href="/sign-in"
             className={cn(

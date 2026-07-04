@@ -48,40 +48,46 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Light theme kept as a sensible fallback; the app forces `.dark`. */
+/*
+ * Premium LIGHT theme (the default): warm near-white background, deep-ink
+ * foreground, soft borders, elevated cards. The flame accent is nudged a touch
+ * darker + more saturated than the raw brand `#FF5A1F` so buttons/links/badges
+ * read crisply on white instead of washing out.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.986 0.004 60);
+  --foreground: oklch(0.205 0.012 250);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.205 0.012 250);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.682 0.211 37.4);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.205 0.012 250);
+  /* Flame, tuned to pop on light surfaces. */
+  --primary: oklch(0.635 0.226 34.5);
+  --primary-foreground: oklch(0.99 0.01 60);
+  --secondary: oklch(0.965 0.004 60);
+  --secondary-foreground: oklch(0.27 0.012 250);
+  --muted: oklch(0.965 0.004 60);
+  --muted-foreground: oklch(0.53 0.014 250);
+  --accent: oklch(0.955 0.02 45);
+  --accent-foreground: oklch(0.42 0.16 36);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.682 0.211 37.4);
-  --chart-1: oklch(0.682 0.211 37.4);
-  --chart-2: oklch(0.62 0.16 250);
-  --chart-3: oklch(0.63 0.2 300);
-  --chart-4: oklch(0.75 0.16 80);
-  --chart-5: oklch(0.65 0.2 25);
+  --border: oklch(0.9 0.006 250);
+  --input: oklch(0.9 0.006 250);
+  --ring: oklch(0.635 0.226 34.5 / 0.55);
+  --chart-1: oklch(0.635 0.226 34.5);
+  --chart-2: oklch(0.55 0.16 250);
+  --chart-3: oklch(0.56 0.2 300);
+  --chart-4: oklch(0.68 0.16 80);
+  --chart-5: oklch(0.6 0.2 25);
   --radius: 0.85rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.682 0.211 37.4);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.682 0.211 37.4);
+  --sidebar: oklch(0.975 0.004 60);
+  --sidebar-foreground: oklch(0.205 0.012 250);
+  --sidebar-primary: oklch(0.635 0.226 34.5);
+  --sidebar-primary-foreground: oklch(0.99 0.01 60);
+  --sidebar-accent: oklch(0.955 0.02 45);
+  --sidebar-accent-foreground: oklch(0.42 0.16 36);
+  --sidebar-border: oklch(0.9 0.006 250);
+  --sidebar-ring: oklch(0.635 0.226 34.5 / 0.55);
 }
 
 /* Premium dark theme: near-black cool background + a single flame accent. */

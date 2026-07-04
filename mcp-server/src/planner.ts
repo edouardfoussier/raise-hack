@@ -89,6 +89,8 @@ export interface AgentFlowInput {
   initScript?: string;
   readOnly?: boolean;
   maxSteps?: number;
+  /** Extra HTTP headers sent on every request (e.g. a Vercel protection-bypass token). */
+  extraHTTPHeaders?: Record<string, string>;
   onStep?: (msg: string) => void;
 }
 
@@ -98,7 +100,10 @@ export async function agentFlow(input: AgentFlowInput): Promise<FlowStep[]> {
   const history: string[] = [];
   try {
     const dev = input.device ? devices[input.device] : undefined;
-    const context = await browser.newContext(dev ?? { viewport: { width: 420, height: 860 } });
+    const baseCtx = dev ?? { viewport: { width: 420, height: 860 } };
+    const context = await browser.newContext(
+      input.extraHTTPHeaders ? { ...baseCtx, extraHTTPHeaders: input.extraHTTPHeaders } : baseCtx,
+    );
     if (input.readOnly) {
       await context.route("**/api/**", (r) => (r.request().method() === "GET" ? r.continue() : r.abort()));
     }
