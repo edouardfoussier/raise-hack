@@ -75,6 +75,10 @@ Prereq: `cd mcp-server && npm install` (pulls Chromium); set `ANTHROPIC_API_KEY`
 - deja-bu: see [DEJA-BU-DEMO.md](DEJA-BU-DEMO.md) (dev server + token + read-only + `cli-deja-checklist.ts`)
 - Report screenshots for verification: `node --input-type=module -e "...chromium...goto(file://.../report.html)...screenshot..."` (run from `mcp-server/`, NOT the repo root — Playwright lives there).
 
+## Recently built (verified)
+- **AI flow planner** — `planner.ts` `agentFlow({url, goal, device?, readOnly?, initScript?})`: drives the app one step at a time toward a natural-language goal (DOM/accessibility based, Stagehand-style, **NOT computer-use**), returns a concrete `FlowStep[]` → then replay deterministically (**plan-once → replay on before AND after** = fair comparison). Demoed via `cli-plan.ts`: from a plain-English goal it re-discovered the exact onboarding steps (click start → type name/email → continue) and replayed to webm. Needs multi-screen exploration ✔ (it re-observes after each action). Exposes `selectModel()` (now exported from vlm.ts).
+- **Mobile tap indicator** (`assets/tap-overlay.js`) + **synthetic iOS keyboard** (`assets/keyboard-overlay.js`), wired into `recordLiveFlow` via `pointer:"touch"` and `keyboard:true` (not yet re-recorded into a deja demo — set those options in `cli-deja-checklist.ts`'s `record()` to show them).
+
 ## NEXT STEPS (priority order after compact)
 1. **SECURE THE SUBMISSION**: push repo private as `raise-hack`; write submission text + 1-min demo script (money shot = deja-bu real-app before/after). Record demo. Submit.
 2. Then the ambitious build (user wants ALL of these):

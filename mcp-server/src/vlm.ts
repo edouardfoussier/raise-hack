@@ -23,7 +23,7 @@ const VerdictSchema = z.object({
 });
 
 /** Pick a vision model from whatever key is available (OpenRouter first — hackathon bonus credits). */
-function selectModel(): LanguageModel {
+export function selectModel(): LanguageModel {
   const override = process.env.DRIFT_VLM_MODEL?.trim();
   if (process.env.OPENROUTER_API_KEY) {
     return openrouter(override || "anthropic/claude-sonnet-5");

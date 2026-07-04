@@ -4,7 +4,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const OVERLAY = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../assets/cursor-overlay.js");
+const ASSETS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../assets");
+const OVERLAY = path.join(ASSETS, "cursor-overlay.js");
+const OVERLAY_TAP = path.join(ASSETS, "tap-overlay.js");
+const OVERLAY_KB = path.join(ASSETS, "keyboard-overlay.js");
 
 export type FlowStep =
   | { action: "move"; selector: string }
@@ -115,6 +118,10 @@ export interface LiveFlowOpts {
   device?: string;
   /** Allow GET /api (real reads) but abort writes (POST/PATCH/PUT/DELETE) — never mutates prod. */
   readOnly?: boolean;
+  /** Pointer style: "cursor" (arrow, default) or "touch" (mobile tap circle). */
+  pointer?: "cursor" | "touch";
+  /** Show a synthetic iOS keyboard that slides up on text-field focus. */
+  keyboard?: boolean;
 }
 
 /** Record a flow with a visible cursor against a LIVE URL (real app), tolerant of missing selectors. */
@@ -135,7 +142,8 @@ export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
     } else if (opts.blockApi) {
       await context.route("**/api/**", (r) => r.abort());
     }
-    await context.addInitScript({ path: OVERLAY });
+    await context.addInitScript({ path: opts.pointer === "touch" ? OVERLAY_TAP : OVERLAY });
+    if (opts.keyboard) await context.addInitScript({ path: OVERLAY_KB });
     if (opts.initScript) await context.addInitScript(opts.initScript);
 
     const page = await context.newPage();
