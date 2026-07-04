@@ -51,8 +51,8 @@ const { scenario, narration } = await renderCodeDiffVideo({
   outWebm: webmPath,
 });
 
-console.log(`\n✓ « ${narration.title} » — ${scenario.hunks.length} hunk(s):`);
-scenario.hunks.forEach((h, i) => console.log(`  ${i + 1}. ${h.why}`));
+console.log(`\n✓ « ${narration.title} » — ${scenario.files[0].hunks.length} hunk(s):`);
+scenario.files[0].hunks.forEach((h, i) => console.log(`  ${i + 1}. ${h.why}`));
 
 const gif = path.join(OUT, "codediff.gif");
 await pexec(
