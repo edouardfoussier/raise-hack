@@ -1,7 +1,7 @@
 import { chromium, devices, type Page } from "playwright";
-import { generateText, Output } from "ai";
+import { generateText, NoObjectGeneratedError, Output } from "ai";
 import { z } from "zod";
-import { selectModel } from "./vlm.js";
+import { selectPlannerModel } from "./providers.js";
 import type { FlowStep } from "./flow.js";
 
 /**
@@ -18,6 +18,34 @@ const DecisionSchema = z.object({
   text: z.string().optional().describe("Text to type (only for action='type')."),
   reason: z.string().describe("One short sentence on why this is the next step."),
 });
+
+type Decision = z.infer<typeof DecisionSchema>;
+
+/**
+ * Rescue parse for models whose provider does not enforce the JSON schema
+ * server-side (e.g. Nemotron on Nebius treats response_format as a hint):
+ * extract the JSON object from the raw text and normalize near-miss shapes.
+ */
+function extractDecision(text: string): Decision | null {
+  const m = text.match(/\{[\s\S]*\}/);
+  if (!m) return null;
+  let raw: any;
+  try {
+    raw = JSON.parse(m[0]);
+  } catch {
+    return null;
+  }
+  if (!raw || typeof raw !== "object") return null;
+  // Tolerate a nested {"action": {"type": "click", "selector": "…"}} shape.
+  if (raw.action && typeof raw.action === "object") {
+    const a = raw.action;
+    raw = { ...raw, action: a.type ?? a.action, selector: raw.selector ?? a.selector, text: raw.text ?? a.text };
+  }
+  if (raw.done == null) raw.done = false;
+  if (raw.reason == null) raw.reason = "(no reason given)";
+  const parsed = DecisionSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
+}
 
 interface El {
   selector: string;
@@ -37,9 +65,8 @@ async function digest(page: Page): Promise<El[]> {
         const label = (
           el.innerText ||
           (el as HTMLInputElement).value ||
-          ph ||
           el.getAttribute("aria-label") ||
-          ""
+          (ph ? `empty field — placeholder: ${ph}` : "")
         )
           .trim()
           .replace(/\s+/g, " ")
@@ -80,17 +107,36 @@ export async function agentFlow(input: AgentFlowInput): Promise<FlowStep[]> {
     await page.goto(input.url, { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(1800);
 
-    const model = selectModel();
+    // Planning is text-only → NVIDIA Nemotron (via Nebius Token Factory) when available.
+    const model = selectPlannerModel();
     const max = input.maxSteps ?? 12;
     for (let i = 0; i < max; i++) {
       const els = await digest(page);
-      const { output } = await generateText({
-        model,
-        system:
-          "You drive a web app to accomplish a GOAL, ONE step at a time. Given the current interactable elements (each with a ready selector) and the actions already taken, choose the single next action. Use a selector verbatim from the list. Prefer clicking a primary CTA to advance; fill fields the goal mentions. Set done=true only when the goal is fully accomplished.",
-        output: Output.object({ schema: DecisionSchema }),
-        prompt: `GOAL: ${input.goal}\n\nACTIONS TAKEN:\n${history.join("\n") || "(none)"}\n\nCURRENT ELEMENTS (selector — kind — label):\n${els.map((e) => `- ${e.selector}  —  ${e.kind}  —  "${e.label}"`).join("\n")}`,
-      });
+      let output: Decision | undefined;
+      for (let attempt = 0; attempt < 2 && !output; attempt++) {
+        try {
+          const res = await generateText({
+            model,
+            maxOutputTokens: 2048, // reasoning models (Nemotron) think before the JSON
+            providerOptions: { nebius: { reasoningEffort: "low" } },
+            system:
+              "You drive a web app to accomplish a GOAL, ONE step at a time. Given the current interactable elements (each with a ready selector) and the actions already taken, choose the single next action. Use a selector verbatim from the list. Prefer clicking a primary CTA to advance; fill fields the goal mentions. " +
+              'A label like "empty field — placeholder: …" means that field is EMPTY (a placeholder is NOT a value): type into every field the goal mentions before continuing. Set done=true ONLY when NOTHING remains to do — if any click or input is still required (e.g. a final Continue/Submit), return that action with done=false instead. ' +
+              'Reply with a single FLAT JSON object of exactly this shape: {"done": boolean, "action": "click"|"type"|"hover", "selector": string, "text": string, "reason": string} — "action" is a plain string, never a nested object; omit "action"/"selector" only when done=true.',
+            output: Output.object({ schema: DecisionSchema }),
+            prompt: `GOAL: ${input.goal}\n\nACTIONS TAKEN:\n${history.join("\n") || "(none)"}\n\nCURRENT ELEMENTS (selector — kind — label):\n${els.map((e) => `- ${e.selector}  —  ${e.kind}  —  "${e.label}"`).join("\n")}`,
+          });
+          output = res.output;
+        } catch (e) {
+          // Some providers (Nemotron on Nebius) don't enforce response_format
+          // server-side; rescue the decision from the raw text when possible.
+          const rescued = NoObjectGeneratedError.isInstance(e) && e.text ? extractDecision(e.text) : undefined;
+          if (rescued) output = rescued;
+          else if (attempt === 0) input.onStep?.("⚠ unusable model response — retrying step");
+          else throw e;
+        }
+      }
+      if (!output) throw new Error("planner: no decision produced");
 
       if (output.done || !output.action || !output.selector) {
         input.onStep?.(`done: ${output.reason}`);

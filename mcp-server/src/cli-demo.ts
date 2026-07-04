@@ -20,7 +20,7 @@ import { generateText, Output } from "ai";
 import { z } from "zod";
 import { agentFlow } from "./planner.js";
 import { recordLiveFlow, type FlowStep } from "./flow.js";
-import { selectModel } from "./vlm.js";
+import { selectPlannerModel } from "./providers.js";
 import { composeVideo } from "./compose.js";
 
 const URL = process.env.DEMO_URL || "file://" + path.resolve(process.cwd(), "../sample-app/flow.html");
@@ -83,16 +83,23 @@ async function main(): Promise<void> {
   });
 
   const numbered = meaningful.map((s, i) => `${i + 1}. ${describe(s)}`).join("\n");
-  const model = selectModel();
-  const { output } = await generateText({
-    model,
-    system:
-      "You narrate a product demo video. Given the GOAL and the ordered UI steps, write ONE short caption per step that a viewer reads as it happens. Captions must be concise (≤ 8 words), plain English, and aligned one-to-one with the steps in order.",
-    output: Output.object({ schema: CaptionSchema }),
-    prompt: `GOAL: ${GOAL}\n\nSTEPS (write exactly ${meaningful.length} captions, one per step, in order):\n${numbered}`,
-  });
-
-  const raw = (output as z.infer<typeof CaptionSchema>).captions ?? [];
+  const model = selectPlannerModel(); // text-only task → Nemotron (Nebius) when available
+  let raw: string[] = [];
+  try {
+    const { output } = await generateText({
+      model,
+      maxOutputTokens: 2048,
+      providerOptions: { nebius: { reasoningEffort: "low" } },
+      system:
+        "You narrate a product demo video. Given the GOAL and the ordered UI steps, write ONE short caption per step that a viewer reads as it happens. Captions must be concise (≤ 8 words), plain English, and aligned one-to-one with the steps in order. " +
+        'Reply with a single JSON object: {"captions": string[]}.',
+      output: Output.object({ schema: CaptionSchema }),
+      prompt: `GOAL: ${GOAL}\n\nSTEPS (write exactly ${meaningful.length} captions, one per step, in order):\n${numbered}`,
+    });
+    raw = (output as z.infer<typeof CaptionSchema>).captions ?? [];
+  } catch {
+    console.log("  ⚠ caption LLM call failed — using deterministic captions");
+  }
   // Align defensively: pad/truncate to the meaningful-step count.
   const captions: string[] = meaningful.map((s, i) => (raw[i]?.trim() || fallbackCaption(s)));
   console.log("✓ captions:");
