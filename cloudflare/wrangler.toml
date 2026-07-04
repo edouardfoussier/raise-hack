@@ -1,0 +1,59 @@
+#:schema node_modules/wrangler/config-schema.json
+# Scenario — public share-page + video storage + view analytics
+# Deployed to the user's Cloudflare account. Domain getscenar.io is already on Cloudflare.
+#
+# NOTE: This file only DECLARES bindings. It does NOT provision resources.
+# Create them first (see README.md), then paste the returned ids below.
+
+name = "scenario-share"
+main = "src/worker.ts"
+compatibility_date = "2024-11-06"
+compatibility_flags = ["nodejs_compat"]
+
+# Serve the Worker on your zone. Uncomment ONE of the routing options after
+# you have created the resources and want a custom domain (see README).
+#
+# Option A — custom domain (recommended). Cloudflare manages the DNS record + cert.
+# [[routes]]
+# pattern = "share.getscenar.io"
+# custom_domain = true
+#
+# Option B — route pattern on an existing zone.
+# [[routes]]
+# pattern = "getscenar.io/v/*"
+# zone_name = "getscenar.io"
+
+[observability]
+enabled = true
+
+# ---- R2: video file storage ------------------------------------------------
+# Provision:  wrangler r2 bucket create scenario-videos
+[[r2_buckets]]
+binding = "VIDEOS"                 # env.VIDEOS in the Worker
+bucket_name = "scenario-videos"
+
+# ---- D1: view analytics ----------------------------------------------------
+# Provision:  wrangler d1 create scenario-views   (then paste database_id below)
+[[d1_databases]]
+binding = "DB"                     # env.DB in the Worker
+database_name = "scenario-views"
+database_id = "REPLACE_WITH_DATABASE_ID"   # from `wrangler d1 create scenario-views`
+
+# ---- Optional: Analytics Engine (richer, sampled analytics) -----------------
+# See README "Analytics Engine" section. Uncomment to enable, then use
+# env.ANALYTICS.writeDataPoint(...) alongside (or instead of) the D1 writes.
+# [[analytics_engine_datasets]]
+# binding = "ANALYTICS"
+# dataset = "scenario_views"
+
+# ---- Secrets (do NOT put values here) --------------------------------------
+# Set with:  wrangler secret put IP_SALT
+# The Worker reads env.IP_SALT to salt the SHA-256 IP hash. Never commit a value.
+#
+# For local dev you may put a throwaway salt in a .dev.vars file (gitignored):
+#   IP_SALT="dev-only-not-a-real-salt"
+
+[vars]
+# Public base URL used to build shareUrl in POST /api/videos responses.
+# Override per-environment as needed.
+SHARE_BASE_URL = "https://share.getscenar.io"

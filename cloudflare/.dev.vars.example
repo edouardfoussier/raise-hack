@@ -1,0 +1,3 @@
+# Local dev secrets for `wrangler dev`. Copy to `.dev.vars` (gitignored).
+# NEVER commit real values. In production, use `wrangler secret put IP_SALT`.
+IP_SALT="dev-only-not-a-real-salt-change-me"
