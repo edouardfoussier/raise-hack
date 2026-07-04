@@ -31,7 +31,7 @@ Cursor's **Design Mode** lets you point / draw / talk to edit UI. But it capture
 1. **git** — reads the file at `HEAD` (before) vs the working tree (after), plus the diff.
 2. **render** — Playwright renders the component in isolation at both states → PNGs (static), or **frame sequences of the interaction** (motion).
 3. **judge** — Claude Sonnet 5 receives the renders + your `tokens.json` + the diff, and returns `{ classification, reasoning, proposed_diff, confidence }` written in your design system's language.
-4. **fix** — the verdict, before/after renders, and the diff land **inline in Cursor's chat**; accept → the agent applies the fix.
+4. **review & fix** — Drift opens a self-contained visual **before/after report** in your browser (for motion drift, the interaction **plays on loop** — before vs after side by side), and returns the verdict + diff **inline in Cursor's chat**; accept → the agent applies the fix. The same report is your PR/CI artifact.
 
 No dashboard. The model provider is swappable (OpenRouter for the hackathon credits, or Anthropic directly).
 

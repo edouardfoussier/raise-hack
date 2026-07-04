@@ -10,6 +10,7 @@ import { getRepoRoot, getHeadContent, getWorkingContent, getDiff, toRepoRel } fr
 import { renderBeforeAfter } from "./render.js";
 import { captureInteractionFrames } from "./capture.js";
 import { getVerdict, getMotionVerdict } from "./vlm.js";
+import { buildReportHtml, writeAndOpenReport, type Visual } from "./report.js";
 import type { DriftVerdict } from "./types.js";
 
 type Content =
@@ -21,6 +22,8 @@ const LABEL: Record<string, string> = {
   accidental_regression: "Accidental regression",
   platform_constraint: "Platform constraint",
 };
+
+const dataUri = (b64: string) => `data:image/png;base64,${b64}`;
 
 function headline(v: DriftVerdict): string {
   return `## Drift verdict: ${LABEL[v.classification] ?? v.classification}  ·  confidence ${(v.confidence * 100).toFixed(0)}%\n\n${v.reasoning}`;
@@ -44,9 +47,9 @@ server.registerTool(
       "Review a UI change for design-system drift. Renders the affected component BEFORE (last commit) and AFTER " +
       "(current working tree); a vision model judges whether the change is an intentional redesign, an accidental " +
       "regression, or a platform constraint — explaining its reasoning in the design system's own language and proposing " +
-      "a fix. Pass `interaction` (hover/click) to review the component IN MOTION (captures before/after frame sequences " +
-      "and judges duration/easing/distance against the motion tokens) — something a single frozen screenshot cannot do. " +
-      "Call this right after editing a component's styles.",
+      "a fix. It also opens a visual before/after review (drift-report.html) in the browser. Pass `interaction` (hover/click) " +
+      "to review the component IN MOTION (captures before/after frame sequences and judges duration/easing/distance against " +
+      "the motion tokens). Call this right after editing a component's styles.",
     inputSchema: {
       file: z
         .string()
@@ -83,9 +86,7 @@ server.registerTool(
       const diff = await getDiff(repoRoot, repoRel);
       if (!diff) {
         return {
-          content: [
-            { type: "text", text: `✓ No change vs the last commit for \`${repoRel}\` — nothing to review.` },
-          ],
+          content: [{ type: "text", text: `✓ No change vs the last commit for \`${repoRel}\` — nothing to review.` }],
         };
       }
 
@@ -97,9 +98,15 @@ server.registerTool(
       const tokensJson = await readFile(path.resolve(appDir, "tokens.json"), "utf8").catch(
         () => "(no tokens.json found next to the component)",
       );
+      const modelLabel = process.env.DRIFT_VLM_MODEL || "claude-sonnet-5";
 
-      // --- MOTION path: review the interaction in motion ---
+      let verdict: DriftVerdict;
+      let visualBefore: Visual;
+      let visualAfter: Visual;
+      const inline: Content[] = [];
+
       if (interaction) {
+        // --- MOTION path ---
         const frameSelector = process.env.DRIFT_FRAME_SELECTOR || "#stage";
         const targetSelector = selector || process.env.DRIFT_SELECTOR || "#demo-button";
         const base = {
@@ -119,8 +126,7 @@ server.registerTool(
         } finally {
           await browser.close();
         }
-
-        const verdict = await getMotionVerdict({
+        verdict = await getMotionVerdict({
           beforeFramePaths: before.framePaths,
           afterFramePaths: after.framePaths,
           tokensJson,
@@ -128,8 +134,9 @@ server.registerTool(
           filePath: repoRel,
           interaction,
         });
-
-        const content: Content[] = [
+        visualBefore = { kind: "frames", dataUris: before.frameBase64.map(dataUri) };
+        visualAfter = { kind: "frames", dataUris: after.frameBase64.map(dataUri) };
+        inline.push(
           { type: "text", text: headline(verdict) },
           { type: "text", text: `**Before** — \`${interaction}\` from rest → settled:` },
           { type: "image", data: before.frameBase64[0], mimeType: "image/png" },
@@ -137,44 +144,54 @@ server.registerTool(
           { type: "text", text: `**After** — \`${interaction}\` from rest → settled:` },
           { type: "image", data: after.frameBase64[0], mimeType: "image/png" },
           { type: "image", data: after.frameBase64[after.frameBase64.length - 1], mimeType: "image/png" },
-        ];
-        if (verdict.proposed_diff.trim()) {
-          content.push({ type: "text", text: `**Proposed fix**\n\`\`\`diff\n${verdict.proposed_diff}\n\`\`\`` });
-        }
-        content.push({ type: "text", text: directiveFor(verdict.classification, repoRel) });
-        return { content };
+        );
+      } else {
+        // --- STATIC path ---
+        const sel = selector || process.env.DRIFT_SELECTOR || "#demo-button";
+        const r = await renderBeforeAfter({
+          appDir,
+          previewRel,
+          changedRelToApp: path.basename(absPath),
+          beforeContent,
+          afterContent,
+          selector: sel,
+          outDir,
+        });
+        verdict = await getVerdict({
+          beforePngPath: r.beforePngPath,
+          afterPngPath: r.afterPngPath,
+          tokensJson,
+          diff,
+          filePath: repoRel,
+        });
+        visualBefore = { kind: "image", dataUri: dataUri(r.beforePngBase64) };
+        visualAfter = { kind: "image", dataUri: dataUri(r.afterPngBase64) };
+        inline.push(
+          { type: "text", text: headline(verdict) },
+          { type: "text", text: "**Before** — last committed render:" },
+          { type: "image", data: r.beforePngBase64, mimeType: "image/png" },
+          { type: "text", text: "**After** — current render:" },
+          { type: "image", data: r.afterPngBase64, mimeType: "image/png" },
+        );
       }
 
-      // --- STATIC path: review a single frame ---
-      const sel = selector || process.env.DRIFT_SELECTOR || "#demo-button";
-      const r = await renderBeforeAfter({
-        appDir,
-        previewRel,
-        changedRelToApp: path.basename(absPath),
-        beforeContent,
-        afterContent,
-        selector: sel,
-        outDir,
-      });
-
-      const verdict = await getVerdict({
-        beforePngPath: r.beforePngPath,
-        afterPngPath: r.afterPngPath,
-        tokensJson,
-        diff,
+      // --- Visual review report ---
+      const html = buildReportHtml({
+        verdict,
         filePath: repoRel,
+        model: modelLabel,
+        interaction,
+        before: visualBefore,
+        after: visualAfter,
       });
+      const reportPath = path.join(outDir, "drift-report.html");
+      await writeAndOpenReport(html, reportPath, process.env.DRIFT_OPEN !== "0");
 
-      const content: Content[] = [
-        { type: "text", text: headline(verdict) },
-        { type: "text", text: "**Before** — last committed render:" },
-        { type: "image", data: r.beforePngBase64, mimeType: "image/png" },
-        { type: "text", text: "**After** — current render:" },
-        { type: "image", data: r.afterPngBase64, mimeType: "image/png" },
-      ];
+      const content: Content[] = [...inline];
       if (verdict.proposed_diff.trim()) {
         content.push({ type: "text", text: `**Proposed fix**\n\`\`\`diff\n${verdict.proposed_diff}\n\`\`\`` });
       }
+      content.push({ type: "text", text: `🔍 Opened a visual before/after review → ${reportPath}` });
       content.push({ type: "text", text: directiveFor(verdict.classification, repoRel) });
       return { content };
     } catch (err) {
