@@ -1,12 +1,16 @@
 import "./env.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { chromium } from "playwright";
 import { z } from "zod";
 import path from "node:path";
 import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { getRepoRoot, getHeadContent, getWorkingContent, getDiff, toRepoRel } from "./git.js";
 import { renderBeforeAfter } from "./render.js";
-import { getVerdict } from "./vlm.js";
+import { captureInteractionFrames } from "./capture.js";
+import { getVerdict, getMotionVerdict } from "./vlm.js";
+import type { DriftVerdict } from "./types.js";
 
 type Content =
   | { type: "text"; text: string }
@@ -18,6 +22,18 @@ const LABEL: Record<string, string> = {
   platform_constraint: "Platform constraint",
 };
 
+function headline(v: DriftVerdict): string {
+  return `## Drift verdict: ${LABEL[v.classification] ?? v.classification}  ·  confidence ${(v.confidence * 100).toFixed(0)}%\n\n${v.reasoning}`;
+}
+
+function directiveFor(classification: string, repoRel: string): string {
+  if (classification === "accidental_regression")
+    return `This is design-system drift. Apply the proposed fix to \`${repoRel}\`, then tell the user in one line what drifted and what you changed.`;
+  if (classification === "platform_constraint")
+    return `This looks platform-imposed. Summarize the verdict; only change code if the user asks.`;
+  return `This reads as an intentional, system-consistent change. Summarize the verdict for the user; no fix needed.`;
+}
+
 const server = new McpServer({ name: "drift", version: "0.1.0" });
 
 server.registerTool(
@@ -26,9 +42,11 @@ server.registerTool(
     title: "Drift — design-system review",
     description:
       "Review a UI change for design-system drift. Renders the affected component BEFORE (last commit) and AFTER " +
-      "(current working tree), then a vision model judges whether the change is an intentional redesign, an accidental " +
+      "(current working tree); a vision model judges whether the change is an intentional redesign, an accidental " +
       "regression, or a platform constraint — explaining its reasoning in the design system's own language and proposing " +
-      "a fix. Call this right after editing a component's styles.",
+      "a fix. Pass `interaction` (hover/click) to review the component IN MOTION (captures before/after frame sequences " +
+      "and judges duration/easing/distance against the motion tokens) — something a single frozen screenshot cannot do. " +
+      "Call this right after editing a component's styles.",
     inputSchema: {
       file: z
         .string()
@@ -36,13 +54,28 @@ server.registerTool(
       selector: z
         .string()
         .optional()
-        .describe("CSS selector of the element to capture. Defaults to DRIFT_SELECTOR env or '#demo-button'."),
+        .describe("CSS selector of the element to target. Defaults to DRIFT_SELECTOR env or '#demo-button'."),
+      interaction: z
+        .enum(["hover", "click"])
+        .optional()
+        .describe("If set, review the interaction IN MOTION (before/after frame sequences) instead of a single static frame."),
     },
   },
-  async ({ file, selector }) => {
+  async ({ file, selector, interaction }) => {
     try {
       const root = process.env.DRIFT_PROJECT_ROOT || process.cwd();
       const absPath = path.isAbsolute(file) ? file : path.resolve(root, file);
+      if (!existsSync(absPath)) {
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text",
+              text: `Drift: file not found at ${absPath}. Pass an absolute path, or set DRIFT_PROJECT_ROOT to your project root.`,
+            },
+          ],
+        };
+      }
 
       const repoRoot = await getRepoRoot(absPath);
       const repoRel = toRepoRel(repoRoot, absPath);
@@ -58,12 +91,62 @@ server.registerTool(
 
       const beforeContent = await getHeadContent(repoRoot, repoRel);
       const afterContent = await getWorkingContent(absPath);
-
       const appDir = path.dirname(absPath);
       const previewRel = process.env.DRIFT_PREVIEW || "preview.html";
-      const sel = selector || process.env.DRIFT_SELECTOR || "#demo-button";
       const outDir = path.resolve(repoRoot, ".drift-cache");
+      const tokensJson = await readFile(path.resolve(appDir, "tokens.json"), "utf8").catch(
+        () => "(no tokens.json found next to the component)",
+      );
 
+      // --- MOTION path: review the interaction in motion ---
+      if (interaction) {
+        const frameSelector = process.env.DRIFT_FRAME_SELECTOR || "#stage";
+        const targetSelector = selector || process.env.DRIFT_SELECTOR || "#demo-button";
+        const base = {
+          appDir,
+          previewRel,
+          changedRelToApp: path.basename(absPath),
+          frameSelector,
+          targetSelector,
+          interaction,
+          outDir: path.join(outDir, "motion"),
+        };
+        const browser = await chromium.launch();
+        let before, after;
+        try {
+          before = await captureInteractionFrames(browser, { ...base, content: beforeContent, label: "before" });
+          after = await captureInteractionFrames(browser, { ...base, content: afterContent, label: "after" });
+        } finally {
+          await browser.close();
+        }
+
+        const verdict = await getMotionVerdict({
+          beforeFramePaths: before.framePaths,
+          afterFramePaths: after.framePaths,
+          tokensJson,
+          diff,
+          filePath: repoRel,
+          interaction,
+        });
+
+        const content: Content[] = [
+          { type: "text", text: headline(verdict) },
+          { type: "text", text: `**Before** — \`${interaction}\` from rest → settled:` },
+          { type: "image", data: before.frameBase64[0], mimeType: "image/png" },
+          { type: "image", data: before.frameBase64[before.frameBase64.length - 1], mimeType: "image/png" },
+          { type: "text", text: `**After** — \`${interaction}\` from rest → settled:` },
+          { type: "image", data: after.frameBase64[0], mimeType: "image/png" },
+          { type: "image", data: after.frameBase64[after.frameBase64.length - 1], mimeType: "image/png" },
+        ];
+        if (verdict.proposed_diff.trim()) {
+          content.push({ type: "text", text: `**Proposed fix**\n\`\`\`diff\n${verdict.proposed_diff}\n\`\`\`` });
+        }
+        content.push({ type: "text", text: directiveFor(verdict.classification, repoRel) });
+        return { content };
+      }
+
+      // --- STATIC path: review a single frame ---
+      const sel = selector || process.env.DRIFT_SELECTOR || "#demo-button";
       const r = await renderBeforeAfter({
         appDir,
         previewRel,
@@ -74,10 +157,6 @@ server.registerTool(
         outDir,
       });
 
-      const tokensJson = await readFile(path.resolve(appDir, "tokens.json"), "utf8").catch(
-        () => "(no tokens.json found next to the component)",
-      );
-
       const verdict = await getVerdict({
         beforePngPath: r.beforePngPath,
         afterPngPath: r.afterPngPath,
@@ -86,18 +165,8 @@ server.registerTool(
         filePath: repoRel,
       });
 
-      const directive =
-        verdict.classification === "accidental_regression"
-          ? `This is design-system drift. Apply the proposed fix to \`${repoRel}\`, then tell the user in one line what drifted and what you changed.`
-          : verdict.classification === "platform_constraint"
-            ? `This looks platform-imposed. Summarize the verdict; only change code if the user asks.`
-            : `This reads as an intentional, system-consistent change. Summarize the verdict for the user; no fix needed.`;
-
       const content: Content[] = [
-        {
-          type: "text",
-          text: `## Drift verdict: ${LABEL[verdict.classification] ?? verdict.classification}  ·  confidence ${(verdict.confidence * 100).toFixed(0)}%\n\n${verdict.reasoning}`,
-        },
+        { type: "text", text: headline(verdict) },
         { type: "text", text: "**Before** — last committed render:" },
         { type: "image", data: r.beforePngBase64, mimeType: "image/png" },
         { type: "text", text: "**After** — current render:" },
@@ -106,8 +175,7 @@ server.registerTool(
       if (verdict.proposed_diff.trim()) {
         content.push({ type: "text", text: `**Proposed fix**\n\`\`\`diff\n${verdict.proposed_diff}\n\`\`\`` });
       }
-      content.push({ type: "text", text: directive });
-
+      content.push({ type: "text", text: directiveFor(verdict.classification, repoRel) });
       return { content };
     } catch (err) {
       return {
