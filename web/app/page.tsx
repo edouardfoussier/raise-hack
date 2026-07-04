@@ -91,7 +91,7 @@ export default function Home() {
         {/* Hero */}
         <section className="relative overflow-hidden">
           <div className="bg-grid pointer-events-none absolute inset-0 opacity-[0.35] [mask-image:radial-gradient(80%_60%_at_50%_0%,black,transparent)]" />
-          <div className="glow-teal pointer-events-none absolute inset-x-0 top-0 h-[420px]" />
+          <div className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-[420px]" />
 
           <div className="relative mx-auto max-w-6xl px-4 pt-20 pb-16 sm:px-6 sm:pt-28 sm:pb-24">
             <div className="mx-auto max-w-3xl text-center">
@@ -211,7 +211,7 @@ export default function Home() {
         {/* CTA band */}
         <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
           <div className="relative overflow-hidden rounded-3xl border border-border bg-card px-6 py-14 text-center sm:px-12">
-            <div className="glow-teal pointer-events-none absolute inset-x-0 top-0 h-40" />
+            <div className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-40" />
             <h2 className="relative text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
               Ready to ship the demo?
             </h2>

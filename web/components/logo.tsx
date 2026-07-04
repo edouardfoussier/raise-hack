@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Scenario brand mark: a rounded teal tile with a play glyph. */
+/** Scenario brand mark: a rounded flame tile with a play glyph. */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <span
