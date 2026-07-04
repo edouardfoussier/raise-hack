@@ -29,6 +29,7 @@ const pexec = promisify(exec);
 const ASSETS = path.resolve(process.cwd(), "assets");
 const TAP = path.join(ASSETS, "tap-overlay.js");
 const KB = path.join(ASSETS, "keyboard-overlay.js");
+const CAP = path.join(ASSETS, "caption-overlay.js");
 
 const URL = process.env.DEJA_URL || "https://deja-bu-npi9s11fh-edouard-foussiers-projects.vercel.app";
 const BYPASS = process.env.DEJA_BYPASS || "";
@@ -126,7 +127,7 @@ async function moveTo(page: Page, selector: string): Promise<void> {
   await loc.scrollIntoViewIfNeeded({ timeout: 6000 }).catch(() => {});
   const box = await loc.boundingBox({ timeout: 6000 });
   if (!box) throw new Error(`not found: ${selector}`);
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 26 });
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 36 });
 }
 async function tap(page: Page, selector: string): Promise<void> {
   await moveTo(page, selector);
@@ -144,11 +145,16 @@ async function searchProduct(page: Page): Promise<void> {
   try {
     await tap(page, 'input[type="search"]');
     await page.locator('input[type="search"]').first().fill("");
-    await page.keyboard.type(PRODUCT, { delay: 70 }); // ⌨ iOS keyboard
+    await page.keyboard.type(PRODUCT, { delay: 85 }); // ⌨ iOS keyboard
     await page.waitForTimeout(1500);
   } catch (e) {
     console.error("  (search step skipped:", (e as Error).message.split("\n")[0], ")");
   }
+}
+
+/** Update the synchronized caption banner (Scenario overlay). */
+async function cap(page: Page, text: string): Promise<void> {
+  await page.evaluate((t) => (window as any).__cap?.(t), text).catch(() => {});
 }
 
 // ── run ────────────────────────────────────────────────────────────────────
@@ -173,6 +179,7 @@ try {
   });
   await context.addInitScript({ path: TAP });
   await context.addInitScript({ path: KB });
+  await context.addInitScript({ path: CAP });
   await context.addInitScript(`try{localStorage.setItem('deja-bu:v1:auth-token', JSON.stringify(${JSON.stringify(PWD)}));}catch(e){}`);
   // Seed the paused delivery into localStorage BEFORE the store constructs.
   await context.addInitScript(
@@ -183,21 +190,30 @@ try {
   // ── ACT 1 — Catalogue : the BEFORE stock ──────────────────────────────────
   await page.goto(URL + "#/catalogue", { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(2800);
+  await cap(page, "① Check the product's current stock");
   await page.mouse.move(dev.viewport.width * 0.5, dev.viewport.height * 0.9, { steps: 1 });
+  await page.waitForTimeout(800);
   await searchProduct(page);
-  await page.waitForTimeout(2200); // hold on the BEFORE number
+  await cap(page, `${before.name} — ${before.stock} in stock`);
+  await page.waitForTimeout(2600); // hold on the BEFORE number
 
   // ── ACT 2 — Réception : open the seeded bordereau → checklist → clôture ────
   await page.goto(URL + "#/reception", { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(2600); // ChecklistStart shows the "en attente" list
+  await cap(page, `② Receive the delivery — ${CARTONS} carton on the slip`);
+  await page.waitForTimeout(1000);
   // Reprendre → resumes the paused session into the active checklist
   await tapText(page, "Reprendre").catch(async () => {
     await tapText(page, "▶ Reprendre").catch(() => console.error("  (Reprendre not found)"));
   });
   await page.waitForTimeout(2200); // ChecklistLineCard — "Vérifie qu'il y a bien N cartons de …"
+  await cap(page, "Checklist — verify each line against the slip");
+  await page.waitForTimeout(1000);
   // ✅ Valider the line
   await tapText(page, "Valider").catch(() => console.error("  (Valider not found)"));
   await page.waitForTimeout(1600); // → recap view (single-line session advances to recap)
+  await cap(page, "Line validated ✓ — closing the reception");
+  await page.waitForTimeout(900);
   // Terminer / clôture — the REAL stock write happens here
   await tapText(page, "Terminer").catch(async () => {
     await tapText(page, "Clôturer").catch(() => console.error("  (Terminer not found)"));
@@ -211,8 +227,10 @@ try {
   await page.goto(URL + "#/catalogue", { waitUntil: "domcontentloaded" });
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(3200);
+  await cap(page, `③ Stock updated — ${before.name}`);
   await searchProduct(page);
-  await page.waitForTimeout(2800); // hold on the AFTER number
+  await cap(page, `${before.stock} → ${before.stock + expectedDelta} in stock ✓`);
+  await page.waitForTimeout(3200); // hold on the AFTER number
 
   const video = page.video();
   await context.close();
