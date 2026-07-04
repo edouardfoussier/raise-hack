@@ -71,10 +71,10 @@ export function buildReportHtml(opts: {
 
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Drift review — ${escapeHtml(opts.filePath)}</title>
+<title>Scenario review — ${escapeHtml(opts.filePath)}</title>
 <style>${CSS}</style></head><body>
 <header class="top">
-  <div class="brand">◈ Drift</div>
+  <div class="brand">◈ Scenario</div>
   <div class="meta">${escapeHtml(opts.filePath)} · <span class="mode">${modeLabel}</span></div>
 </header>
 <section class="verdict" style="--badge:${b.color};--badgebg:${b.bg}">
@@ -89,7 +89,7 @@ export function buildReportHtml(opts: {
   <h3>Proposed fix</h3>
   ${diffHtml}
 </section>
-<footer class="foot">Reviewed by <strong>Drift</strong> · ${escapeHtml(opts.model)} · reasons in your design tokens, not pixels.</footer>
+<footer class="foot">Reviewed by <strong>Scenario</strong> · ${escapeHtml(opts.model)} · reasons in your design tokens, not pixels.</footer>
 </body></html>`;
 }
 
@@ -106,7 +106,7 @@ const CSS = `
 *{box-sizing:border-box}
 body{margin:0;font-family:'Inter',-apple-system,system-ui,sans-serif;background:#0B0D12;color:#E6E8EE}
 .top{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid #1B1F2A}
-.brand{font-weight:650;letter-spacing:.02em;color:#A5B4FC;font-size:16px}
+.brand{font-weight:650;letter-spacing:.02em;color:#FF5A1F;font-size:16px}
 .meta{color:#8A93A6;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .mode{color:#C7D2FE}
 .verdict{margin:28px;padding:20px 22px;border-radius:14px;background:var(--badgebg);border:1px solid #1B1F2A}
@@ -128,6 +128,6 @@ body{margin:0;font-family:'Inter',-apple-system,system-ui,sans-serif;background:
 .diff .hunk{color:#8A93A6}
 .nofix{color:#86EFAC;margin:0}
 .foot{padding:20px 28px;color:#5B6478;font-size:12px;border-top:1px solid #1B1F2A;margin-top:8px}
-.foot strong{color:#A5B4FC}
+.foot strong{color:#FF5A1F}
 @media(max-width:720px){.compare{grid-template-columns:1fr}}
 `;
