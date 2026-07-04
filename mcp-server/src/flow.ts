@@ -1,4 +1,4 @@
-import { chromium, type Page } from "playwright";
+import { chromium, devices, type Page } from "playwright";
 import { cp, mkdtemp, writeFile, rm, mkdir, rename } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -96,6 +96,101 @@ export async function recordFlow(opts: RecordFlowOpts): Promise<string> {
   } finally {
     await browser.close();
     await rm(sandbox, { recursive: true, force: true });
+    await rm(videoDir, { recursive: true, force: true });
+  }
+  return opts.outWebm;
+}
+
+export interface LiveFlowOpts {
+  /** Live URL to drive (e.g. a running dev server). */
+  url: string;
+  steps: FlowStep[];
+  outWebm: string;
+  viewport?: { width: number; height: number };
+  /** JS source run before the page loads (e.g. to set an auth token in localStorage). */
+  initScript?: string;
+  /** Abort all **\/api\/** requests (avoids 401 kicks when bypassing auth). */
+  blockApi?: boolean;
+  /** Playwright device descriptor name (e.g. "iPhone 13") for mobile emulation. */
+  device?: string;
+  /** Allow GET /api (real reads) but abort writes (POST/PATCH/PUT/DELETE) — never mutates prod. */
+  readOnly?: boolean;
+}
+
+/** Record a flow with a visible cursor against a LIVE URL (real app), tolerant of missing selectors. */
+export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
+  const vp = opts.viewport ?? { width: 400, height: 860 };
+  const videoDir = await mkdtemp(path.join(tmpdir(), "drift-live-"));
+  await mkdir(path.dirname(opts.outWebm), { recursive: true });
+
+  const browser = await chromium.launch();
+  try {
+    const dev = opts.device ? devices[opts.device] : undefined;
+    const size = dev?.viewport ?? vp;
+    const context = await browser.newContext(
+      dev ? { ...dev, recordVideo: { dir: videoDir, size } } : { viewport: vp, recordVideo: { dir: videoDir, size } },
+    );
+    if (opts.readOnly) {
+      await context.route("**/api/**", (r) => (r.request().method() === "GET" ? r.continue() : r.abort()));
+    } else if (opts.blockApi) {
+      await context.route("**/api/**", (r) => r.abort());
+    }
+    await context.addInitScript({ path: OVERLAY });
+    if (opts.initScript) await context.addInitScript(opts.initScript);
+
+    const page = await context.newPage();
+    await page.goto(opts.url, { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(1600);
+    await page.mouse.move(vp.width * 0.5, vp.height * 0.9, { steps: 1 });
+    await page.waitForTimeout(250);
+
+    for (const s of opts.steps) {
+      try {
+        switch (s.action) {
+          case "move":
+            await moveTo(page, s.selector);
+            break;
+          case "hover":
+            await moveTo(page, s.selector);
+            await page.waitForTimeout(s.dwell ?? 700);
+            break;
+          case "click":
+            await moveTo(page, s.selector);
+            await page.waitForTimeout(120);
+            await page.mouse.down();
+            await page.waitForTimeout(90);
+            await page.mouse.up();
+            await page.waitForTimeout(280);
+            break;
+          case "type":
+            await moveTo(page, s.selector);
+            await page.mouse.down();
+            await page.mouse.up();
+            await page.waitForTimeout(140);
+            await page.keyboard.type(s.text, { delay: 55 });
+            await page.waitForTimeout(220);
+            break;
+          case "wait":
+            await page.waitForTimeout(s.ms);
+            break;
+        }
+      } catch (e) {
+        const where = "selector" in s ? s.selector : s.action;
+        console.error(`  (skipped ${s.action} ${where}: ${(e as Error).message.split("\n")[0]})`);
+      }
+    }
+
+    await page.waitForTimeout(450);
+    const video = page.video();
+    await context.close();
+    if (video) {
+      const src = await video.path();
+      await rename(src, opts.outWebm).catch(async () => {
+        await cp(src, opts.outWebm);
+      });
+    }
+  } finally {
+    await browser.close();
     await rm(videoDir, { recursive: true, force: true });
   }
   return opts.outWebm;
