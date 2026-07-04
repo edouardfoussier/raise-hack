@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Acme — onboarding flow</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="components.css" />
+  <style>
+    html, body { margin: 0; background: #F9FAFB; color: var(--color-text); font-family: var(--font-family); }
+    .wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+    .panel { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-xl); width: 360px; }
+    h2 { font-size: 20px; font-weight: var(--font-weight-medium); margin: 0 0 6px; }
+    .sub { color: var(--color-text-muted); font-size: var(--font-size-sm); margin: 0 0 20px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <div class="step" data-step="1" data-active="true">
+        <h2>Ship UI without the drift</h2>
+        <p class="sub">Create your account to keep your design system consistent on every PR.</p>
+        <button class="btn btn--primary btn--block" id="flow-start">Get started</button>
+      </div>
+
+      <div class="step" data-step="2">
+        <h2>Create your account</h2>
+        <p class="sub">Just two details and you're set.</p>
+        <div class="field"><label for="flow-name">Name</label><input id="flow-name" type="text" placeholder="Ada Lovelace" /></div>
+        <div class="field"><label for="flow-email">Email</label><input id="flow-email" type="email" placeholder="ada@example.com" /></div>
+        <button class="btn btn--primary btn--block" id="flow-continue">Continue</button>
+      </div>
+
+      <div class="step" data-step="3">
+        <div class="success">
+          <div class="check">✓</div>
+          <h2>You're in</h2>
+          <p class="sub">Drift is now watching your design system.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function show(n) {
+      document.querySelectorAll(".step").forEach(function (s) {
+        s.setAttribute("data-active", s.getAttribute("data-step") === String(n) ? "true" : "false");
+      });
+    }
+    document.getElementById("flow-start").addEventListener("click", function () { show(2); });
+    document.getElementById("flow-continue").addEventListener("click", function () { show(3); });
+    show(1);
+  </script>
+</body>
+</html>
