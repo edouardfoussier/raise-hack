@@ -14,16 +14,16 @@
       "padding:12px 18px", "pointer-events:none",
       "font-family:-apple-system,BlinkMacSystemFont,Inter,system-ui,sans-serif",
       "font-size:15px", "font-weight:600", "letter-spacing:.2px",
-      "color:#ecfdf5", "text-align:center", "line-height:1.3",
+      "color:#fff7ed", "text-align:center", "line-height:1.3",
       "background:linear-gradient(180deg,rgba(6,11,15,0.97),rgba(6,11,15,0.80))",
       "-webkit-backdrop-filter:blur(6px)", "backdrop-filter:blur(6px)",
-      "border-bottom:2px solid #2dd4bf", "box-shadow:0 6px 26px rgba(0,0,0,0.45)",
+      "border-bottom:2px solid #ff5a1f", "box-shadow:0 6px 26px rgba(0,0,0,0.45)",
       "transform:translateY(-120%)", "opacity:0",
       "transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .3s ease",
     ].join(";");
     var dot = document.createElement("span");
     dot.style.cssText =
-      "flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:#2dd4bf;box-shadow:0 0 10px #2dd4bf";
+      "flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:#ff5a1f;box-shadow:0 0 10px #ff5a1f";
     var txt = document.createElement("span");
     txt.id = BAR_ID + "_txt";
     bar.appendChild(dot);

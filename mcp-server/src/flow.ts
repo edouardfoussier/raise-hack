@@ -8,6 +8,7 @@ const ASSETS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../as
 const OVERLAY = path.join(ASSETS, "cursor-overlay.js");
 const OVERLAY_TAP = path.join(ASSETS, "tap-overlay.js");
 const OVERLAY_KB = path.join(ASSETS, "keyboard-overlay.js");
+const CAPTION = path.join(ASSETS, "caption-overlay.js");
 
 export type FlowStep =
   | { action: "move"; selector: string }
@@ -15,6 +16,7 @@ export type FlowStep =
   | { action: "click"; selector: string }
   | { action: "type"; selector: string; text: string }
   | { action: "scroll"; selector?: string; by?: number; dwell?: number }
+  | { action: "caption"; text: string }
   | { action: "wait"; ms: number };
 
 export interface RecordFlowOpts {
@@ -38,7 +40,7 @@ async function smoothScroll(page: Page, by: number): Promise<void> {
   }
 }
 
-async function moveTo(page: Page, selector: string, steps = 28, timeout = 6000): Promise<void> {
+async function moveTo(page: Page, selector: string, steps = 36, timeout = 6000): Promise<void> {
   // Fail fast (6s) instead of Playwright's 30s default so a missing selector in a
   // tolerant live flow doesn't stall the whole recording.
   const loc = page.locator(selector).first();
@@ -146,6 +148,8 @@ export interface LiveFlowOpts {
   pointer?: "cursor" | "touch";
   /** Show a synthetic iOS keyboard that slides up on text-field focus. */
   keyboard?: boolean;
+  /** Inject the caption-overlay banner so `{ action: "caption" }` steps narrate the flow. */
+  captions?: boolean;
 }
 
 /** Record a flow with a visible cursor against a LIVE URL (real app), tolerant of missing selectors. */
@@ -168,6 +172,7 @@ export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
     }
     await context.addInitScript({ path: opts.pointer === "touch" ? OVERLAY_TAP : OVERLAY });
     if (opts.keyboard) await context.addInitScript({ path: OVERLAY_KB });
+    if (opts.captions) await context.addInitScript({ path: CAPTION });
     if (opts.initScript) await context.addInitScript(opts.initScript);
 
     const page = await context.newPage();
@@ -212,6 +217,10 @@ export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
               await smoothScroll(page, s.by ?? 500);
             }
             await page.waitForTimeout(s.dwell ?? 500);
+            break;
+          case "caption":
+            await page.evaluate((t) => (window as any).__cap?.(t), s.text);
+            await page.waitForTimeout(1200);
             break;
           case "wait":
             await page.waitForTimeout(s.ms);
