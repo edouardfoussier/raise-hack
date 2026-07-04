@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drift preview surface</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="components.css" />
+  <style>
+    html, body { margin: 0; }
+    body { display: grid; place-items: center; min-height: 100vh; background: #F9FAFB; }
+    /* Padding around the captured node so element screenshots have breathing room. */
+    #stage { padding: 32px; }
+  </style>
+</head>
+<body>
+  <!-- Drift screenshots the element matching the requested selector (default: #demo-button). -->
+  <div id="stage">
+    <button class="btn btn--primary" id="demo-button">Get started</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+/* Generated from tokens.json — the CSS-variable surface of the design system. */
+:root {
+  --color-brand:        #4F46E5;
+  --color-brand-hover:  #4338CA;
+  --color-on-brand:     #FFFFFF;
+  --color-surface:      #FFFFFF;
+  --color-border:       #E5E7EB;
+  --color-text:         #111827;
+  --color-text-muted:   #6B7280;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-pill: 999px;
+
+  --font-family:         'Inter', system-ui, -apple-system, sans-serif;
+  --font-size-sm:        14px;
+  --font-size-md:        15px;
+  --font-weight-regular: 400;
+  --font-weight-medium:  560;
+}

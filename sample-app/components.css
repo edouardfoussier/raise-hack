@@ -1,0 +1,42 @@
+/* Components — styled strictly from design tokens.
+   This is the file Drift watches: drift shows up when a value stops
+   coming from a token (e.g. a hardcoded padding that isn't on the scale). */
+
+.btn {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-md) var(--space-lg); /* 12px 16px — on the spacing scale */
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+
+.btn--primary {
+  background: var(--color-brand);
+  color: var(--color-on-brand);
+}
+.btn--primary:hover {
+  background: var(--color-brand-hover);
+}
+
+.btn--secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.card {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  display: grid;
+  gap: var(--space-sm);
+  max-width: 320px;
+}
+.card__title { font-family: var(--font-family); font-size: var(--font-size-md); font-weight: var(--font-weight-medium); margin: 0; }
+.card__body  { font-family: var(--font-family); font-size: var(--font-size-sm); color: var(--color-text-muted); margin: 0; }

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Acme — Design System</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="components.css" />
+  <style>
+    html, body { margin: 0; background: #F9FAFB; color: var(--color-text); font-family: var(--font-family); }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+    h1 { font-size: 22px; font-weight: var(--font-weight-medium); margin: 0 0 4px; }
+    .sub { color: var(--color-text-muted); font-size: var(--font-size-sm); margin: 0 0 32px; }
+    section { margin: 28px 0; }
+    .label { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--color-text-muted); margin: 0 0 12px; }
+    .row { display: flex; gap: var(--space-md); align-items: center; flex-wrap: wrap; }
+    .swatches { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+    .swatch { width: 56px; height: 56px; border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Acme Design System</h1>
+    <p class="sub">A tiny token-driven system. Drift keeps it consistent.</p>
+
+    <section>
+      <p class="label">Buttons</p>
+      <div class="row">
+        <button class="btn btn--primary" id="demo-button">Get started</button>
+        <button class="btn btn--secondary">Learn more</button>
+      </div>
+    </section>
+
+    <section>
+      <p class="label">Card</p>
+      <div class="card">
+        <p class="card__title">Consistent by construction</p>
+        <p class="card__body">Every value here traces back to a design token.</p>
+      </div>
+    </section>
+
+    <section>
+      <p class="label">Brand color</p>
+      <div class="swatches">
+        <div class="swatch" style="background: var(--color-brand)"></div>
+        <div class="swatch" style="background: var(--color-brand-hover)"></div>
+        <div class="swatch" style="background: var(--color-surface)"></div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
