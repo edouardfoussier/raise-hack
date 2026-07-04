@@ -22,7 +22,7 @@ export function HeroPreview() {
       {/* Player */}
       <div className="group/poster p-3">
         <VideoPoster
-          color="#2ee6cf"
+          color="#ff5a1f"
           durationSec={62}
           playSize="lg"
           className="aspect-video w-full rounded-xl"

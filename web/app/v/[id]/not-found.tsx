@@ -23,7 +23,7 @@ export default function ShareNotFound() {
       </header>
 
       <main className="relative grid flex-1 place-items-center px-4 py-16">
-        <div className="glow-teal pointer-events-none absolute inset-x-0 top-0 h-64" />
+        <div className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-64" />
         <div className="bg-grid pointer-events-none absolute inset-0 opacity-[0.2] [mask-image:radial-gradient(70%_50%_at_50%_0%,black,transparent)]" />
 
         <div className="relative flex max-w-md flex-col items-center text-center">

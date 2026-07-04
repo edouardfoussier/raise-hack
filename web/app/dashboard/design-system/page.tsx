@@ -95,7 +95,7 @@ export default function DesignSystemPage() {
 
       {/* Connected-app banner */}
       <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
-        <div className="glow-teal pointer-events-none absolute inset-x-0 top-0 h-24" />
+        <div className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-24" />
         <div className="relative flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <span
@@ -132,7 +132,7 @@ export default function DesignSystemPage() {
       {/* Colors */}
       <DsSection
         title="Color & tokens"
-        description="One near-black canvas, one electric-teal accent. Click any token to copy its value."
+        description="One near-black canvas, one flame accent. Click any token to copy its value."
       >
         <div className="space-y-5">
           <div className="flex flex-col gap-4 rounded-xl border border-primary/25 bg-primary/[0.06] p-4 sm:flex-row sm:items-center">
@@ -140,12 +140,12 @@ export default function DesignSystemPage() {
             <div className="space-y-1">
               <p className="text-sm font-medium">Primary — the single accent</p>
               <p className="text-xs text-muted-foreground">
-                Every interactive highlight uses this electric teal. Everything
+                Every interactive highlight uses this flame accent. Everything
                 else stays calm and neutral.
               </p>
               <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1 font-mono text-xs text-muted-foreground">
-                <span>#2ee6cf</span>
-                <span>oklch(0.83 0.14 183)</span>
+                <span>#ff5a1f</span>
+                <span>oklch(0.682 0.211 37.4)</span>
               </div>
             </div>
           </div>

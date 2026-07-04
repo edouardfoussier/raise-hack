@@ -214,7 +214,7 @@ export function ComponentGallery({ avatars }: { avatars: string[] }) {
                   </button>
                 }
               />
-              <TooltipContent>Base UI tooltip, teal-themed</TooltipContent>
+              <TooltipContent>Base UI tooltip, flame-themed</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger
@@ -249,7 +249,7 @@ export function ComponentGallery({ avatars }: { avatars: string[] }) {
             <CardContent>
               <div className="group/poster">
                 <VideoPoster
-                  color="#2ee6cf"
+                  color="#ff5a1f"
                   durationSec={62}
                   className="aspect-video w-full rounded-lg"
                 />

@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 export function ShareCTA() {
   return (
     <section className="relative overflow-hidden rounded-3xl border border-border bg-card p-6 sm:p-10">
-      <div className="glow-teal pointer-events-none absolute inset-x-0 top-0 h-40" />
+      <div className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-40" />
       <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="max-w-xl space-y-3">
           <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">

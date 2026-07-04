@@ -31,7 +31,7 @@ export const DEMO_USER: AppUser = {
   id: "user_demo",
   name: "Demo User",
   email: "demo@getscenar.io",
-  imageUrl: avatarDataUri("DU", "#2ee6cf", "#16a3b8"),
+  imageUrl: avatarDataUri("DU", "#ff8a4d", "#ff5a1f"),
   isDemo: true,
 };
 
@@ -43,7 +43,7 @@ const projects: Project[] = [
     appUrl: "https://app.getscenar.io",
     framework: "Next.js",
     lastDeployedAt: "2026-06-28T14:22:00.000Z",
-    thumbnailColor: "#2ee6cf",
+    thumbnailColor: "#ff5a1f",
     description:
       "Marketing site and account dashboard for Scenario — the surface users land on to view and share generated demos.",
   },
@@ -65,7 +65,7 @@ const videos: Video[] = [
     id: "vid_onboarding",
     title: "Onboarding in 60 seconds",
     projectId: "prj_scenario_web",
-    thumbnailColor: "#2ee6cf",
+    thumbnailColor: "#ff5a1f",
     durationSec: 62,
     status: "ready",
     createdAt: "2026-06-29T16:40:00.000Z",

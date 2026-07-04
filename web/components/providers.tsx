@@ -5,11 +5,11 @@ import { USE_CLERK } from "@/lib/env";
 
 /**
  * Dark appearance for Clerk's hosted components so a real sign-in matches the
- * app's premium dark/teal theme. Only applied when Clerk is actually mounted.
+ * app's premium dark/flame theme. Only applied when Clerk is actually mounted.
  */
 const clerkAppearance = {
   variables: {
-    colorPrimary: "#2ee6cf",
+    colorPrimary: "#ff5a1f",
     colorBackground: "#14171a",
     colorText: "#eef2f1",
     colorTextSecondary: "#9aa4a8",

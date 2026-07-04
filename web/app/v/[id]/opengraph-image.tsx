@@ -7,7 +7,7 @@ export const alt = "A deterministic product demo generated with Scenario";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const TEAL = "#2ee6cf";
+const ACCENT = "#ff5a1f";
 const BG = "#0b0d10";
 const TEXT = "#f4f7f7";
 const MUTED = "#9aa6ad";
@@ -50,7 +50,7 @@ export default async function OpengraphImage({ params }: Props) {
           padding: "72px",
           background: BG,
           backgroundImage:
-            "radial-gradient(900px 520px at 12% -12%, rgba(46,230,207,0.30), transparent 60%), radial-gradient(760px 520px at 112% 120%, rgba(46,230,207,0.12), transparent 55%)",
+            "radial-gradient(900px 520px at 12% -12%, rgba(255,90,31,0.30), transparent 60%), radial-gradient(760px 520px at 112% 120%, rgba(255,90,31,0.12), transparent 55%)",
           color: TEXT,
           fontFamily: "sans-serif",
         }}
@@ -65,8 +65,8 @@ export default async function OpengraphImage({ params }: Props) {
               width: 64,
               height: 64,
               borderRadius: 18,
-              background: TEAL,
-              boxShadow: "0 0 44px rgba(46,230,207,0.55)",
+              background: ACCENT,
+              boxShadow: "0 0 44px rgba(255,90,31,0.55)",
             }}
           >
             <svg width="30" height="30" viewBox="0 0 24 24">
@@ -100,7 +100,7 @@ export default async function OpengraphImage({ params }: Props) {
                   width: 10,
                   height: 10,
                   borderRadius: 999,
-                  background: TEAL,
+                  background: ACCENT,
                 }}
               />
               Deterministic product demo
@@ -162,7 +162,7 @@ export default async function OpengraphImage({ params }: Props) {
                     width: 8,
                     height: 8,
                     borderRadius: 999,
-                    background: TEAL,
+                    background: ACCENT,
                   }}
                 />
                 {chip}

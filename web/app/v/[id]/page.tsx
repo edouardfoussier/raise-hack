@@ -101,7 +101,7 @@ export default async function SharePage({ params }: PageProps) {
       </header>
 
       <main className="relative flex-1">
-        <div className="glow-teal pointer-events-none absolute inset-x-0 top-0 h-64" />
+        <div className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-64" />
         <div className="bg-grid pointer-events-none absolute inset-x-0 top-0 h-64 opacity-[0.25] [mask-image:radial-gradient(80%_60%_at_50%_0%,black,transparent)]" />
 
         <article className="relative mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">

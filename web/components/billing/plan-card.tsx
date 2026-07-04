@@ -31,7 +31,7 @@ export function PlanCard({
       {recommended ? (
         <div
           aria-hidden="true"
-          className="glow-teal pointer-events-none absolute inset-x-0 top-0 h-24 opacity-60"
+          className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-24 opacity-60"
         />
       ) : null}
 
