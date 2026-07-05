@@ -279,8 +279,8 @@ export default function Home() {
               <div className="overflow-hidden rounded-2xl border border-border/80 bg-card/80 shadow-xl shadow-black/20 ring-1 ring-white/5">
                 <video
                   className="aspect-video w-full bg-[#0b0d10] object-cover"
-                  src="/videos/onboarding-demo.mp4"
-                  poster="/videos/onboarding-demo.jpg"
+                  src="/videos/deja-catalogue.mp4"
+                  poster="/videos/deja-catalogue.jpg"
                   autoPlay
                   muted
                   loop
