@@ -4,17 +4,15 @@ import { Logo } from "@/components/logo";
 import { GithubIcon } from "@/components/icons";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
-import { getFeaturedShareId } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
   { label: "How it works", href: "/#how-it-works" },
   { label: "Features", href: "/#features" },
+  { label: "Demos", href: "/#demos" },
 ];
 
 export function SiteHeader() {
-  const featured = getFeaturedShareId();
-
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
@@ -32,12 +30,6 @@ export function SiteHeader() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href={`/v/${featured}`}
-            className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Demo
-          </Link>
         </nav>
 
         <div className="flex items-center gap-2">

@@ -1,10 +1,8 @@
 import { Captions, Eye } from "lucide-react";
 
-import { VideoPoster } from "@/components/video-poster";
-
 /**
- * Stylized "browser window" showing a Diffender-generated demo, used as the hero
- * visual. Purely presentational.
+ * Hero "browser window" showing a REAL Diffender-generated demo — a deja-bu
+ * reception walkthrough — autoplaying muted on loop. Purely presentational.
  */
 export function HeroPreview() {
   return (
@@ -19,20 +17,27 @@ export function HeroPreview() {
         </div>
       </div>
 
-      {/* Player */}
-      <div className="group/poster p-3">
-        <VideoPoster
-          color="#ff5a1f"
-          durationSec={62}
-          playSize="lg"
-          className="aspect-video w-full rounded-xl"
+      {/* Player — a real generated demo, autoplay muted loop. */}
+      <div className="p-3">
+        <video
+          className="aspect-video w-full rounded-xl bg-[#0b0d10] object-cover"
+          src="/videos/deja-reception.mp4"
+          poster="/videos/deja-reception.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-label="A Diffender-generated demo of a delivery-reception flow"
         />
 
-        {/* Faux caption + metadata bar */}
+        {/* Caption + metadata bar */}
         <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 text-sm text-foreground/90">
             <Captions className="size-4 text-primary" />
-            <span className="font-medium">“Connect your repo, then describe the flow…”</span>
+            <span className="font-medium">
+              “Reception recorded — stock updated 60 → 72.”
+            </span>
           </div>
           <div className="flex items-center gap-2 self-start rounded-full border border-border/70 bg-background/60 px-2.5 py-1 text-xs text-muted-foreground">
             <Eye className="size-3.5" />

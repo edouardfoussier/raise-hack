@@ -30,8 +30,8 @@ export function SiteFooter() {
           <div className="max-w-xs space-y-4">
             <Logo />
             <p className="text-sm text-muted-foreground">
-              Deterministic, shareable demo videos of your web app — generated
-              from your real components.
+              An AI-native design system — detect drift, reconcile changes, and
+              keep designers and engineers aligned on every commit.
             </p>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Link

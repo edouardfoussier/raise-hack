@@ -18,15 +18,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://diffender.com"),
   title: {
-    default: "Diffender — Ship the demo, not just the code.",
+    default: "Diffender — Keep your product on-brand, every commit.",
     template: "%s · Diffender",
   },
   description:
-    "Diffender auto-generates polished, deterministic demo videos of your web app — captions, voice-over, intro/outro and a shareable link, straight from your real components.",
+    "Diffender is an AI-native design system that reasons about consistency across your product's visual and interactive surface — extracting your real design system, detecting drift, and proposing reconciliation to keep designers and engineers aligned.",
   openGraph: {
-    title: "Diffender — Ship the demo, not just the code.",
+    title: "Diffender — Keep your product on-brand, every commit.",
     description:
-      "Deterministic, shareable demo videos of your web app, generated from your real components.",
+      "An AI-native design system: extract your real tokens, detect drift on every commit, and reconcile changes — reasoning in your design tokens, not pixels.",
     url: "https://diffender.com",
     siteName: "Diffender",
     type: "website",
