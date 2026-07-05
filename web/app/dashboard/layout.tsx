@@ -4,6 +4,7 @@ import { ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { SidebarNav } from "@/components/dashboard/sidebar-nav";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
+import { ProjectSwitcher } from "@/components/dashboard/project-switcher";
 import { UserMenu } from "@/components/dashboard/user-menu";
 import { LogoutButton } from "@/components/dashboard/logout-button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -11,6 +12,10 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { DEMO_USER } from "@/lib/mock-data";
+import {
+  getCurrentProjectId,
+  getSwitcherProjects,
+} from "@/lib/projects";
 import { cn } from "@/lib/utils";
 
 /**
@@ -47,6 +52,8 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const user = (await getCurrentUser()) ?? DEMO_USER;
+  const projects = getSwitcherProjects();
+  const currentProjectId = await getCurrentProjectId();
 
   return (
     <div className="min-h-dvh">
@@ -74,9 +81,10 @@ export default async function DashboardLayout({
       <div className="flex min-h-dvh flex-col md:pl-64">
         <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border/70 bg-background/70 px-4 backdrop-blur-xl sm:px-8">
           <MobileNav />
-          <Link href="/" aria-label="Scenario home" className="md:hidden">
+          <Link href="/" aria-label="Diffender home" className="md:hidden">
             <Logo showWordmark={false} />
           </Link>
+          <ProjectSwitcher projects={projects} currentId={currentProjectId} />
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <Badge variant="outline" className="hidden gap-1.5 sm:inline-flex">
               <ShieldCheck className="size-3.5 text-primary" />

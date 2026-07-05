@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { CreditCard, LogOut, Settings } from "lucide-react";
+import { Boxes, LogOut, Settings } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -77,12 +77,12 @@ export function UserMenu({ user }: { user: AppUser }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem render={<Link href="/dashboard/assets" />}>
-          <Settings className="text-muted-foreground" />
+          <Boxes className="text-muted-foreground" />
           Account & assets
         </DropdownMenuItem>
-        <DropdownMenuItem render={<Link href="/dashboard/billing" />}>
-          <CreditCard className="text-muted-foreground" />
-          Billing
+        <DropdownMenuItem render={<Link href="/dashboard/settings" />}>
+          <Settings className="text-muted-foreground" />
+          Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleDemoSignOut}>
