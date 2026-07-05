@@ -27,6 +27,13 @@ type GenerateBody = {
   goal?: string;
   captions?: boolean;
   voice?: boolean;
+  /** Edited voice-over script from the wizard — narrated verbatim when present. */
+  script?: string;
+  /**
+   * Chosen Gradium voice id. The seed "Edouard (cloned)" voice sends the sentinel
+   * "default" (or nothing), meaning "use the server's configured GRADIUM_VOICE_ID".
+   */
+  voiceId?: string;
 };
 
 /** Repo root = one level above web/ (Next dev cwd), overridable for other setups. */
@@ -141,8 +148,20 @@ export async function POST(request: Request): Promise<Response> {
 
   if (voice) {
     env.DEMO_VOICE = "1";
-    const voiceId = process.env.GRADIUM_VOICE_ID?.trim();
-    if (voiceId) env.GRADIUM_VOICE_ID = voiceId;
+    const serverVoiceId = process.env.GRADIUM_VOICE_ID?.trim();
+    if (serverVoiceId) env.GRADIUM_VOICE_ID = serverVoiceId;
+
+    // A chosen voice id from the Assets picker overrides the account default,
+    // EXCEPT the "default" sentinel which maps to the seed "Edouard (cloned)"
+    // voice (whose real id stays server-side in GRADIUM_VOICE_ID).
+    const chosenVoiceId = body.voiceId?.trim();
+    if (chosenVoiceId && chosenVoiceId !== "default") {
+      env.DEMO_VOICE_ID = chosenVoiceId;
+    }
+
+    // The edited voice-over script is narrated verbatim instead of the captions.
+    const script = body.script?.trim();
+    if (script) env.DEMO_SCRIPT = script;
   } else {
     delete env.DEMO_VOICE;
   }
@@ -186,5 +205,7 @@ export async function POST(request: Request): Promise<Response> {
     goal,
     captions,
     voice,
+    voiceId: body.voiceId?.trim() || "default",
+    scripted: Boolean(body.script?.trim()),
   });
 }

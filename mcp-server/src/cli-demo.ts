@@ -18,6 +18,9 @@
  *   DEMO_INIT    — JS source run before each page loads (e.g. seed an auth token in localStorage)
  *   DEMO_READONLY — "1" to allow GET /api but abort writes (never mutates the target app)
  *   DEMO_VOICE   — "1" to narrate the demo with a Gradium voice-over (uses GRADIUM_VOICE_ID)
+ *   DEMO_VOICE_ID — override the Gradium voice id used for the narration (per-request pick)
+ *   DEMO_SCRIPT  — the exact voice-over text to narrate (edited in the web wizard). When
+ *                  present it replaces the auto-caption narration; captions stay independent.
  */
 import "./env.js";
 import path from "node:path";
@@ -64,6 +67,9 @@ const EXTRA_HEADERS = parseHeaders();
 const INIT_SCRIPT = process.env.DEMO_INIT?.trim() || undefined;
 const READ_ONLY = process.env.DEMO_READONLY === "1";
 const VOICE = process.env.DEMO_VOICE === "1";
+// Optional edited voice-over script from the web wizard. When set, it is
+// narrated verbatim instead of the auto-generated captions.
+const SCRIPT = process.env.DEMO_SCRIPT?.trim() || undefined;
 
 /** A short human phrase describing a step, for the captioning prompt. */
 function describe(s: FlowStep): string {
@@ -181,8 +187,14 @@ async function main(): Promise<void> {
   // ── Step E — VOICE-OVER (optional, Gradium narration muxed over the mp4) ──
   if (VOICE) {
     try {
-      console.log(`\n⧗ narrating with Gradium voice (GRADIUM_VOICE_ID)…`);
-      await narrateOver(result.mp4Path, captions, (result.introMs ?? 2200) / 1000);
+      if (SCRIPT) {
+        console.log(`\n⧗ narrating edited script with Gradium voice…`);
+      } else {
+        console.log(`\n⧗ narrating captions with Gradium voice…`);
+      }
+      // An edited wizard script (DEMO_SCRIPT) is narrated verbatim; otherwise
+      // fall back to the auto-generated captions joined into a sentence.
+      await narrateOver(result.mp4Path, captions, (result.introMs ?? 2200) / 1000, SCRIPT);
       console.log(`✓ voice-over muxed into final.mp4`);
     } catch (e) {
       console.log(`  ⚠ voice-over skipped — ${(e as Error).message.split("\n")[0]}`);
@@ -195,17 +207,27 @@ async function main(): Promise<void> {
 }
 
 /**
- * Synthesize a single narration WAV from the ordered captions and mux it over the
- * finished mp4 (in place). A `leadIn` of silence is prepended so the voice starts
- * roughly when the intro card ends and the real flow begins. Captions are joined
- * into one natural sentence so the clone reads them as a flowing voice-over.
+ * Synthesize a single narration WAV and mux it over the finished mp4 (in place).
+ * A `leadIn` of silence is prepended so the voice starts roughly when the intro
+ * card ends and the real flow begins.
+ *
+ * When `scriptOverride` is provided (the edited voice-over from the web wizard)
+ * it is narrated verbatim. Otherwise the ordered captions are joined into one
+ * natural sentence so the clone reads them as a flowing voice-over.
  */
-async function narrateOver(mp4Path: string, captions: string[], leadIn: number): Promise<void> {
-  const script = captions
-    .map((c) => c.trim().replace(/[.]+$/, ""))
-    .filter(Boolean)
-    .join(". ")
-    .concat(".");
+async function narrateOver(
+  mp4Path: string,
+  captions: string[],
+  leadIn: number,
+  scriptOverride?: string,
+): Promise<void> {
+  const script = (scriptOverride?.trim()
+    ? scriptOverride.trim()
+    : captions
+        .map((c) => c.trim().replace(/[.]+$/, ""))
+        .filter(Boolean)
+        .join(". ")
+        .concat("."));
   if (!script) return;
 
   const work = await mkdtemp(path.join(tmpdir(), "scenario-vo-"));

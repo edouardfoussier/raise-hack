@@ -19,8 +19,20 @@ const GRADIUM_BASE = "https://api.gradium.ai";
 const TTS_URL = `${GRADIUM_BASE}/api/post/speech/tts`;
 const VOICES_URL = `${GRADIUM_BASE}/api/voices/`;
 
-// Edouard's cloned Gradium voice (override with GRADIUM_VOICE_ID).
-const VOICE_ID = process.env.GRADIUM_VOICE_ID || "5gI6AfyZkgLWq5aL";
+/**
+ * The configured cloned Gradium voice. `DEMO_VOICE_ID` (a per-request override
+ * chosen in the web wizard) wins over the account default `GRADIUM_VOICE_ID`,
+ * which in turn wins over the hard-coded flagship id. Read lazily so a value
+ * layered into the process env after import (e.g. by the /api/generate spawn)
+ * is still honored.
+ */
+function configuredVoiceId(): string {
+  return (
+    process.env.DEMO_VOICE_ID?.trim() ||
+    process.env.GRADIUM_VOICE_ID?.trim() ||
+    "5gI6AfyZkgLWq5aL"
+  );
+}
 
 function apiKey(): string {
   const key = process.env.GRADIUM_API_KEY;
@@ -88,7 +100,7 @@ async function pickEnglishVoiceId(): Promise<string> {
 export async function ttsToFile(text: string, outPath: string): Promise<void> {
   let buf: Buffer;
   try {
-    buf = await ttsOnce(text, VOICE_ID);
+    buf = await ttsOnce(text, configuredVoiceId());
   } catch (err) {
     // Flagship id may not exist on this account — discover one and retry.
     const voiceId = await pickEnglishVoiceId();
