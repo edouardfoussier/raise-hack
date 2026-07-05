@@ -12,6 +12,7 @@ import { captureInteractionFrames } from "./capture.js";
 import { getVerdict, getMotionVerdict } from "./vlm.js";
 import { buildReportHtml, writeAndOpenReport, type Visual } from "./report.js";
 import { reviewFlow, type FlowDef } from "./flow-review.js";
+import { extractDesignSystem } from "./extract.js";
 import type { DriftVerdict } from "./types.js";
 
 type Content =
@@ -279,6 +280,43 @@ server.registerTool(
         content: [{ type: "text", text: `Drift flow failed: ${err instanceof Error ? err.message : String(err)}` }],
       };
     }
+  },
+);
+
+server.registerTool(
+  "extract_design_system",
+  {
+    title: "Scenario — extract a live design system",
+    description:
+      "Connect a running app to Scenario by extracting its LIVE design system from a URL. Drives a headless browser " +
+      "over the page (via dembrandt) and returns the design system a coding agent would show: brand colors (hex + role), " +
+      "the typography scale (font families + sizes), the spacing scale, motion tokens, breakpoints, and a component count. " +
+      "These are the same tokens Drift then reviews your edits against. Use to onboard an app (\"connect your app from your " +
+      "coding agent\") before reviewing changes with drift_review / drift_flow.",
+    inputSchema: {
+      url: z.string().describe("URL of the running app to extract (a full URL, or a bare domain like 'thesphinx.ai')."),
+      dark: z.boolean().optional().describe("Extract colors from the site's dark mode."),
+      slow: z.boolean().optional().describe("Use 3x longer timeouts for slow-loading sites."),
+    },
+  },
+  async ({ url, dark, slow }) => {
+    // dembrandt writes output/<domain>/*.json relative to cwd; run it from the
+    // mcp-server dir (where this file lives) so output lands beside the server.
+    const cwd = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+    const result = await extractDesignSystem(url, { cwd, dark, slow });
+    if (!result.ok) {
+      return { isError: true, content: [{ type: "text", text: `Scenario extract: ${result.error}` }] };
+    }
+    const content: Content[] = [
+      { type: "text", text: result.summary! },
+      {
+        type: "text",
+        text:
+          "Report this design-system summary to the user, framed as \"this is your app's live design system in " +
+          "Scenario — edit a component, then /drift to review your change against these tokens.\"",
+      },
+    ];
+    return { content };
   },
 );
 

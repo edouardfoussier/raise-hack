@@ -6,3 +6,4 @@ dist/
 out/
 .drift-cache/
 .claude/
+mcp-server/output/
