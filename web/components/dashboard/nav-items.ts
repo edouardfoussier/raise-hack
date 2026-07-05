@@ -3,6 +3,7 @@ import {
   CreditCard,
   Film,
   FolderGit2,
+  GitCompareArrows,
   LayoutDashboard,
   Palette,
   Radio,
@@ -20,6 +21,7 @@ export type NavItem = {
 export const dashboardNav: NavItem[] = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard, exact: true },
   { label: "Projects", href: "/dashboard/projects", icon: FolderGit2 },
+  { label: "Diff Render", href: "/dashboard/diff-render", icon: GitCompareArrows },
   { label: "Videos", href: "/dashboard/videos", icon: Film },
   { label: "Assets", href: "/dashboard/assets", icon: Boxes },
   { label: "Channels", href: "/dashboard/channels", icon: Radio },

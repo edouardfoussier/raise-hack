@@ -1,14 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, Film, Globe } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Film,
+  Globe,
+  ShieldCheck,
+} from "lucide-react";
 
 import { GenerateDemoButton } from "@/components/dashboard/generate-demo-button";
 import { VideoCard } from "@/components/videos/video-card";
+import { CommitTimeline } from "@/components/reviews/commit-timeline";
 import { GithubIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getProjectById, getVideos } from "@/lib/mock-data";
+import {
+  getCommitsForProject,
+  regressionCountForProject,
+} from "@/lib/reviews";
 import { formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +51,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const videos = getVideos()
     .filter((v) => v.projectId === project.id)
     .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+
+  const commits = getCommitsForProject(project.id);
+  const regressions = regressionCountForProject(project.id);
 
   return (
     <div className="space-y-8">
@@ -106,6 +120,37 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
+
+      {commits.length > 0 ? (
+        <section className="space-y-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="grid size-9 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+                <ShieldCheck className="size-4" />
+              </span>
+              <div>
+                <h2 className="font-heading text-lg font-medium">
+                  Commit history
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  At every commit, Design Guardrails watches your design system.
+                </p>
+              </div>
+            </div>
+            {regressions > 0 ? (
+              <Badge
+                variant="outline"
+                className="gap-1.5 self-start border-destructive/40 text-destructive"
+              >
+                <ShieldCheck className="size-3.5" />
+                {regressions} regression{regressions === 1 ? "" : "s"} flagged
+              </Badge>
+            ) : null}
+          </div>
+
+          <CommitTimeline commits={commits} />
+        </section>
+      ) : null}
 
       <section className="space-y-4">
         <h2 className="font-heading text-lg font-medium">Demos</h2>
