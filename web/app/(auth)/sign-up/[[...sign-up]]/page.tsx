@@ -18,9 +18,30 @@ export const metadata: Metadata = {
   title: "Sign up",
 };
 
+const appearance = {
+  elements: {
+    rootBox: "w-full",
+    card: "bg-card border border-border shadow-none rounded-2xl",
+    headerTitle: "font-heading",
+    socialButtonsBlockButton:
+      "border-border bg-background hover:bg-muted/60 text-foreground",
+    formButtonPrimary:
+      "bg-primary text-primary-foreground hover:bg-primary/90 shadow-none",
+    footerActionLink: "text-primary hover:text-primary/90",
+  },
+} as const;
+
 export default function SignUpPage() {
   if (USE_CLERK) {
-    return <SignUp />;
+    return (
+      <div className="flex w-full flex-col items-center">
+        <SignUp
+          appearance={appearance}
+          fallbackRedirectUrl="/dashboard"
+          signInUrl="/sign-in"
+        />
+      </div>
+    );
   }
 
   return (
@@ -40,10 +61,6 @@ export default function SignUpPage() {
           <GithubIcon className="size-4" />
           Continue with GitHub
         </Link>
-        <p className="text-center text-xs text-muted-foreground">
-          Demo mode is on — no account required. You&apos;ll continue as a
-          deterministic demo user.
-        </p>
         <p className="text-center text-sm text-muted-foreground">
           Already have an account?{" "}
           <Link

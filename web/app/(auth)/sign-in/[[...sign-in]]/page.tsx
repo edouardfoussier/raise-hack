@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SignIn } from "@clerk/nextjs";
-import { ArrowRight } from "lucide-react";
 
 import { GithubIcon } from "@/components/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -14,18 +12,45 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { USE_CLERK } from "@/lib/env";
-import { DEMO_USER } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Sign in",
 };
 
+/**
+ * Themed appearance so Clerk's hosted <SignIn> matches Diffender's flame theme.
+ * "Sign in with GitHub" is the primary social connection (configured on the
+ * Clerk instance); the appearance just makes the buttons feel native.
+ */
+const appearance = {
+  elements: {
+    rootBox: "w-full",
+    card: "bg-card border border-border shadow-none rounded-2xl",
+    headerTitle: "font-heading",
+    socialButtonsBlockButton:
+      "border-border bg-background hover:bg-muted/60 text-foreground",
+    formButtonPrimary:
+      "bg-primary text-primary-foreground hover:bg-primary/90 shadow-none",
+    footerActionLink: "text-primary hover:text-primary/90",
+  },
+} as const;
+
 export default function SignInPage() {
+  // Real auth: Clerk drives the flow (GitHub OAuth primary, email fallback).
   if (USE_CLERK) {
-    return <SignIn />;
+    return (
+      <div className="flex w-full flex-col items-center">
+        <SignIn
+          appearance={appearance}
+          fallbackRedirectUrl="/dashboard"
+          signUpUrl="/sign-up"
+        />
+      </div>
+    );
   }
 
+  // No Clerk keys configured — offer a direct GitHub sign-in entry point.
   return (
     <Card className="w-full max-w-sm rounded-2xl">
       <CardHeader className="items-center text-center">
@@ -41,36 +66,16 @@ export default function SignInPage() {
           )}
         >
           <GithubIcon className="size-4" />
-          Continue with GitHub
+          Sign in with GitHub
         </Link>
-
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          <span className="h-px flex-1 bg-border" />
-          demo mode
-          <span className="h-px flex-1 bg-border" />
-        </div>
-
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 p-3 transition-colors hover:border-primary/40"
-        >
-          <Avatar className="size-9">
-            <AvatarImage src={DEMO_USER.imageUrl} alt="" />
-            <AvatarFallback>DU</AvatarFallback>
-          </Avatar>
-          <div className="min-w-0 text-left text-sm">
-            <p className="font-medium leading-tight">{DEMO_USER.name}</p>
-            <p className="truncate text-xs text-muted-foreground">
-              {DEMO_USER.email}
-            </p>
-          </div>
-          <ArrowRight className="ml-auto size-4 text-muted-foreground" />
-        </Link>
-
-        <p className="text-center text-xs text-muted-foreground">
-          You&apos;ll be signed in as a deterministic demo user. Add Clerk keys
-          and set <span className="font-mono">NEXT_PUBLIC_DEMO_MODE=0</span> to
-          enable real GitHub OAuth.
+        <p className="text-center text-sm text-muted-foreground">
+          New to Diffender?{" "}
+          <Link
+            href="/sign-up"
+            className="font-medium text-primary hover:underline"
+          >
+            Create an account
+          </Link>
         </p>
       </CardContent>
     </Card>
