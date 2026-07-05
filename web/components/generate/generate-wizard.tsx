@@ -8,8 +8,10 @@ import {
   Clapperboard,
   Download,
   LoaderCircle,
+  Monitor,
   RotateCcw,
   ScrollText,
+  Smartphone,
   Sparkles,
   UserRound,
   Wand2,
@@ -32,16 +34,15 @@ const DEFAULT_GOAL =
   "Open the Catalogue and search for Accent Ginger, then open the product.";
 
 type VideoType = "demo";
+type Device = "mobile" | "desktop";
 
 type GenerateResponse = {
   id: string;
   videoUrl: string;
   gifUrl?: string;
+  device?: Device;
   error?: string;
 };
-
-const DURATIONS = [20, 40, 60] as const;
-type Duration = (typeof DURATIONS)[number];
 
 const STEPS = [
   { key: "source", label: "Source", icon: Clapperboard },
@@ -61,6 +62,7 @@ export function GenerateWizard() {
   // Step 1 — Source
   const [url, setUrl] = useState(DEFAULT_URL);
   const [videoType, setVideoType] = useState<VideoType>("demo");
+  const [device, setDevice] = useState<Device>("mobile");
 
   // Step 2 — Voice-over
   const [voiceOn, setVoiceOn] = useState(true);
@@ -70,9 +72,8 @@ export function GenerateWizard() {
   const [avatarOn, setAvatarOn] = useState(false);
   const [avatarPhotoId, setAvatarPhotoId] = useState<string | null>(null);
 
-  // Step 4 — Script
+  // Step 4 — Script (per-step lines; length adapts to the flow)
   const [goal, setGoal] = useState(DEFAULT_GOAL);
-  const [duration, setDuration] = useState<Duration>(40);
   const [script, setScript] = useState("");
   const [scriptLoading, setScriptLoading] = useState(false);
 
@@ -124,7 +125,6 @@ export function GenerateWizard() {
         body: JSON.stringify({
           url: url.trim(),
           goal: goal.trim(),
-          durationSec: duration,
         }),
       });
       const data = (await res.json()) as { script?: string; error?: string };
@@ -132,8 +132,8 @@ export function GenerateWizard() {
         throw new Error(data.error || `Request failed (${res.status})`);
       }
       setScript(data.script);
-      toast.success("Script drafted", {
-        description: "Edit it below before you generate.",
+      toast.success("Narration drafted", {
+        description: "One line per step — edit them below before you generate.",
       });
     } catch (e) {
       toast.error("Couldn't draft a script", {
@@ -159,6 +159,7 @@ export function GenerateWizard() {
         body: JSON.stringify({
           url: url.trim(),
           goal: goal.trim(),
+          device,
           captions: true,
           voice: voiceOn,
           voiceId: voiceOn ? selectedVoice?.voiceId ?? "default" : undefined,
@@ -200,6 +201,8 @@ export function GenerateWizard() {
             setUrl={setUrl}
             videoType={videoType}
             setVideoType={setVideoType}
+            device={device}
+            setDevice={setDevice}
           />
         )}
 
@@ -226,8 +229,6 @@ export function GenerateWizard() {
           <ScriptStep
             goal={goal}
             setGoal={setGoal}
-            duration={duration}
-            setDuration={setDuration}
             script={script}
             setScript={setScript}
             loading={scriptLoading}
@@ -239,6 +240,7 @@ export function GenerateWizard() {
           <GenerateStep
             url={url}
             goal={goal}
+            device={device}
             voiceOn={voiceOn}
             voiceName={selectedVoice?.name}
             avatarOn={avatarOn}
@@ -348,12 +350,30 @@ function SourceStep({
   setUrl,
   videoType,
   setVideoType,
+  device,
+  setDevice,
 }: {
   url: string;
   setUrl: (v: string) => void;
   videoType: VideoType;
   setVideoType: (v: VideoType) => void;
+  device: Device;
+  setDevice: (v: Device) => void;
 }) {
+  const DEVICES: { key: Device; label: string; desc: string; icon: typeof Smartphone }[] = [
+    {
+      key: "mobile",
+      label: "Mobile",
+      desc: "iPhone portrait · touch taps · on-screen keyboard.",
+      icon: Smartphone,
+    },
+    {
+      key: "desktop",
+      label: "Desktop",
+      desc: "Landscape viewport · arrow cursor.",
+      icon: Monitor,
+    },
+  ];
   const VIDEO_TYPES: {
     key: VideoType;
     label: string;
@@ -389,6 +409,59 @@ function SourceStep({
         <p className="text-xs text-muted-foreground">
           Prefilled with the déjà-bu preview — a safe read-only target.
         </p>
+      </div>
+
+      <div className="space-y-2">
+        <span className="text-xs font-medium text-muted-foreground">Device</span>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {DEVICES.map((d) => {
+            const selected = device === d.key;
+            const Icon = d.icon;
+            return (
+              <button
+                key={d.key}
+                type="button"
+                onClick={() => setDevice(d.key)}
+                aria-pressed={selected}
+                className={cn(
+                  "flex items-start gap-3 rounded-xl border p-3 text-left transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  selected
+                    ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20"
+                    : "border-border bg-background/40 hover:border-primary/30",
+                )}
+              >
+                <span
+                  className={cn(
+                    "grid size-8 shrink-0 place-items-center rounded-lg ring-1",
+                    selected
+                      ? "bg-primary/10 text-primary ring-primary/20"
+                      : "bg-muted text-muted-foreground ring-border",
+                  )}
+                >
+                  <Icon className="size-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-medium">{d.label}</span>
+                    <span
+                      className={cn(
+                        "grid size-4 shrink-0 place-items-center rounded-full border",
+                        selected
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-muted-foreground/40",
+                      )}
+                    >
+                      {selected && <Check className="size-2.5" />}
+                    </span>
+                  </span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    {d.desc}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="space-y-2">
@@ -486,8 +559,6 @@ function VoiceStep({
 function ScriptStep({
   goal,
   setGoal,
-  duration,
-  setDuration,
   script,
   setScript,
   loading,
@@ -495,21 +566,20 @@ function ScriptStep({
 }: {
   goal: string;
   setGoal: (v: string) => void;
-  duration: Duration;
-  setDuration: (v: Duration) => void;
   script: string;
   setScript: (v: string) => void;
   loading: boolean;
   onGenerate: () => void;
 }) {
-  const wordCount = script.trim() ? script.trim().split(/\s+/).length : 0;
+  const lineList = script.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const lineCount = lineList.length;
 
   return (
     <div className="space-y-6">
       <StepHeader
         icon={<ScrollText className="size-4" />}
         title="Write the narration"
-        subtitle="Describe the objective, pick a length, then draft and edit the script."
+        subtitle="One spoken line per step — the video's length adapts to the flow."
       />
 
       <div className="space-y-1.5">
@@ -526,30 +596,6 @@ function ScriptStep({
         />
       </div>
 
-      <div className="space-y-2">
-        <span className="text-xs font-medium text-muted-foreground">Duration</span>
-        <div className="flex flex-wrap gap-2">
-          {DURATIONS.map((d) => {
-            const active = duration === d;
-            return (
-              <button
-                key={d}
-                type="button"
-                onClick={() => setDuration(d)}
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                  active
-                    ? "border-primary/50 bg-primary/10 text-primary"
-                    : "border-border bg-background/40 text-muted-foreground hover:border-primary/30 hover:text-foreground",
-                )}
-              >
-                {d}s
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       <div>
         <Button
           onClick={onGenerate}
@@ -561,7 +607,7 @@ function ScriptStep({
           ) : (
             <Wand2 className="size-4" />
           )}
-          {loading ? "Drafting…" : script ? "Redraft script" : "Generate script"}
+          {loading ? "Drafting…" : script ? "Redraft lines" : "Draft narration"}
         </Button>
       </div>
 
@@ -571,10 +617,10 @@ function ScriptStep({
             htmlFor="wiz-script"
             className="text-xs font-medium text-muted-foreground"
           >
-            Voice-over script
+            Narration — one line per step
           </label>
           <span className="text-[11px] tabular-nums text-muted-foreground">
-            {wordCount} words · ~{Math.round(wordCount / 2.5)}s read
+            {lineCount} {lineCount === 1 ? "line" : "lines"}
           </span>
         </div>
         <textarea
@@ -582,12 +628,13 @@ function ScriptStep({
           value={script}
           onChange={(e) => setScript(e.target.value)}
           rows={6}
-          placeholder="Generate a draft above, then edit the narration here…"
+          placeholder={"Draft above, then edit — one line per step, e.g.\nOpen the Catalogue\nSearch for Accent Ginger\nOpen the product"}
           className="w-full resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm leading-relaxed outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
         />
         <p className="text-xs text-muted-foreground">
-          This exact text is narrated in your chosen voice. Leave empty to fall
-          back to auto-captions.
+          Each line narrates one step and stays on screen for as long as it takes
+          to speak — so the voice always matches the action and the length adapts
+          to the flow. Leave empty to auto-write a line per step.
         </p>
       </div>
     </div>
@@ -599,6 +646,7 @@ function ScriptStep({
 function GenerateStep({
   url,
   goal,
+  device,
   voiceOn,
   voiceName,
   avatarOn,
@@ -611,6 +659,7 @@ function GenerateStep({
 }: {
   url: string;
   goal: string;
+  device: Device;
   voiceOn: boolean;
   voiceName?: string;
   avatarOn: boolean;
@@ -621,6 +670,9 @@ function GenerateStep({
   onGenerate: () => void;
   onReset: () => void;
 }) {
+  // The result device (what was actually rendered) wins over the current picker.
+  const shownDevice = result?.device ?? device;
+  const isMobile = shownDevice !== "desktop";
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
       <div className="space-y-5">
@@ -633,6 +685,10 @@ function GenerateStep({
         <dl className="space-y-2.5 rounded-xl border border-border bg-background/40 p-4 text-sm">
           <SummaryRow label="App URL" value={url} mono />
           <SummaryRow label="Objective" value={goal} />
+          <SummaryRow
+            label="Device"
+            value={isMobile ? "Mobile · iPhone portrait" : "Desktop · landscape"}
+          />
           <SummaryRow
             label="Voice-over"
             value={voiceOn ? voiceName ?? "On" : "Off (captions only)"}
@@ -673,7 +729,15 @@ function GenerateStep({
               "radial-gradient(90% 120% at 80% 0%, color-mix(in oklch, var(--primary) 45%, transparent), transparent 60%), linear-gradient(160deg, #161b20, #0b0d10)",
           }}
         />
-        <div className="relative w-full max-w-[300px]">
+        {/* Portrait (mobile) → narrow column; landscape (desktop) → wide.
+            The container just bounds width; the video/placeholder centers and
+            fits inside via object-contain + a shared max-height. */}
+        <div
+          className={cn(
+            "relative mx-auto w-full",
+            isMobile ? "max-w-[260px]" : "max-w-[440px]",
+          )}
+        >
           {result ? (
             <div className="space-y-3">
               <video
@@ -682,7 +746,7 @@ function GenerateStep({
                 controls
                 playsInline
                 muted
-                className="aspect-[760/560] w-full rounded-xl bg-black ring-1 ring-white/10"
+                className="mx-auto block h-auto max-h-[60vh] w-full rounded-xl bg-black object-contain ring-1 ring-white/10"
               />
               <div className="flex items-center justify-center gap-2">
                 <Button variant="outline" size="sm" className="gap-1.5" onClick={onReset}>
@@ -702,7 +766,12 @@ function GenerateStep({
               </div>
             </div>
           ) : (
-            <div className="grid aspect-[760/560] w-full place-items-center rounded-xl border border-dashed border-white/15 text-center">
+            <div
+              className={cn(
+                "grid w-full place-items-center rounded-xl border border-dashed border-white/15 text-center",
+                isMobile ? "aspect-[9/19.5]" : "aspect-video",
+              )}
+            >
               {loading ? (
                 <div className="flex flex-col items-center gap-2 text-white/80">
                   <LoaderCircle className="size-6 animate-spin text-primary" />

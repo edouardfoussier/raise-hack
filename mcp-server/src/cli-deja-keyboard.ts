@@ -43,7 +43,7 @@ const STEPS: FlowStep[] = [
 ];
 
 console.log("⧗ recording mobile tap + iOS keyboard demo on deja-bu (read-only)…");
-const webm = await recordLiveFlow({
+const { webm } = await recordLiveFlow({
   url: URL,
   steps: STEPS,
   outWebm: path.join(OUT, "keyboard-demo.webm"),

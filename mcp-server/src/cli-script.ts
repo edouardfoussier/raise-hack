@@ -1,12 +1,14 @@
 /**
- * Scenario — voice-over SCRIPT generator.
+ * Scenario — per-step voice-over DRAFT generator.
  *
- * Given a demo GOAL (and the app URL for light context) plus a target duration,
- * write a concise, natural spoken-narration script sized to be read aloud in
- * roughly that many seconds (~2.5 words/sec). Prints the script to stdout so the
- * web `/api/script` route can capture it.
+ * Given a demo GOAL (and the app URL for light context), write a short draft
+ * narration as ONE SPOKEN LINE PER STEP (newline-separated). The wizard shows
+ * these as editable lines; the engine narrates one line per meaningful UI step
+ * and the total length ADAPTS to the flow (audio-driven) — so the exact step
+ * count is decided at record time, and any extra/short lines are padded or
+ * truncated to the real steps.
  *
- *   SCRIPT_GOAL=… SCRIPT_URL=… SCRIPT_DURATION=40 npx tsx src/cli-script.ts
+ *   SCRIPT_GOAL=… SCRIPT_URL=… npx tsx src/cli-script.ts
  *
  * Reuses the same planner model selection the engine uses (Nebius Nemotron when
  * available, else the OpenRouter/Anthropic stack) so no extra config is needed.
@@ -17,14 +19,6 @@ import { selectPlannerModel } from "./providers.js";
 
 const GOAL = process.env.SCRIPT_GOAL?.trim() || "";
 const URL = process.env.SCRIPT_URL?.trim() || "";
-const DURATION = Math.max(
-  5,
-  Math.min(180, Number(process.env.SCRIPT_DURATION) || 40),
-);
-
-// ~2.5 spoken words per second is a comfortable narration pace.
-const WORDS_PER_SEC = 2.5;
-const TARGET_WORDS = Math.round(DURATION * WORDS_PER_SEC);
 
 async function main(): Promise<void> {
   if (!GOAL) throw new Error("SCRIPT_GOAL is required");
@@ -38,25 +32,29 @@ async function main(): Promise<void> {
     maxOutputTokens: 2000,
     providerOptions: { nebius: { reasoningEffort: "low" } },
     system:
-      "You write voice-over narration scripts for short product-demo videos. " +
-      "Given the GOAL of a demo (what the viewer will watch happen on screen) " +
-      "write a single, natural spoken narration that a presenter reads aloud " +
-      "over the recording. " +
+      "You write voice-over narration for short product-demo videos, ONE spoken " +
+      "line PER STEP the viewer will watch. Given the GOAL, break the demo into a " +
+      "handful of natural steps and write one line each. " +
       "Rules: warm, confident, plain English. Present tense, second person where " +
-      "natural ('you'). No stage directions, no timestamps, no numbered steps, no " +
-      "markdown, no quotes, no headings — just the words to be spoken. Do not " +
-      "mention that this is AI-generated. Write ONE flowing script of a few short " +
-      "sentences.",
+      "natural ('you'). Each line is a short spoken sentence (6–14 words). " +
+      "No numbering, no bullets, no timestamps, no markdown, no quotes, no " +
+      "headings. Do not mention that this is AI-generated. Output ONLY the lines, " +
+      "one per line, separated by newlines.",
     prompt:
       `GOAL: ${GOAL}\n` +
       (URL ? `APP URL (context only, do not read aloud): ${URL}\n` : "") +
-      `\nWrite the narration to be spoken in about ${DURATION} seconds — ` +
-      `aim for roughly ${TARGET_WORDS} words. Output only the script.`,
+      `\nWrite one spoken line per step (aim for 3–6 lines). ` +
+      `Output only the lines, one per line.`,
   });
 
-  const script = text.trim();
+  // Normalize to clean newline-separated lines (strip any stray numbering/bullets).
+  const lines = text
+    .split(/\r?\n/)
+    .map((l) => l.replace(/^\s*(?:\d+[.)]|[-*•])\s*/, "").trim())
+    .filter(Boolean);
+  const script = lines.join("\n");
   if (!script) throw new Error("model returned an empty script");
-  // stdout is captured by the caller; keep it to just the script.
+  // stdout is captured by the caller; keep it to just the lines.
   process.stdout.write(script);
 }
 

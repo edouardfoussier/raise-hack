@@ -16,8 +16,23 @@ export type FlowStep =
   | { action: "click"; selector: string }
   | { action: "type"; selector: string; text: string }
   | { action: "scroll"; selector?: string; by?: number; dwell?: number }
-  | { action: "caption"; text: string }
+  /**
+   * Show a caption/subtitle for this step. `holdMs` keeps it on screen for that
+   * long (used to make a step dwell for the length of its narration line). The
+   * caption is tagged with `key` so the recorder can report WHEN (video-relative
+   * ms) it appeared — the voice-over track and burned subtitles align to that.
+   */
+  | { action: "caption"; text: string; holdMs?: number; key?: string }
   | { action: "wait"; ms: number };
+
+/** One caption's on-screen appearance, timed relative to the recorded video. */
+export interface CaptionCue {
+  /** Stable id linking this cue back to its narration line. */
+  key?: string;
+  text: string;
+  /** ms from the first video frame to when the caption became visible. */
+  startMs: number;
+}
 
 export interface RecordFlowOpts {
   appDir: string;
@@ -154,12 +169,20 @@ export interface LiveFlowOpts {
   captions?: boolean;
 }
 
+/** Result of a live recording: the webm path plus the timed caption cues. */
+export interface LiveFlowResult {
+  webm: string;
+  /** Every caption's video-relative start time (for VO + subtitle alignment). */
+  cues: CaptionCue[];
+}
+
 /** Record a flow with a visible cursor against a LIVE URL (real app), tolerant of missing selectors. */
-export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
+export async function recordLiveFlow(opts: LiveFlowOpts): Promise<LiveFlowResult> {
   const vp = opts.viewport ?? { width: 400, height: 860 };
   const videoDir = await mkdtemp(path.join(tmpdir(), "drift-live-"));
   await mkdir(path.dirname(opts.outWebm), { recursive: true });
 
+  const cues: CaptionCue[] = [];
   const browser = await chromium.launch();
   try {
     const dev = opts.device ? devices[opts.device] : undefined;
@@ -181,6 +204,9 @@ export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
     if (opts.initScript) await context.addInitScript(opts.initScript);
 
     const page = await context.newPage();
+    // Recording begins at page creation → anchor here so every caption's
+    // Date.now()-t0 is a video-relative timestamp.
+    const t0 = Date.now();
     await page.goto(opts.url, { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(1600);
     await page.mouse.move(vp.width * 0.5, vp.height * 0.9, { steps: 1 });
@@ -224,8 +250,12 @@ export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
             await page.waitForTimeout(s.dwell ?? 500);
             break;
           case "caption":
+            // Record WHEN this caption appears (video-relative) so the voice-over
+            // line and the burned subtitle can be placed at the same instant, then
+            // HOLD the step on screen for the caption's narration duration.
+            cues.push({ key: s.key, text: s.text, startMs: Date.now() - t0 });
             await page.evaluate((t) => (window as any).__cap?.(t), s.text);
-            await page.waitForTimeout(1200);
+            await page.waitForTimeout(s.holdMs ?? 1200);
             break;
           case "wait":
             await page.waitForTimeout(s.ms);
@@ -250,5 +280,5 @@ export async function recordLiveFlow(opts: LiveFlowOpts): Promise<string> {
     await browser.close();
     await rm(videoDir, { recursive: true, force: true });
   }
-  return opts.outWebm;
+  return { webm: opts.outWebm, cues };
 }

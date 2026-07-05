@@ -40,7 +40,7 @@ const initScript = `try{localStorage.setItem('deja-bu:v1:auth-token', JSON.strin
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function record(label: string): Promise<string> {
-  return recordLiveFlow({
+  const { webm } = await recordLiveFlow({
     url: URL,
     steps: STEPS,
     outWebm: path.join(OUT, `${label}.webm`),
@@ -50,6 +50,7 @@ async function record(label: string): Promise<string> {
     pointer: "touch", // 👆 mobile tap indicator instead of a desktop arrow
     keyboard: true, // ⌨ synthetic iOS keyboard on text-field focus
   });
+  return webm;
 }
 async function frames(webm: string, dir: string, fps = 0.9): Promise<string[]> {
   await rm(dir, { recursive: true, force: true });

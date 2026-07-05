@@ -27,13 +27,19 @@ type GenerateBody = {
   goal?: string;
   captions?: boolean;
   voice?: boolean;
-  /** Edited voice-over script from the wizard — narrated verbatim when present. */
+  /**
+   * Edited narration from the wizard — ONE LINE PER STEP (newline-separated).
+   * When present it replaces the auto-generated per-step lines; the total length
+   * still adapts to the flow (audio-driven).
+   */
   script?: string;
   /**
    * Chosen Gradium voice id. The seed "Edouard (cloned)" voice sends the sentinel
    * "default" (or nothing), meaning "use the server's configured GRADIUM_VOICE_ID".
    */
   voiceId?: string;
+  /** Render device: "mobile" (iPhone 13 portrait + touch) or "desktop". */
+  device?: "mobile" | "desktop";
 };
 
 /** Repo root = one level above web/ (Next dev cwd), overridable for other setups. */
@@ -132,6 +138,8 @@ export async function POST(request: Request): Promise<Response> {
 
   const captions = body.captions !== false; // default ON
   const voice = body.voice !== false; // default ON
+  // Device: default to mobile (the common case — most demoed apps are mobile).
+  const device: "mobile" | "desktop" = body.device === "desktop" ? "desktop" : "mobile";
 
   const root = repoRoot();
   const id = `gen_${crypto.randomUUID().replace(/-/g, "").slice(0, 10)}`;
@@ -142,6 +150,7 @@ export async function POST(request: Request): Promise<Response> {
     ...process.env,
     DEMO_URL: url,
     DEMO_GOAL: goal,
+    DEMO_DEVICE: device,
     DEMO_TITLE: process.env.DEMO_TITLE?.trim() || "Scenario",
     ...dejaEnv(url),
   };
@@ -203,6 +212,7 @@ export async function POST(request: Request): Promise<Response> {
     gifUrl,
     url,
     goal,
+    device,
     captions,
     voice,
     voiceId: body.voiceId?.trim() || "default",

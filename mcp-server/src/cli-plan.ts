@@ -28,7 +28,7 @@ console.log(JSON.stringify(steps, null, 2));
 
 console.log("\n⧗ replaying the generated flow deterministically (with cursor) → webm…");
 const outDir = path.resolve(process.cwd(), "..", ".drift-cache", "plan");
-const webm = await recordLiveFlow({
+const { webm } = await recordLiveFlow({
   url: URL,
   steps,
   outWebm: path.join(outDir, "planned.webm"),

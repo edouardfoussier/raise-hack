@@ -14,6 +14,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import type { CaptionCue } from "./flow.js";
 
 const pexecFile = promisify(execFile);
 
@@ -36,6 +37,15 @@ export interface ComposeOpts {
   introMs?: number;
   /** Outro card duration in ms (default 2600). */
   outroMs?: number;
+  /**
+   * Timed per-step captions to burn as a subtitle. Rendered in a dedicated band
+   * added BELOW the app content (never overlapping it). Times are relative to
+   * the recorded main clip. When omitted (or empty), no band is added and the
+   * app's own top caption banner (if any) is used as-is.
+   */
+  subtitles?: CaptionCue[];
+  /** Total duration of the main recording in ms (to time the last subtitle). */
+  mainDurationMs?: number;
 }
 
 export interface ComposeResult {
@@ -211,17 +221,48 @@ function outroHtml(opts: { cta?: string; url?: string; title: string; brand: str
 }
 
 /** Render a full HTML string to a PNG of exactly w×h. */
-async function htmlToPng(html: string, w: number, h: number, outPng: string): Promise<void> {
+async function htmlToPng(
+  html: string,
+  w: number,
+  h: number,
+  outPng: string,
+  omitBackground = false,
+): Promise<void> {
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
     await page.setContent(html, { waitUntil: "networkidle" });
     await page.waitForTimeout(120); // let gradients/fonts settle
-    await page.screenshot({ path: outPng, clip: { x: 0, y: 0, width: w, height: h } });
+    await page.screenshot({
+      path: outPng,
+      clip: { x: 0, y: 0, width: w, height: h },
+      omitBackground, // transparent PNG for subtitle strips
+    });
     await page.close();
   } finally {
     await browser.close();
   }
+}
+
+/**
+ * One caption strip → a transparent PNG the full frame width and `band` tall,
+ * with the text centered (brand-tinted). Rendered with the browser so it works
+ * regardless of whether ffmpeg was built with a text/font filter.
+ */
+function captionStripHtml(text: string, w: number, band: number): string {
+  const fontSize = Math.max(15, Math.round(band * 0.3));
+  return `<!doctype html><html><head><meta charset="utf-8"><style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { width:${w}px; height:${band}px; overflow:hidden; background:transparent; }
+    .wrap {
+      width:${w}px; height:${band}px;
+      display:flex; align-items:center; justify-content:center;
+      padding:0 ${Math.round(w * 0.06)}px;
+      font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:#fff7ed; text-align:center; line-height:1.25;
+      font-size:${fontSize}px; font-weight:600; letter-spacing:0.2px;
+    }
+  </style></head><body><div class="wrap">${esc(text)}</div></body></html>`;
 }
 
 /* ------------------------------ ffmpeg ------------------------------ */
@@ -296,6 +337,85 @@ async function concatSegments(
   ]);
 }
 
+/**
+ * Take the raw recorded clip and produce a normalized main clip at
+ * `composed` size (= app frame + a bottom caption band), with each timed
+ * caption shown as a subtitle IN THE BAND — so app content is never covered.
+ *
+ * Captions are rendered to transparent PNG strips with the browser and overlaid
+ * (timed) with ffmpeg's `overlay` filter — no reliance on drawtext/libfreetype,
+ * which many Homebrew ffmpeg builds omit. When there are no subtitles, `band` is
+ * 0 and this just normalizes the clip.
+ */
+async function buildMainClip(
+  rawMain: string,
+  app: VideoMeta,
+  composed: VideoMeta,
+  band: number,
+  subtitles: CaptionCue[],
+  durationMs: number,
+  work: string,
+  outMp4: string,
+): Promise<void> {
+  const bandTop = composed.height - band;
+  const total = Math.max(durationMs, ...subtitles.map((c) => c.startMs), 0);
+  const sorted = [...subtitles].sort((a, b) => a.startMs - b.startMs);
+
+  // Render each caption to a transparent strip PNG (frame-wide × band-tall).
+  const strips: { png: string; start: number; end: number }[] = [];
+  if (band > 0) {
+    for (let i = 0; i < sorted.length; i++) {
+      const cue = sorted[i];
+      const png = path.join(work, `cap-${i}.png`);
+      await htmlToPng(captionStripHtml(cue.text, composed.width, band), composed.width, band, png, true);
+      const start = Math.max(0, cue.startMs / 1000);
+      const nextStart = i + 1 < sorted.length ? sorted[i + 1].startMs / 1000 : total / 1000 + 2;
+      const end = Math.max(start + 0.3, nextStart);
+      strips.push({ png, start, end });
+    }
+  }
+
+  // Filtergraph: scale app to the top area, pad the bottom band dark, add a thin
+  // brand accent line, then overlay each timed caption strip in the band.
+  const inputs: string[] = ["-i", rawMain];
+  for (const s of strips) inputs.push("-i", s.png);
+
+  const chain: string[] = [
+    `[0:v]scale=${app.width}:${app.height}:force_original_aspect_ratio=decrease,` +
+      `pad=${composed.width}:${composed.height}:(ow-iw)/2:0:color=0x0a0a0f,` +
+      `fps=${composed.fps},setsar=1` +
+      (band > 0
+        ? `,drawbox=x=0:y=${bandTop}:w=${composed.width}:h=2:color=0xff5a1f@0.9:t=fill`
+        : ``) +
+      `[base]`,
+  ];
+  let last = "base";
+  strips.forEach((s, i) => {
+    const out = i === strips.length - 1 ? "vout" : `ov${i}`;
+    // Strip input index in ffmpeg is i+1 (0 is the video).
+    chain.push(
+      `[${last}][${i + 1}:v]overlay=x=0:y=${bandTop}:` +
+        `enable='between(t,${s.start.toFixed(3)},${s.end.toFixed(3)})'[${out}]`,
+    );
+    last = out;
+  });
+  if (!strips.length) chain.push(`[base]format=yuv420p[vout]`);
+  else chain.push(`[${last}]format=yuv420p[voutf]`);
+  const filter = chain.join(";");
+  const mapLabel = strips.length ? "[voutf]" : "[vout]";
+
+  await pexecFile("ffmpeg", [
+    "-y",
+    ...inputs,
+    "-filter_complex", filter,
+    "-map", mapLabel,
+    "-c:v", "libx264",
+    "-pix_fmt", "yuv420p",
+    "-profile:v", "high",
+    outMp4,
+  ]);
+}
+
 /** Palette-based GIF at width 360. */
 async function mp4ToGif(mp4: string, outGif: string): Promise<void> {
   await pexecFile("ffmpeg", [
@@ -318,11 +438,22 @@ export async function composeVideo(opts: ComposeOpts): Promise<ComposeResult> {
   const outDir = path.resolve(process.cwd(), opts.outDir);
   await mkdir(outDir, { recursive: true });
 
-  const meta = await probeVideo(inputAbs);
+  const app = await probeVideo(inputAbs);
+
+  // Timed subtitles → a dedicated bottom band sized to the app frame. The band
+  // must be even (yuv420p) and is only added when there are subtitles to show.
+  const subtitles = opts.subtitles ?? [];
+  let band = 0;
+  if (subtitles.length) {
+    band = Math.round(Math.min(app.width, app.height) * 0.14);
+    if (band % 2 !== 0) band += 1;
+  }
+  // The composed frame = app frame + caption band. Intro/outro/concat all use it.
+  const meta: VideoMeta = { width: app.width, height: app.height + band, fps: app.fps };
 
   const work = await mkdtemp(path.join(tmpdir(), "scenario-compose-"));
   try {
-    // 1. Render cards → PNG
+    // 1. Render cards → PNG (at the FULL composed size so they letterbox-match)
     const introPng = path.join(work, "intro.png");
     const outroPng = path.join(work, "outro.png");
     await htmlToPng(
@@ -344,9 +475,15 @@ export async function composeVideo(opts: ComposeOpts): Promise<ComposeResult> {
     await pngToSegment(introPng, introMs, meta, introMp4);
     await pngToSegment(outroPng, outroMs, meta, outroMp4);
 
+    // 2b. Main clip → normalize to composed size + burn subtitles in the band.
+    const mainMp4 = path.join(work, "main-sub.mp4");
+    const mainDurationMs =
+      opts.mainDurationMs ?? Math.round((await probeDuration(inputAbs)) * 1000);
+    await buildMainClip(inputAbs, app, meta, band, subtitles, mainDurationMs, work, mainMp4);
+
     // 3. Concat intro + main + outro (re-encode via concat filter)
     const mp4Path = path.join(outDir, "final.mp4");
-    await concatSegments(introMp4, inputAbs, outroMp4, meta, mp4Path);
+    await concatSegments(introMp4, mainMp4, outroMp4, meta, mp4Path);
 
     // 4. GIF
     const gifPath = path.join(outDir, "final.gif");
