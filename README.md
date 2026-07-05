@@ -112,7 +112,7 @@ Key env knobs for `cli-demo`: `DEMO_URL`, `DEMO_GOAL`, `DEMO_DEVICE=mobile|deskt
 
 ## Built with
 
-**Anthropic Claude** (the vision verdict) · **NVIDIA Nemotron** via **Nebius Token Factory** (plans the demo flow) · **Gradium** (cloned voice-over) · **Cloudflare** Workers/R2/D1 (share + analytics) · **dembrandt** (design-system extraction) · Playwright · ffmpeg · Vercel AI SDK · Clerk · Next.js.
+Developed with **Cursor** · **NVIDIA Nemotron** via **Nebius Token Factory** (plans the demo flow) · **Gradium** (cloned voice-over) · **Cloudflare** Workers/R2/D1 (share + analytics) · **dembrandt** (design-system extraction) · Playwright · ffmpeg · Vercel AI SDK · Clerk · Next.js.
 
 ---
 
