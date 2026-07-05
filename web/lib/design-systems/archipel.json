@@ -1,0 +1,351 @@
+{
+  "url": "https://archipel-azure.vercel.app/login",
+  "extractedAt": "2026-07-05T00:56:49.079Z",
+  "meta": {
+    "dembrandtVersion": "0.22.0",
+    "schemaVersion": "1.2.0",
+    "flags": {}
+  },
+  "siteName": "Archipel",
+  "logo": null,
+  "logoInstances": [],
+  "favicons": [
+    {
+      "type": "icon",
+      "url": "https://archipel-azure.vercel.app/favicon.ico?favicon.0x3dzn~oxb6tn.ico",
+      "sizes": "256x256"
+    }
+  ],
+  "colors": {
+    "semantic": {
+      "primary": "lab(72.7183 31.8672 97.9407)",
+      "background": "lab(98.2596 -0.247031 -0.706708)",
+      "text": "lab(2.75381 0 0)"
+    },
+    "palette": [
+      {
+        "color": "oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+        "normalized": "#a1a1a1",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      },
+      {
+        "color": "lab(60.3514 40.5624 87.1228)",
+        "normalized": "#e17100",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      }
+    ],
+    "cssVariables": {},
+    "detected": [
+      {
+        "color": "rgb(0, 0, 0)",
+        "normalized": "#000000",
+        "count": 1,
+        "usageFrac": 1,
+        "confidence": "low",
+        "sources": [],
+        "isToken": false
+      }
+    ],
+    "_raw": []
+  },
+  "typography": {
+    "styles": [
+      {
+        "context": "heading-1",
+        "family": "Inter",
+        "fallbacks": "Inter Fallback",
+        "size": "20px (1.25rem)",
+        "weight": 700,
+        "lineHeight": "1.40",
+        "spacing": "-0.5px",
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Inter",
+        "fallbacks": "Inter Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 400,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Inter",
+        "fallbacks": "Inter Fallback",
+        "size": "14px (0.88rem)",
+        "weight": 500,
+        "lineHeight": "1.43",
+        "spacing": null,
+        "transform": null
+      }
+    ],
+    "sources": {
+      "googleFonts": [],
+      "adobeFonts": false,
+      "variableFonts": false,
+      "selfHostedFonts": [
+        "83afe278b6a6bb3c-s.p.0q-301v4kxxnr.woff2"
+      ],
+      "customFonts": [
+        "83afe278b6a6bb3c-s.p.0q-301v4kxxnr.woff2"
+      ]
+    }
+  },
+  "spacing": {
+    "scaleType": "8px",
+    "commonValues": [
+      {
+        "px": "4px",
+        "display": "4px",
+        "rem": "0.25rem",
+        "count": 5,
+        "numericValue": 4
+      },
+      {
+        "px": "8px",
+        "display": "8px",
+        "rem": "0.50rem",
+        "count": 2,
+        "numericValue": 8
+      },
+      {
+        "px": "16px",
+        "display": "16px",
+        "rem": "1.00rem",
+        "count": 5,
+        "numericValue": 16
+      },
+      {
+        "px": "24px",
+        "display": "24px",
+        "rem": "1.50rem",
+        "count": 2,
+        "numericValue": 24
+      },
+      {
+        "px": "32px",
+        "display": "32px",
+        "rem": "2.00rem",
+        "count": 1,
+        "numericValue": 32
+      }
+    ]
+  },
+  "borderRadius": {
+    "values": [
+      {
+        "value": "10px",
+        "count": 3,
+        "elements": [
+          "input",
+          "button"
+        ],
+        "confidence": "low",
+        "numericValue": 10
+      },
+      {
+        "value": "14px",
+        "count": 1,
+        "elements": [
+          "card"
+        ],
+        "confidence": "low",
+        "numericValue": 14
+      }
+    ]
+  },
+  "borders": {
+    "combinations": [
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "lab(66.128 -0.0000298023 0.0000119209)",
+        "count": 1,
+        "elements": [
+          "input"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "lab(90.952 0 -0.0000119209)",
+        "count": 1,
+        "elements": [
+          "input"
+        ],
+        "confidence": "low"
+      }
+    ]
+  },
+  "shadows": [
+    {
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.145 -0.00000143796 0.00000340492 / 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "count": 1,
+      "confidence": "low"
+    }
+  ],
+  "gradients": [],
+  "motion": {
+    "durations": [
+      {
+        "value": "0.001s",
+        "ms": 1,
+        "count": 18
+      }
+    ],
+    "easings": [
+      {
+        "value": "ease",
+        "type": "ease",
+        "count": 15
+      },
+      {
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "type": "custom",
+        "count": 3
+      }
+    ],
+    "animations": [],
+    "contexts": {
+      "card": {
+        "count": 4,
+        "durations": [
+          "0.001s"
+        ],
+        "easing": "ease",
+        "easingType": "ease",
+        "props": []
+      },
+      "input": {
+        "count": 2,
+        "durations": [
+          "0.001s"
+        ],
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "easingType": "custom",
+        "props": [
+          "color",
+          "background-color",
+          "border-color",
+          "outline-color"
+        ]
+      },
+      "button": {
+        "count": 1,
+        "durations": [
+          "0.001s"
+        ],
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "easingType": "custom",
+        "props": []
+      }
+    },
+    "interactiveDeltas": [
+      {
+        "tag": "button",
+        "text": "Se connecter",
+        "pattern": "color-shift",
+        "delta": {
+          "background": {
+            "from": "lab(72.7183 31.8672 97.9407)",
+            "to": "lab(60.3514 40.5624 87.1228)"
+          }
+        }
+      }
+    ]
+  },
+  "components": {
+    "buttons": [
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "lab(72.7183 31.8672 97.9407)",
+            "color": "lab(98.26 0 0)",
+            "padding": "0px 10px",
+            "borderRadius": "10px",
+            "border": "1px solid rgba(0, 0, 0, 0)",
+            "fontSize": "14px",
+            "fontWeight": "500"
+          }
+        },
+        "fontWeight": "500",
+        "fontSize": "14px",
+        "text": "Se connecter",
+        "confidence": "high"
+      }
+    ],
+    "inputs": {
+      "text": [
+        {
+          "specificType": "email",
+          "states": {
+            "default": {
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "color": "lab(2.75381 0 0)",
+              "border": "1px solid lab(66.128 -0.0000298023 0.0000119209)",
+              "borderRadius": "10px",
+              "padding": "4px 10px",
+              "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+              "outline": "oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) none 1px"
+            },
+            "focus": null
+          }
+        },
+        {
+          "specificType": "password",
+          "states": {
+            "default": {
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "color": "lab(2.75381 0 0)",
+              "border": "1px solid lab(90.952 0 -0.0000119209)",
+              "borderRadius": "10px",
+              "padding": "4px 10px",
+              "boxShadow": "none",
+              "outline": "oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) none 3px"
+            },
+            "focus": null
+          }
+        }
+      ],
+      "checkbox": [],
+      "radio": [],
+      "select": []
+    },
+    "links": [],
+    "badges": {
+      "all": [],
+      "byVariant": {
+        "error": [],
+        "warning": [],
+        "success": [],
+        "info": [],
+        "neutral": []
+      }
+    }
+  },
+  "breakpoints": [],
+  "iconSystem": [],
+  "frameworks": [
+    {
+      "name": "Tailwind CSS",
+      "confidence": "high",
+      "evidence": "arbitrary values (e.g., top-[117px]), responsive/state modifiers"
+    }
+  ]
+}

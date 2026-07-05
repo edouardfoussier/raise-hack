@@ -1,0 +1,1782 @@
+{
+  "url": "https://thesphinx.ai/",
+  "extractedAt": "2026-07-05T00:51:50.530Z",
+  "meta": {
+    "dembrandtVersion": "0.22.0",
+    "schemaVersion": "1.2.0",
+    "flags": {}
+  },
+  "siteName": "The Sphinx",
+  "logo": {
+    "source": "img",
+    "context": "header",
+    "url": "https://thesphinx.ai/lesphinx-logo_white.png",
+    "width": 1024,
+    "height": 1024,
+    "alt": "LeSphinx",
+    "type": "logomark",
+    "reversed": true,
+    "background": "#0e0c0b",
+    "safeZone": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+    },
+    "position": {
+      "top": 20,
+      "left": 24
+    }
+  },
+  "logoInstances": [
+    {
+      "source": "img",
+      "context": "header",
+      "url": "https://thesphinx.ai/lesphinx-logo_white.png",
+      "width": 1024,
+      "height": 1024,
+      "alt": "LeSphinx",
+      "type": "logomark",
+      "reversed": true,
+      "background": "#0e0c0b",
+      "safeZone": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "position": {
+        "top": 20,
+        "left": 24
+      }
+    },
+    {
+      "source": "img",
+      "context": "footer",
+      "url": "https://thesphinx.ai/logo-min.png",
+      "width": 728,
+      "height": 120,
+      "alt": "Mistral AI Hackathon",
+      "type": "wordmark",
+      "reversed": true,
+      "background": "#0e0c0b",
+      "safeZone": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "position": {
+        "top": 1460.703125,
+        "left": 969.375
+      }
+    }
+  ],
+  "favicons": [
+    {
+      "type": "icon",
+      "url": "https://thesphinx.ai/favicon.png",
+      "sizes": null
+    },
+    {
+      "type": "apple-touch-icon",
+      "url": "https://thesphinx.ai/favicon.png",
+      "sizes": null
+    },
+    {
+      "type": "og:image",
+      "url": "https://thesphinx.ai/og-image.jpg",
+      "sizes": null
+    },
+    {
+      "type": "twitter:image",
+      "url": "https://thesphinx.ai/og-image.jpg",
+      "sizes": null
+    }
+  ],
+  "colors": {
+    "semantic": {
+      "background": "rgb(14, 12, 11)",
+      "text": "rgb(237, 232, 222)",
+      "primary": "rgb(163, 140, 117)"
+    },
+    "palette": [
+      {
+        "color": "rgb(163, 140, 117)",
+        "normalized": "#a38c75",
+        "count": 73,
+        "confidence": "high",
+        "sources": [
+          "hero-subtitle",
+          "mode-btn",
+          "footer-made"
+        ],
+        "lch": "lch(59.73% 16.3 71.99)",
+        "oklch": "oklch(65.48% 0.043 66.95)",
+        "role": "accent",
+        "onColor": "#000000",
+        "hover": "#8b7763",
+        "variantOf": "primary"
+      },
+      {
+        "color": "rgb(237, 232, 222)",
+        "normalized": "#ede8de",
+        "count": 56,
+        "confidence": "high",
+        "sources": [
+          "hero-bg",
+          "hero-bg-img",
+          "hero-overlay"
+        ],
+        "lch": "lch(92.13% 5.45 90.34)",
+        "oklch": "oklch(93.22% 0.014 84.58)",
+        "role": "neutral",
+        "onColor": "#000000",
+        "hover": "#c9c5bd",
+        "variantOf": "primary"
+      },
+      {
+        "color": "rgba(53, 46, 39, 0.5)",
+        "normalized": "#352e27",
+        "count": 7,
+        "confidence": "high",
+        "sources": [
+          "lang-toggle",
+          "site-footer"
+        ],
+        "lch": "lch(19.46% 5.95 72.68)",
+        "oklch": "oklch(30.64% 0.016 67.17)",
+        "role": "accent",
+        "onColor": "#ffffff",
+        "hover": "#40372f",
+        "variantOf": "primary"
+      },
+      {
+        "color": "rgb(210, 194, 172)",
+        "normalized": "#d2c2ac",
+        "count": 6,
+        "confidence": "medium",
+        "sources": [],
+        "lch": "lch(79.19% 13.26 81.14)",
+        "oklch": "oklch(82.14% 0.035 75.92)",
+        "role": "accent",
+        "onColor": "#000000",
+        "hover": "#b3a592",
+        "variantOf": "primary"
+      },
+      {
+        "color": "rgb(14, 12, 11)",
+        "normalized": "#0e0c0b",
+        "count": 3,
+        "confidence": "high",
+        "sources": [
+          "btn-gold"
+        ],
+        "lch": "lch(3.44% 0.78 53.52)",
+        "oklch": "oklch(15.64% 0.004 48.45)",
+        "role": "surface",
+        "onColor": "#ffffff",
+        "hover": "#110e0d"
+      }
+    ],
+    "cssVariables": {},
+    "detected": [
+      {
+        "color": "rgb(163, 140, 117)",
+        "normalized": "#a38c75",
+        "count": 73,
+        "usageFrac": 0.36683417085427134,
+        "confidence": "high",
+        "sources": [
+          "hero-subtitle",
+          "mode-btn",
+          "footer-made",
+          "footer-mistral-logo",
+          "global-about-link"
+        ],
+        "isToken": true
+      },
+      {
+        "color": "rgb(237, 232, 222)",
+        "normalized": "#ede8de",
+        "count": 56,
+        "usageFrac": 0.2814070351758794,
+        "confidence": "high",
+        "sources": [
+          "hero-bg",
+          "hero-bg-img",
+          "hero-overlay",
+          "hero-nav",
+          "nav-brand"
+        ],
+        "isToken": true
+      },
+      {
+        "color": "rgb(230, 160, 0)",
+        "normalized": "#e6a000",
+        "count": 30,
+        "usageFrac": 0.1507537688442211,
+        "confidence": "high",
+        "sources": [
+          "mode-btn",
+          "lore-link",
+          "footer-link"
+        ],
+        "isToken": false
+      },
+      {
+        "color": "rgba(53, 46, 39, 0.5)",
+        "normalized": "#352e27",
+        "count": 7,
+        "usageFrac": 0.035175879396984924,
+        "confidence": "high",
+        "sources": [
+          "lang-toggle",
+          "site-footer"
+        ],
+        "isToken": false
+      },
+      {
+        "color": "rgb(232, 184, 77)",
+        "normalized": "#e8b84d",
+        "count": 6,
+        "usageFrac": 0.03015075376884422,
+        "confidence": "medium",
+        "sources": [],
+        "isToken": false
+      },
+      {
+        "color": "rgb(210, 194, 172)",
+        "normalized": "#d2c2ac",
+        "count": 6,
+        "usageFrac": 0.03015075376884422,
+        "confidence": "medium",
+        "sources": [],
+        "isToken": false
+      },
+      {
+        "color": "rgba(54, 42, 23, 0.5)",
+        "normalized": "#362a17",
+        "count": 5,
+        "usageFrac": 0.02512562814070352,
+        "confidence": "low",
+        "sources": [],
+        "isToken": false
+      },
+      {
+        "color": "rgba(107, 85, 46, 0.4)",
+        "normalized": "#6b552e",
+        "count": 5,
+        "usageFrac": 0.02512562814070352,
+        "confidence": "low",
+        "sources": [],
+        "isToken": false
+      },
+      {
+        "color": "rgb(14, 12, 11)",
+        "normalized": "#0e0c0b",
+        "count": 3,
+        "usageFrac": 0.01507537688442211,
+        "confidence": "high",
+        "sources": [
+          "btn-gold"
+        ],
+        "isToken": true
+      },
+      {
+        "color": "rgb(0, 0, 0)",
+        "normalized": "#000000",
+        "count": 2,
+        "usageFrac": 0.010050251256281407,
+        "confidence": "low",
+        "sources": [],
+        "isToken": false
+      },
+      {
+        "color": "rgb(132, 115, 98)",
+        "normalized": "#847362",
+        "count": 2,
+        "usageFrac": 0.010050251256281407,
+        "confidence": "medium",
+        "sources": [
+          "hero-tagline"
+        ],
+        "isToken": false
+      },
+      {
+        "color": "rgba(22, 20, 18, 0.8)",
+        "normalized": "#161412",
+        "count": 1,
+        "usageFrac": 0.005025125628140704,
+        "confidence": "high",
+        "sources": [
+          "lang-toggle"
+        ],
+        "isToken": false
+      },
+      {
+        "color": "rgba(50, 41, 27, 0.4)",
+        "normalized": "#32291b",
+        "count": 1,
+        "usageFrac": 0.005025125628140704,
+        "confidence": "low",
+        "sources": [
+          "mode-btn"
+        ],
+        "isToken": false
+      },
+      {
+        "color": "rgba(34, 31, 28, 0.6)",
+        "normalized": "#221f1c",
+        "count": 1,
+        "usageFrac": 0.005025125628140704,
+        "confidence": "low",
+        "sources": [
+          "mode-btn"
+        ],
+        "isToken": false
+      },
+      {
+        "color": "rgba(73, 64, 54, 0.4)",
+        "normalized": "#494036",
+        "count": 1,
+        "usageFrac": 0.005025125628140704,
+        "confidence": "low",
+        "sources": [
+          "mode-btn"
+        ],
+        "isToken": false
+      }
+    ],
+    "_raw": [
+      {
+        "color": "rgb(14, 12, 11)",
+        "normalized": "#0e0c0b",
+        "count": 3
+      },
+      {
+        "color": "rgb(237, 232, 222)",
+        "normalized": "#ede8de",
+        "count": 56
+      },
+      {
+        "color": "rgba(53, 46, 39, 0.5)",
+        "normalized": "#352e27",
+        "count": 7
+      },
+      {
+        "color": "rgb(163, 140, 117)",
+        "normalized": "#a38c75",
+        "count": 73
+      },
+      {
+        "color": "rgb(230, 160, 0)",
+        "normalized": "#e6a000",
+        "count": 30
+      },
+      {
+        "color": "rgb(232, 184, 77)",
+        "normalized": "#e8b84d",
+        "count": 6
+      },
+      {
+        "color": "rgb(210, 194, 172)",
+        "normalized": "#d2c2ac",
+        "count": 6
+      },
+      {
+        "color": "rgba(54, 42, 23, 0.5)",
+        "normalized": "#362a17",
+        "count": 5
+      },
+      {
+        "color": "rgba(107, 85, 46, 0.4)",
+        "normalized": "#6b552e",
+        "count": 5
+      }
+    ]
+  },
+  "typography": {
+    "styles": [
+      {
+        "context": "display",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "88px (5.50rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": "5.28px",
+        "transform": null
+      },
+      {
+        "context": "heading-2",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "40px (2.50rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "40px (2.50rem)",
+        "weight": 700,
+        "lineHeight": "1.00",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "32px (2.00rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "28.8px (1.80rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "28.8px (1.80rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": "0.576px",
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "25.6px (1.60rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "24px (1.50rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "20.8px (1.30rem)",
+        "weight": 400,
+        "lineHeight": "1.00",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "19.2px (1.20rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "19.2px (1.20rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "17.6px (1.10rem)",
+        "weight": 300,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Arial",
+        "fallbacks": null,
+        "size": "17.6px (1.10rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "16.8px (1.05rem)",
+        "weight": 600,
+        "lineHeight": null,
+        "spacing": "0.84px",
+        "transform": null
+      },
+      {
+        "context": "heading-3",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "16.8px (1.05rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "1.28px",
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Arial",
+        "fallbacks": null,
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.64px",
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "15.2px (0.95rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.912px",
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "15.2px (0.95rem)",
+        "weight": 600,
+        "lineHeight": null,
+        "spacing": "0.76px",
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "15.2px (0.95rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "14.72px (0.92rem)",
+        "weight": 400,
+        "lineHeight": "1.55",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "14.4px (0.90rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "14.4px (0.90rem)",
+        "weight": 400,
+        "lineHeight": "1.70",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "14.4px (0.90rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "13.6px (0.85rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.816px",
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "13.6px (0.85rem)",
+        "weight": 600,
+        "lineHeight": null,
+        "spacing": "0.68px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "13.6px (0.85rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "13.3333px (0.83rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Arial",
+        "fallbacks": null,
+        "size": "13.3333px (0.83rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "text",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "13.12px (0.82rem)",
+        "weight": 400,
+        "lineHeight": "1.70",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "link",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "13.12px (0.82rem)",
+        "weight": 400,
+        "lineHeight": "1.70",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "13.12px (0.82rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "link",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12.8px (0.80rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12.8px (0.80rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "body",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12.48px (0.78rem)",
+        "weight": 400,
+        "lineHeight": "1.55",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": "0.96px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "caption",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": "0.96px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "ui",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 600,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": "0.48px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "caption",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "heading-3",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": "1.44px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "ui",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.48px",
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.48px",
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "1.2px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "11.52px (0.72rem)",
+        "weight": 600,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "11.2px (0.70rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "1.12px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "caption",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "11.2px (0.70rem)",
+        "weight": 400,
+        "lineHeight": "1.55",
+        "spacing": "0.672px",
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "10.88px (0.68rem)",
+        "weight": 500,
+        "lineHeight": null,
+        "spacing": "0.4352px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "10.4px (0.65rem)",
+        "weight": 600,
+        "lineHeight": null,
+        "spacing": "1.56px",
+        "transform": "uppercase"
+      },
+      {
+        "context": "caption",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "10.4px (0.65rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": "0.48px",
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "10.4px (0.65rem)",
+        "weight": 700,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "link",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "10.4px (0.65rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.416px",
+        "transform": null
+      },
+      {
+        "context": "ui",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "10.4px (0.65rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.416px",
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Raleway",
+        "fallbacks": null,
+        "size": "10.4px (0.65rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.416px",
+        "transform": null
+      },
+      {
+        "context": "caption",
+        "family": "Cinzel",
+        "fallbacks": null,
+        "size": "9.6px (0.60rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": "0.48px",
+        "transform": "uppercase"
+      }
+    ],
+    "sources": {
+      "googleFonts": [],
+      "adobeFonts": false,
+      "variableFonts": false,
+      "selfHostedFonts": [],
+      "customFonts": []
+    }
+  },
+  "spacing": {
+    "scaleType": "8px",
+    "commonValues": [
+      {
+        "px": "2.4px",
+        "display": "2.4px",
+        "rem": "0.15rem",
+        "count": 12,
+        "numericValue": 2.4
+      },
+      {
+        "px": "3.2px",
+        "display": "3.2px",
+        "rem": "0.20rem",
+        "count": 8,
+        "numericValue": 3.2
+      },
+      {
+        "px": "4px",
+        "display": "4px",
+        "rem": "0.25rem",
+        "count": 56,
+        "numericValue": 4
+      },
+      {
+        "px": "4.8px",
+        "display": "4.8px",
+        "rem": "0.30rem",
+        "count": 13,
+        "numericValue": 4.8
+      },
+      {
+        "px": "5.6px",
+        "display": "5.6px",
+        "rem": "0.35rem",
+        "count": 9,
+        "numericValue": 5.6
+      },
+      {
+        "px": "6.4px",
+        "display": "6.4px",
+        "rem": "0.40rem",
+        "count": 10,
+        "numericValue": 6.4
+      },
+      {
+        "px": "8px",
+        "display": "8px",
+        "rem": "0.50rem",
+        "count": 16,
+        "numericValue": 8
+      },
+      {
+        "px": "9.6px",
+        "display": "9.6px",
+        "rem": "0.60rem",
+        "count": 8,
+        "numericValue": 9.6
+      },
+      {
+        "px": "11.2px",
+        "display": "11.2px",
+        "rem": "0.70rem",
+        "count": 24,
+        "numericValue": 11.2
+      },
+      {
+        "px": "12px",
+        "display": "12px",
+        "rem": "0.75rem",
+        "count": 12,
+        "numericValue": 12
+      },
+      {
+        "px": "12.8px",
+        "display": "12.8px",
+        "rem": "0.80rem",
+        "count": 9,
+        "numericValue": 12.8
+      },
+      {
+        "px": "14.4px",
+        "display": "14.4px",
+        "rem": "0.90rem",
+        "count": 6,
+        "numericValue": 14.4
+      },
+      {
+        "px": "16px",
+        "display": "16px",
+        "rem": "1.00rem",
+        "count": 8,
+        "numericValue": 16
+      },
+      {
+        "px": "19.2px",
+        "display": "19.2px",
+        "rem": "1.20rem",
+        "count": 5,
+        "numericValue": 19.2
+      },
+      {
+        "px": "20px",
+        "display": "20px",
+        "rem": "1.25rem",
+        "count": 2,
+        "numericValue": 20
+      },
+      {
+        "px": "24px",
+        "display": "24px",
+        "rem": "1.50rem",
+        "count": 1,
+        "numericValue": 24
+      },
+      {
+        "px": "28.8px",
+        "display": "28.8px",
+        "rem": "1.80rem",
+        "count": 6,
+        "numericValue": 28.8
+      },
+      {
+        "px": "32px",
+        "display": "32px",
+        "rem": "2.00rem",
+        "count": 10,
+        "numericValue": 32
+      },
+      {
+        "px": "40px",
+        "display": "40px",
+        "rem": "2.50rem",
+        "count": 3,
+        "numericValue": 40
+      },
+      {
+        "px": "48px",
+        "display": "48px",
+        "rem": "3.00rem",
+        "count": 2,
+        "numericValue": 48
+      }
+    ]
+  },
+  "borderRadius": {
+    "values": [
+      {
+        "value": "2px",
+        "count": 2,
+        "elements": [
+          "span"
+        ],
+        "confidence": "low",
+        "numericValue": 2
+      },
+      {
+        "value": "3px",
+        "count": 5,
+        "elements": [
+          "span"
+        ],
+        "confidence": "medium",
+        "numericValue": 3
+      },
+      {
+        "value": "6px",
+        "count": 5,
+        "elements": [
+          "button",
+          "badge"
+        ],
+        "confidence": "medium",
+        "numericValue": 6
+      },
+      {
+        "value": "8px",
+        "count": 5,
+        "elements": [
+          "badge",
+          "input",
+          "div"
+        ],
+        "confidence": "medium",
+        "numericValue": 8
+      },
+      {
+        "value": "12px",
+        "count": 28,
+        "elements": [
+          "button",
+          "card",
+          "div",
+          "input",
+          "modal"
+        ],
+        "confidence": "high",
+        "numericValue": 12
+      },
+      {
+        "value": "16px",
+        "count": 2,
+        "elements": [
+          "div",
+          "modal"
+        ],
+        "confidence": "low",
+        "numericValue": 16
+      },
+      {
+        "value": "20px",
+        "count": 1,
+        "elements": [
+          "badge"
+        ],
+        "confidence": "low",
+        "numericValue": 20
+      },
+      {
+        "value": "99px",
+        "count": 3,
+        "elements": [
+          "button",
+          "badge"
+        ],
+        "confidence": "low",
+        "numericValue": 99
+      },
+      {
+        "value": "50%",
+        "count": 13,
+        "elements": [
+          "span",
+          "button",
+          "div",
+          "canvas"
+        ],
+        "confidence": "high",
+        "numericValue": 50
+      }
+    ]
+  },
+  "borders": {
+    "combinations": [
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(204, 148, 51, 0.1)",
+        "count": 9,
+        "elements": [
+          "card"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(53, 46, 39, 0.5)",
+        "count": 8,
+        "elements": [
+          "button",
+          "span",
+          "input"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(53, 46, 39)",
+        "count": 8,
+        "elements": [
+          "button",
+          "input",
+          "modal"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "0px 0px 1px",
+        "style": "none none solid",
+        "color": "rgb(230, 160, 0)",
+        "count": 6,
+        "elements": [
+          "th",
+          "h3"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(107, 85, 46, 0.4)",
+        "count": 5,
+        "elements": [
+          "span"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(204, 148, 51, 0.15)",
+        "count": 4,
+        "elements": [
+          "card",
+          "header",
+          "modal"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "2px",
+        "style": "solid",
+        "color": "rgb(230, 160, 0)",
+        "count": 2,
+        "elements": [
+          "button",
+          "card"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(204, 148, 51, 0.2)",
+        "count": 2,
+        "elements": [
+          "button"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "2px",
+        "style": "solid",
+        "color": "rgba(73, 64, 54, 0.4)",
+        "count": 1,
+        "elements": [
+          "button"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px 0px 0px",
+        "style": "solid none none",
+        "color": "rgb(53, 46, 39)",
+        "count": 1,
+        "elements": [
+          "footer"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(82, 177, 224, 0.5)",
+        "count": 1,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "2px",
+        "style": "solid",
+        "color": "rgb(53, 46, 39)",
+        "count": 1,
+        "elements": [
+          "card"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(230, 155, 26, 0.7)",
+        "count": 1,
+        "elements": [
+          "card"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(230, 155, 26, 0.6)",
+        "count": 1,
+        "elements": [
+          "card"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(230, 160, 0)",
+        "count": 1,
+        "elements": [
+          "button"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "0px 1px 0px 0px",
+        "style": "none solid none none",
+        "color": "rgb(237, 232, 222)",
+        "count": 1,
+        "elements": [
+          "aside"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "0px 0px 0px 2px",
+        "style": "none none none solid",
+        "color": "rgb(237, 232, 222)",
+        "count": 1,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "2px",
+        "style": "solid",
+        "color": "rgba(204, 148, 51, 0.3)",
+        "count": 1,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "3px",
+        "style": "solid",
+        "color": "rgb(230, 160, 0)",
+        "count": 1,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low"
+      }
+    ]
+  },
+  "shadows": [
+    {
+      "shadow": "rgba(230, 160, 0, 0.2) 0px 0px 20px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "count": 2,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(204, 148, 51, 0.15) 0px 0px 15px 0px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(230, 160, 0, 0.3) 0px 0px 20px 0px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(230, 160, 0, 0.25) 0px 0px 32px 0px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(230, 160, 0, 0.2) 0px 0px 24px 0px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(230, 160, 0, 0.15) 0px 0px 40px 0px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(230, 160, 0, 0.3) 0px 0px 30px 0px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(230, 160, 0, 0.3) 0px 0px 40px 0px, rgba(230, 160, 0, 0.1) 0px 0px 80px 0px",
+      "count": 1,
+      "confidence": "low"
+    }
+  ],
+  "gradients": [
+    {
+      "gradient": "linear-gradient(rgba(14, 12, 11, 0.25) 0%, rgba(14, 12, 11, 0.55) 40%, rgba(14, 12, 11, 0.88) 75%, rgba(14, 12, 11, 0.97) 100%)",
+      "type": "linear",
+      "stopColors": [
+        "rgba(14, 12, 11, 0.25)",
+        "rgba(14, 12, 11, 0.55)",
+        "rgba(14, 12, 11, 0.88)",
+        "rgba(14, 12, 11, 0.97)"
+      ],
+      "count": 1
+    },
+    {
+      "gradient": "linear-gradient(135deg, rgb(232, 184, 77), rgb(230, 160, 0), rgb(139, 90, 0))",
+      "type": "linear",
+      "stopColors": [
+        "rgb(232, 184, 77)",
+        "rgb(230, 160, 0)",
+        "rgb(139, 90, 0)"
+      ],
+      "count": 1
+    },
+    {
+      "gradient": "linear-gradient(135deg, rgb(139, 90, 0), rgb(230, 160, 0), rgb(232, 184, 77))",
+      "type": "linear",
+      "stopColors": [
+        "rgb(139, 90, 0)",
+        "rgb(230, 160, 0)",
+        "rgb(232, 184, 77)"
+      ],
+      "count": 1
+    }
+  ],
+  "motion": {
+    "durations": [
+      {
+        "value": "0.001s",
+        "ms": 1,
+        "count": 134
+      }
+    ],
+    "easings": [
+      {
+        "value": "ease",
+        "type": "ease",
+        "count": 126
+      },
+      {
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "type": "ease-out",
+        "count": 20
+      },
+      {
+        "value": "linear",
+        "type": "linear",
+        "count": 1
+      }
+    ],
+    "animations": [
+      {
+        "name": "float",
+        "duration": "0.001s",
+        "easing": "ease-in-out",
+        "count": 1,
+        "contexts": [
+          "hero"
+        ]
+      },
+      {
+        "name": "pulseGlow",
+        "duration": "0.001s",
+        "easing": "ease-in-out",
+        "count": 1,
+        "contexts": [
+          "button"
+        ]
+      }
+    ],
+    "contexts": {
+      "hero": {
+        "count": 8,
+        "durations": [
+          "0.001s"
+        ],
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "easingType": "ease-out",
+        "props": [
+          "opacity",
+          "transform"
+        ]
+      },
+      "modal": {
+        "count": 1,
+        "durations": [
+          "0.001s"
+        ],
+        "easing": "ease",
+        "easingType": "ease",
+        "props": []
+      },
+      "nav": {
+        "count": 4,
+        "durations": [
+          "0.001s"
+        ],
+        "easing": "ease",
+        "easingType": "ease",
+        "props": [
+          "opacity",
+          "transform"
+        ]
+      },
+      "button": {
+        "count": 5,
+        "durations": [
+          "0.001s"
+        ],
+        "easing": "ease",
+        "easingType": "ease",
+        "props": [
+          "border-color",
+          "opacity",
+          "color"
+        ]
+      },
+      "link": {
+        "count": 3,
+        "durations": [
+          "0.001s"
+        ],
+        "easing": "ease",
+        "easingType": "ease",
+        "props": [
+          "color",
+          "opacity"
+        ]
+      }
+    },
+    "interactiveDeltas": [
+      {
+        "tag": "button",
+        "text": "𓀀𓀁\n                        D",
+        "pattern": "color-shift",
+        "delta": {
+          "color": {
+            "from": "rgb(163, 140, 117)",
+            "to": "rgb(237, 232, 222)"
+          }
+        }
+      },
+      {
+        "tag": "a",
+        "text": "MCP Server",
+        "pattern": "color-shift",
+        "delta": {
+          "color": {
+            "from": "rgb(230, 160, 0)",
+            "to": "rgb(232, 184, 77)"
+          }
+        }
+      },
+      {
+        "tag": "a",
+        "text": "by Edouard Foussier",
+        "pattern": "fade-in",
+        "delta": {
+          "opacity": {
+            "from": "0.7",
+            "to": "1"
+          }
+        }
+      }
+    ]
+  },
+  "components": {
+    "buttons": [
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgba(50, 41, 27, 0.4)",
+            "color": "rgb(230, 160, 0)",
+            "padding": "11.2px 24px",
+            "borderRadius": "12px",
+            "border": "2px solid rgb(230, 160, 0)",
+            "boxShadow": "rgba(204, 148, 51, 0.15) 0px 0px 15px 0px",
+            "fontSize": "13.3333px",
+            "fontWeight": "400"
+          }
+        },
+        "fontWeight": "400",
+        "fontSize": "13.3333px",
+        "text": "𓀀 Solo",
+        "confidence": "high"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgba(34, 31, 28, 0.6)",
+            "color": "rgb(163, 140, 117)",
+            "padding": "11.2px 24px",
+            "borderRadius": "12px",
+            "border": "2px solid rgba(73, 64, 54, 0.4)",
+            "fontSize": "13.3333px",
+            "fontWeight": "400"
+          }
+        },
+        "fontWeight": "400",
+        "fontSize": "13.3333px",
+        "text": "𓀀𓀁 Duel",
+        "confidence": "high"
+      }
+    ],
+    "inputs": {
+      "text": [],
+      "checkbox": [],
+      "radio": [],
+      "select": []
+    },
+    "links": [
+      {
+        "color": "rgb(230, 160, 0)",
+        "textDecoration": "underline",
+        "fontWeight": "400",
+        "states": {
+          "default": {
+            "color": "rgb(230, 160, 0)",
+            "textDecoration": "underline"
+          },
+          "hover": {
+            "color": "var(--gold-light)"
+          }
+        }
+      },
+      {
+        "color": "rgb(163, 140, 117)",
+        "textDecoration": "none",
+        "fontWeight": "400",
+        "states": {
+          "default": {
+            "color": "rgb(163, 140, 117)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--gold)"
+          }
+        }
+      }
+    ],
+    "badges": {
+      "all": [],
+      "byVariant": {
+        "error": [],
+        "warning": [],
+        "success": [],
+        "info": [],
+        "neutral": []
+      }
+    }
+  },
+  "breakpoints": [
+    {
+      "px": "390px"
+    },
+    {
+      "px": "520px"
+    },
+    {
+      "px": "768px"
+    },
+    {
+      "px": "900px"
+    }
+  ],
+  "iconSystem": [
+    {
+      "name": "SVG Icons",
+      "type": "svg"
+    }
+  ],
+  "frameworks": [
+    {
+      "name": "Element Plus/UI",
+      "confidence": "high",
+      "evidence": "10 el- components"
+    }
+  ]
+}
