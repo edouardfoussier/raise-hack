@@ -5,6 +5,7 @@ import { Logo } from "@/components/logo";
 import { SidebarNav } from "@/components/dashboard/sidebar-nav";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
 import { UserMenu } from "@/components/dashboard/user-menu";
+import { LogoutButton } from "@/components/dashboard/logout-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -49,7 +50,8 @@ export default async function DashboardLayout({
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar md:flex">
         <div className="flex h-16 items-center px-5">
           <Link
-            href="/dashboard"
+            href="/"
+            aria-label="Scenario home"
             className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Logo />
@@ -58,8 +60,9 @@ export default async function DashboardLayout({
         <div className="flex-1 overflow-y-auto px-3 py-2">
           <SidebarNav />
         </div>
-        <div className="p-3">
+        <div className="space-y-2 p-3">
           <PlanCard plan={billing.plan} />
+          <LogoutButton />
         </div>
       </aside>
 
@@ -67,7 +70,7 @@ export default async function DashboardLayout({
       <div className="flex min-h-dvh flex-col md:pl-64">
         <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border/70 bg-background/70 px-4 backdrop-blur-xl sm:px-8">
           <MobileNav />
-          <Link href="/dashboard" className="md:hidden">
+          <Link href="/" aria-label="Scenario home" className="md:hidden">
             <Logo showWordmark={false} />
           </Link>
           <div className="ml-auto flex items-center gap-2 sm:gap-3">

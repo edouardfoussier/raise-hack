@@ -112,6 +112,8 @@ export default async function SharePage({ params }: PageProps) {
             durationSec={video.durationSec}
             title={video.title}
             processing={!ready}
+            src={video.videoUrl}
+            poster={video.thumbnailUrl}
           />
 
           <div className="mt-6 flex flex-col gap-5 sm:mt-8 sm:flex-row sm:items-start sm:justify-between">

@@ -20,6 +20,10 @@ type SharePlayerProps = {
   durationSec: number;
   title: string;
   processing?: boolean;
+  /** Real media file (served from /public). When set, a native player is used. */
+  src?: string;
+  /** Poster image shown before the real video plays. */
+  poster?: string;
   /** Rotating faux caption lines shown while "playing". */
   captions?: string[];
   className?: string;
@@ -37,7 +41,47 @@ const DEFAULT_CAPTIONS = [
  * animates a scrubber, a light sweep and a rotating caption to sell the demo
  * artifact. The scrubber is seekable for a touch of interactivity.
  */
-export function SharePlayer({
+/**
+ * Public share player. When a real `src` is available it renders a native
+ * `<video controls>` inside the premium frame; otherwise it falls back to the
+ * deterministic mock animation. Split into two components so the hook-driven
+ * mock never runs conditionally.
+ */
+export function SharePlayer(props: SharePlayerProps) {
+  if (props.src && !props.processing) {
+    return <RealPlayer {...props} src={props.src} />;
+  }
+  return <MockPlayer {...props} />;
+}
+
+function RealPlayer({
+  src,
+  poster,
+  title,
+  className,
+}: SharePlayerProps & { src: string }) {
+  return (
+    <div
+      className={cn(
+        "group/player relative isolate aspect-video w-full overflow-hidden rounded-2xl border border-border/70 bg-black shadow-2xl shadow-black/50 ring-1 ring-white/5",
+        className,
+      )}
+    >
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video
+        src={src}
+        poster={poster}
+        controls
+        playsInline
+        preload="metadata"
+        className="absolute inset-0 size-full object-contain"
+        aria-label={title}
+      />
+    </div>
+  );
+}
+
+function MockPlayer({
   color,
   durationSec,
   title,

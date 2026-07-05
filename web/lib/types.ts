@@ -46,6 +46,8 @@ export interface Video {
   thumbnailColor: string;
   /** Optional real thumbnail image; falls back to the gradient poster. */
   thumbnailUrl?: string;
+  /** Optional real media file (served from /public); enables the real player. */
+  videoUrl?: string;
   durationSec: number;
   status: VideoStatus;
   /** ISO-8601 timestamp. */

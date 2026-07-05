@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { CreditCard, LogOut, Settings, Sparkles } from "lucide-react";
 
@@ -29,12 +30,25 @@ function initialsOf(name: string): string {
 }
 
 export function UserMenu({ user }: { user: AppUser }) {
+  const router = useRouter();
+
   // Real Clerk session: use Clerk's own account switcher.
   if (USE_CLERK) {
     return <UserButton />;
   }
 
   const initials = initialsOf(user.name);
+
+  const handleDemoSignOut = () => {
+    try {
+      window.localStorage.removeItem("scenario.demo-session");
+      window.sessionStorage.removeItem("scenario.demo-session");
+    } catch {
+      // Storage unavailable — ignore.
+    }
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <DropdownMenu>
@@ -75,9 +89,9 @@ export function UserMenu({ user }: { user: AppUser }) {
           Upgrade plan
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem render={<Link href="/" />}>
+        <DropdownMenuItem onClick={handleDemoSignOut}>
           <LogOut className="text-muted-foreground" />
-          Sign out
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
