@@ -5,7 +5,7 @@ import path from "node:path";
 /**
  * POST /api/generate — the LIVE "Generate demo" endpoint.
  *
- * Accepts { url, goal, captions, voice } and drives the Scenario engine
+ * Accepts { url, goal, captions, voice } and drives the Diffender engine
  * (mcp-server/src/cli-demo.ts) end-to-end:
  *
  *   goal + URL → AI plan → captioned deterministic replay → intro/outro
@@ -151,7 +151,7 @@ export async function POST(request: Request): Promise<Response> {
     DEMO_URL: url,
     DEMO_GOAL: goal,
     DEMO_DEVICE: device,
-    DEMO_TITLE: process.env.DEMO_TITLE?.trim() || "Scenario",
+    DEMO_TITLE: process.env.DEMO_TITLE?.trim() || "Diffender",
     ...dejaEnv(url),
   };
 

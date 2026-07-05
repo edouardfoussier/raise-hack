@@ -62,7 +62,7 @@ export default async function DashboardLayout({
         <div className="flex h-16 items-center px-5">
           <Link
             href="/"
-            aria-label="Scenario home"
+            aria-label="Diffender home"
             className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Logo />

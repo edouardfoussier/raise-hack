@@ -16,19 +16,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://getscenar.io"),
+  metadataBase: new URL("https://diffender.com"),
   title: {
-    default: "Scenario — Ship the demo, not just the code.",
-    template: "%s · Scenario",
+    default: "Diffender — Ship the demo, not just the code.",
+    template: "%s · Diffender",
   },
   description:
-    "Scenario auto-generates polished, deterministic demo videos of your web app — captions, voice-over, intro/outro and a shareable link, straight from your real components.",
+    "Diffender auto-generates polished, deterministic demo videos of your web app — captions, voice-over, intro/outro and a shareable link, straight from your real components.",
   openGraph: {
-    title: "Scenario — Ship the demo, not just the code.",
+    title: "Diffender — Ship the demo, not just the code.",
     description:
       "Deterministic, shareable demo videos of your web app, generated from your real components.",
-    url: "https://getscenar.io",
-    siteName: "Scenario",
+    url: "https://diffender.com",
+    siteName: "Diffender",
     type: "website",
   },
 };

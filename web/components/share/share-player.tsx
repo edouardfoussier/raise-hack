@@ -30,7 +30,7 @@ type SharePlayerProps = {
 };
 
 const DEFAULT_CAPTIONS = [
-  "Connect your repo — Scenario drives your real UI.",
+  "Connect your repo — Diffender drives your real UI.",
   "Describe the flow, or let the AI planner map it out.",
   "Captions and voice-over are generated automatically.",
   "Ship a polished, deterministic demo in a single link.",

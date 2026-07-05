@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 import { getProjectById, getVideoById, getVideoByShareId } from "@/lib/mock-data";
 import { formatCompactNumber, formatDuration } from "@/lib/format";
 
-export const alt = "A deterministic product demo generated with Scenario";
+export const alt = "A deterministic product demo generated with Diffender";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -74,7 +74,7 @@ export default async function OpengraphImage({ params }: Props) {
             </svg>
           </div>
           <div style={{ display: "flex", fontSize: 36, fontWeight: 600 }}>
-            Scenario
+            Diffender
           </div>
         </div>
 

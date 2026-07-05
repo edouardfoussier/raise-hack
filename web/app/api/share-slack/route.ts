@@ -147,7 +147,7 @@ export async function POST(request: Request): Promise<Response> {
   const ref = body.videoPath?.trim() || body.videoUrl?.trim();
   if (!ref) return fail("missing 'videoPath' (or 'videoUrl')");
 
-  const title = body.title?.trim() || "Scenario demo";
+  const title = body.title?.trim() || "Diffender demo";
 
   const absPath = resolvePublicMp4(ref);
   if (!absPath) {
@@ -162,7 +162,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const filename = `${path.basename(absPath, ".mp4")}.mp4`;
-  const comment = `🎬 New Scenario demo — ${title}`;
+  const comment = `🎬 New Diffender demo — ${title}`;
   const client = new WebClient(token);
 
   try {

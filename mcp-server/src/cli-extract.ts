@@ -1,12 +1,12 @@
 /**
- * Scenario — "connect your live app" brick (CLI).
+ * Diffender — "connect your live app" brick (CLI).
  *
  *   URL  →  dembrandt (headless browser extraction)  →  design-system JSON
  *   →  clean console summary (brand colors / type scale / spacing / motion /
  *      breakpoints / component count).
  *
  * This is the "extracted design system" a coding agent shows when you connect
- * your running app to Scenario — the same tokens Drift then reviews your edits
+ * your running app to Diffender — the same tokens Drift then reviews your edits
  * against. Runs entirely through `npx dembrandt` (no extra deps here).
  *
  *   EXTRACT_URL=https://thesphinx.ai npx tsx src/cli-extract.ts

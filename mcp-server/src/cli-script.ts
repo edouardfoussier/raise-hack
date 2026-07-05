@@ -1,5 +1,5 @@
 /**
- * Scenario — per-step voice-over DRAFT generator.
+ * Diffender — per-step voice-over DRAFT generator.
  *
  * Given a demo GOAL (and the app URL for light context), write a short draft
  * narration as ONE SPOKEN LINE PER STEP (newline-separated). The wizard shows

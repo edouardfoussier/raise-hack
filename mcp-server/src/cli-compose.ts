@@ -14,10 +14,10 @@ const outDir = path.resolve(process.cwd(), "..", ".drift-cache", "deja-reception
 console.log("⧗ composing intro + demo + outro …");
 const res = await composeVideo({
   inputVideo,
-  title: "Scenario",
+  title: "Diffender",
   subtitle: "AI-generated product demo — deterministic replay",
-  cta: "Try it → getscenar.io",
-  url: "getscenar.io",
+  cta: "Try it → diffender.com",
+  url: "diffender.com",
   outDir,
 });
 

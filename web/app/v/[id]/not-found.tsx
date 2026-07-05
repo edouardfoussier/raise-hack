@@ -38,7 +38,7 @@ export default function ShareNotFound() {
           </h1>
           <p className="mt-3 text-pretty text-sm text-muted-foreground">
             The demo you&apos;re looking for may have been unpublished or the link
-            was mistyped. Explore Scenario or watch a live example instead.
+            was mistyped. Explore Diffender or watch a live example instead.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
@@ -49,7 +49,7 @@ export default function ShareNotFound() {
                 "h-10 gap-2 rounded-xl px-5",
               )}
             >
-              Back to Scenario
+              Back to Diffender
               <ArrowRight className="size-4" />
             </Link>
             <Link

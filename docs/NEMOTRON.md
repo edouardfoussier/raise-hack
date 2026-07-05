@@ -17,4 +17,4 @@ The image-based drift verdicts stay on a vision model (Nemotron 3 Super is text-
 so the planner describes the JSON shape in-prompt and rescue-parses off-schema replies.
 
 **Prize writeup:** Nemotron (via Nebius Token Factory) is the agent brain that turns a
-natural-language goal into a replayable UI flow — every demo video Scenario produces is planned by Nemotron.
+natural-language goal into a replayable UI flow — every demo video Diffender produces is planned by Nemotron.

@@ -1,6 +1,6 @@
 /**
  * cli-submission.ts — assembles the 60-second RAISE-hack SUBMISSION video for
- * "Scenario" from existing assets, timed to a Gradium voice-over.
+ * "Diffender" from existing assets, timed to a Gradium voice-over.
  *
  * Pipeline:
  *   1. TTS each of the 6 script segments → WAV (Gradium, default EN voice).
@@ -45,12 +45,12 @@ const REVIEW_PNG = path.join(CACHE, "moneyshot", "review-report.png");
 const RECEPTION = path.join(CACHE, "deja-reception", "reception.webm");
 
 const SCRIPT: string[] = [
-  "I'm Edouard — I built Scenario for RAISE-hack, remotely.",
+  "I'm Edouard — I built Diffender for RAISE-hack, remotely.",
   "AI ships UI five times faster than anyone can review. Cursor shows you it runs — but did it stay on your design system?",
-  "Scenario replays your real UI before and after a change, reasoning in your design tokens. This padding drifted off the scale, the color left the palette — accidental regression, and here's the fix.",
+  "Diffender replays your real UI before and after a change, reasoning in your design tokens. This padding drifted off the scale, the color left the palette — accidental regression, and here's the fix.",
   "It doesn't just review. Describe a flow, and its AI drives your real app deterministically, filming the perfect demo. Watch the stock jump from sixty to seventy-two.",
-  "Captions, voice-over by Gradium, a branded intro and outro. And this whole video? Made by Scenario.",
-  "Ship the demo, not just the code. Scenario — get scenar dot I O.",
+  "Captions, voice-over by Gradium, a branded intro and outro. And this whole video? Made by Diffender.",
+  "Ship the demo, not just the code. Diffender — diffender dot com.",
 ];
 
 /* ------------------------------ ffprobe ------------------------------ */
@@ -127,8 +127,8 @@ function cardShell(inner: string): string {
 
 function seg1Html(): string {
   return cardShell(`
-    <div class="mark"><span class="flame">&#9670;</span> Scenario</div>
-    <div class="title">Scenario</div>
+    <div class="mark"><span class="flame">&#9670;</span> Diffender</div>
+    <div class="title">Diffender</div>
     <div class="subtitle">built by <span class="accent">Edouard</span> · RAISE-hack <span class="accent">(remote)</span></div>
   `);
 }
@@ -143,16 +143,16 @@ function seg2Html(): string {
 
 function seg5Html(): string {
   return cardShell(`
-    <div class="mark"><span class="flame">&#9670;</span> Scenario</div>
+    <div class="mark"><span class="flame">&#9670;</span> Diffender</div>
     <div class="reveal">Captions, voice-over, a branded intro &amp; outro.<br/>
-      This whole video was <span class="accent">made by Scenario.</span></div>
+      This whole video was <span class="accent">made by Diffender.</span></div>
   `);
 }
 
 function seg6Html(): string {
   return cardShell(`
     <div class="cta">Ship the demo, <span class="accent">not just the code.</span></div>
-    <div class="pill">getscenar.io</div>
+    <div class="pill">diffender.com</div>
   `);
 }
 

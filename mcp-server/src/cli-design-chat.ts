@@ -1,5 +1,5 @@
 /**
- * cli-design-chat — a tiny bridge the Scenario web app shells out to for the
+ * cli-design-chat — a tiny bridge the Diffender web app shells out to for the
  * design-intent chat (the brief's "example 3").
  *
  * It reuses the engine's model selection (`selectModel` from ./vlm) and the

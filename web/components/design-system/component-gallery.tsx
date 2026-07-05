@@ -161,7 +161,7 @@ export function ComponentGallery({ avatars }: { avatars: string[] }) {
             </div>
             <div className="space-y-1.5">
               <label className="text-xs text-muted-foreground">Repository</label>
-              <Input defaultValue="getscenario/web" />
+              <Input defaultValue="diffender/web" />
             </div>
             <Input placeholder="Disabled" disabled />
           </div>
@@ -241,7 +241,7 @@ export function ComponentGallery({ avatars }: { avatars: string[] }) {
           <Card size="sm">
             <CardHeader>
               <CardTitle>Onboarding in 60s</CardTitle>
-              <CardDescription>Scenario Web</CardDescription>
+              <CardDescription>Diffender Web</CardDescription>
               <CardAction>
                 <Badge variant="secondary">Ready</Badge>
               </CardAction>

@@ -71,10 +71,10 @@ export function buildReportHtml(opts: {
 
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Scenario review — ${escapeHtml(opts.filePath)}</title>
+<title>Diffender review — ${escapeHtml(opts.filePath)}</title>
 <style>${CSS}</style></head><body>
 <header class="top">
-  <div class="brand">◈ Scenario</div>
+  <div class="brand">◈ Diffender</div>
   <div class="meta">${escapeHtml(opts.filePath)} · <span class="mode">${modeLabel}</span></div>
 </header>
 <section class="verdict" style="--badge:${b.color};--badgebg:${b.bg}">
@@ -89,7 +89,7 @@ export function buildReportHtml(opts: {
   <h3>Proposed fix</h3>
   ${diffHtml}
 </section>
-<footer class="foot">Reviewed by <strong>Scenario</strong> · ${escapeHtml(opts.model)} · reasons in your design tokens, not pixels.</footer>
+<footer class="foot">Reviewed by <strong>Diffender</strong> · ${escapeHtml(opts.model)} · reasons in your design tokens, not pixels.</footer>
 </body></html>`;
 }
 

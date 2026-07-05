@@ -1,5 +1,5 @@
 /**
- * Scenario — PROTOTYPE "repo → video" brick.
+ * Diffender — PROTOTYPE "repo → video" brick.
  *
  *   local repo dir  →  serve it on localhost  →  AI plan  →  captioned replay
  *   →  branded intro/outro  →  final.mp4  →  tear the server down.
@@ -16,8 +16,8 @@
  *   REPO_GOAL   — natural-language goal for the AI planner (required)
  *   REPO_ENTRY  — entry page for static repos (default: index.html, else first *.html)
  *   REPO_PORT   — force a port (default: OS-assigned free port)
- *   REPO_TITLE  — intro brand word (default "Scenario")
- *   REPO_CTA    — outro call-to-action (default "Try it → getscenar.io")
+ *   REPO_TITLE  — intro brand word (default "Diffender")
+ *   REPO_CTA    — outro call-to-action (default "Try it → diffender.com")
  *
  * How the repo is served (detection order):
  *   1. package.json with a "dev" or "start" script  → `npm run <script>` child
@@ -43,8 +43,8 @@ import { composeVideo } from "./compose.js";
 // ── Env ─────────────────────────────────────────────────────────────────────
 const REPO_DIR = process.env.REPO_DIR;
 const GOAL = process.env.REPO_GOAL;
-const TITLE = process.env.REPO_TITLE || "Scenario";
-const CTA = process.env.REPO_CTA || "Try it → getscenar.io";
+const TITLE = process.env.REPO_TITLE || "Diffender";
+const CTA = process.env.REPO_CTA || "Try it → diffender.com";
 const BRAND = "#FF5A1F";
 
 if (!REPO_DIR) fail("REPO_DIR is required (path to the repo to demo).");
@@ -328,7 +328,7 @@ async function main(): Promise<void> {
       title: TITLE,
       subtitle: "AI-generated demo — straight from the repo",
       cta: CTA,
-      url: "getscenar.io",
+      url: "diffender.com",
       brand: BRAND,
       outDir: path.join(cacheDir, "composed"),
     });

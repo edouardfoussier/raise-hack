@@ -134,7 +134,7 @@ export function GenerateDemoForm() {
                 Generate a demo
               </h2>
               <p className="text-xs text-muted-foreground">
-                Paste an app URL and a goal — Scenario films it for you.
+                Paste an app URL and a goal — Diffender films it for you.
               </p>
             </div>
           </div>

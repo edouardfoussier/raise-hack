@@ -394,7 +394,7 @@ function SourceStep({
       <StepHeader
         icon={<Clapperboard className="size-4" />}
         title="What should we film?"
-        subtitle="Point Scenario at a live app URL and choose the kind of video."
+        subtitle="Point Diffender at a live app URL and choose the kind of video."
       />
 
       <div className="space-y-1.5">
@@ -681,7 +681,7 @@ function GenerateStep({
         <StepHeader
           icon={<Wand2 className="size-4" />}
           title="Review & generate"
-          subtitle="Scenario plans, records and narrates a deterministic replay."
+          subtitle="Diffender plans, records and narrates a deterministic replay."
         />
 
         <dl className="space-y-2.5 rounded-xl border border-border bg-background/40 p-4 text-sm">
@@ -767,7 +767,7 @@ function GenerateStep({
                 </Button>
                 <ShareToSlackButton
                   videoPath={result.videoUrl}
-                  title={goal.trim() ? `Scenario demo — ${goal.trim()}` : "Scenario demo"}
+                  title={goal.trim() ? `Diffender demo — ${goal.trim()}` : "Diffender demo"}
                 />
               </div>
             </div>

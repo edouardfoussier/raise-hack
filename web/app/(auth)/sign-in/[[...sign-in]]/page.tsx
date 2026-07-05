@@ -29,7 +29,7 @@ export default function SignInPage() {
   return (
     <Card className="w-full max-w-sm rounded-2xl">
       <CardHeader className="items-center text-center">
-        <CardTitle className="text-xl">Sign in to Scenario</CardTitle>
+        <CardTitle className="text-xl">Sign in to Diffender</CardTitle>
         <CardDescription>Continue to your dashboard</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

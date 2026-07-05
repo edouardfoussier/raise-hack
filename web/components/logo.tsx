@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Scenario brand mark: a rounded flame tile with a play glyph. */
+/** Diffender brand mark: a rounded flame tile with a play glyph. */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <span
@@ -36,7 +36,7 @@ export function Logo({
       <LogoMark />
       {showWordmark ? (
         <span className="font-heading text-[0.95rem] font-semibold tracking-tight text-foreground">
-          Scenario
+          Diffender
         </span>
       ) : null}
     </span>

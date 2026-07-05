@@ -21,7 +21,7 @@ export default function ProjectsPage() {
             Projects
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Connected repos and apps Scenario films. Generate a deterministic
+            Connected repos and apps Diffender films. Generate a deterministic
             demo from any project.
           </p>
         </div>

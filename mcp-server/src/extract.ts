@@ -1,5 +1,5 @@
 /**
- * Scenario — shared "extract a design system from a URL" core.
+ * Diffender — shared "extract a design system from a URL" core.
  *
  * Drives a headless browser over a URL via `npx dembrandt --save-output`,
  * finds the JSON it writes, and turns it into a plain-text design-system
@@ -208,7 +208,7 @@ export function buildSummary(
   // ── One-line headline the agent can echo ──
   line();
   line(bold("✓ ") + `${palette.length} colors · ${styles.length} text styles · ${bpVals.length} breakpoints · ${total} components`);
-  line(dim("This is your app's live design system in Scenario. Edit a component, then /drift to review it against these tokens."));
+  line(dim("This is your app's live design system in Diffender. Edit a component, then /drift to review it against these tokens."));
 
   return {
     text: out.join("\n"),

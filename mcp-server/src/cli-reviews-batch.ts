@@ -1,5 +1,5 @@
 /**
- * Batch review driver for the Scenario "Reviews per commit" feature.
+ * Batch review driver for the Diffender "Reviews per commit" feature.
  *
  * For each simulated "commit" it:
  *   1. applies a drift to sample-app/components.css (string replacements),

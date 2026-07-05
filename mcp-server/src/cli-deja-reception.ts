@@ -37,7 +37,7 @@ const PWD = process.env.DEJA_PWD || "";
 // Target product (clean data, upp=12): 1 carton reçu → +12 units on the counter.
 const PRODUCT = process.env.DEJA_PRODUCT || "ACCENT GINGER";
 const CARTONS = Number(process.env.DEJA_CARTONS || 1);
-const SUPPLIER = process.env.DEJA_SUPPLIER || "Distridrink (démo Scenario)";
+const SUPPLIER = process.env.DEJA_SUPPLIER || "Distridrink (démo Diffender)";
 const OUT = path.resolve(process.cwd(), "..", ".drift-cache", "deja-reception");
 if (!BYPASS) console.warn("⚠ DEJA_BYPASS not set — the Vercel SSO wall will block the app.");
 if (!PWD) console.warn("⚠ DEJA_PWD not set — the app will show a login screen.");
@@ -152,7 +152,7 @@ async function searchProduct(page: Page): Promise<void> {
   }
 }
 
-/** Update the synchronized caption banner (Scenario overlay). */
+/** Update the synchronized caption banner (Diffender overlay). */
 async function cap(page: Page, text: string): Promise<void> {
   await page.evaluate((t) => (window as any).__cap?.(t), text).catch(() => {});
 }

@@ -9,7 +9,7 @@ import type { Project } from "@/lib/types";
 import { formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-/** Strip the protocol so `https://app.getscenar.io` renders as `app.getscenar.io`. */
+/** Strip the protocol so `https://app.diffender.com` renders as `app.diffender.com`. */
 function prettyUrl(url: string): string {
   try {
     const { host, pathname } = new URL(url);

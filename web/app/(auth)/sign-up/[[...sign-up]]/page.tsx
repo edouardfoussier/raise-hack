@@ -27,7 +27,7 @@ export default function SignUpPage() {
     <Card className="w-full max-w-sm rounded-2xl">
       <CardHeader className="items-center text-center">
         <CardTitle className="text-xl">Create your account</CardTitle>
-        <CardDescription>Start shipping demos with Scenario</CardDescription>
+        <CardDescription>Start shipping demos with Diffender</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Link

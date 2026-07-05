@@ -210,7 +210,7 @@ function introHtml(opts: { title: string; subtitle?: string; brand: string; w: n
 
 function outroHtml(opts: { cta?: string; url?: string; title: string; brand: string; w: number; h: number }): string {
   const ctaText = opts.cta ?? "Try it now";
-  // Highlight an arrow if present ("Try it → getscenar.io").
+  // Highlight an arrow if present ("Try it → diffender.com").
   const ctaHtml = esc(ctaText).replace("→", `<span class="accent">→</span>`);
   const inner = `
     <div class="cta">${ctaHtml}</div>

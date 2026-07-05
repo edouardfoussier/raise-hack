@@ -1,5 +1,5 @@
 /**
- * Shared data contract for the Scenario web app.
+ * Shared data contract for the Diffender web app.
  *
  * These types describe the in-memory mock data exposed by `lib/mock-data.ts`.
  * Downstream pages/agents should READ this data via the accessors and rely on
@@ -19,7 +19,7 @@ export interface Project {
   name: string;
   /** GitHub-style "owner/repo" slug. */
   repo: string;
-  /** Public URL of the deployed app that Scenario films. */
+  /** Public URL of the deployed app that Diffender films. */
   appUrl: string;
   framework: Framework;
   /** ISO-8601 timestamp of the last deploy. */

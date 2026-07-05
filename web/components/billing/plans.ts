@@ -24,7 +24,7 @@ export const PLANS: PlanConfig[] = [
     name: "Free",
     price: "$0",
     period: "/mo",
-    tagline: "For trying Scenario on a single app.",
+    tagline: "For trying Diffender on a single app.",
     features: [
       { label: "Deterministic demo videos", included: true },
       { label: "Auto captions & voice-over", included: true },
@@ -47,7 +47,7 @@ export const PLANS: PlanConfig[] = [
       { label: "Share analytics", included: true, highlight: true },
       { label: "Cloned voice & custom avatar", included: true },
       { label: "Priority rendering", included: true },
-      { label: "Remove Scenario branding", included: true },
+      { label: "Remove Diffender branding", included: true },
     ],
   },
 ];

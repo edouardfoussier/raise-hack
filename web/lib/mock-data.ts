@@ -1,5 +1,5 @@
 /**
- * In-memory mock data for the Scenario web app.
+ * In-memory mock data for the Diffender web app.
  *
  * NO database — everything here is deterministic and read-only. Downstream
  * pages/agents should consume the exported accessors (getProjects, getVideos,
@@ -30,7 +30,7 @@ function avatarDataUri(initials: string, from: string, to: string): string {
 export const DEMO_USER: AppUser = {
   id: "user_demo",
   name: "Demo User",
-  email: "demo@getscenar.io",
+  email: "demo@diffender.com",
   imageUrl: avatarDataUri("DU", "#ff8a4d", "#ff5a1f"),
   isDemo: true,
 };
@@ -38,25 +38,25 @@ export const DEMO_USER: AppUser = {
 const projects: Project[] = [
   {
     id: "prj_scenario_web",
-    name: "Scenario Web",
-    repo: "getscenario/web",
-    appUrl: "https://app.getscenar.io",
+    name: "Diffender Web",
+    repo: "diffender/web",
+    appUrl: "https://app.diffender.com",
     framework: "Next.js",
     lastDeployedAt: "2026-06-28T14:22:00.000Z",
     thumbnailColor: "#ff5a1f",
     description:
-      "Marketing site and account dashboard for Scenario — the surface users land on to view and share generated demos.",
+      "Marketing site and account dashboard for Diffender — the surface users land on to view and share generated demos.",
   },
   {
     id: "prj_deja_bu",
     name: "Déjà-bu",
-    repo: "getscenario/deja-bu",
-    appUrl: "https://deja-bu.demo.getscenar.io",
+    repo: "diffender/deja-bu",
+    appUrl: "https://deja-bu.demo.diffender.com",
     framework: "Remix",
     lastDeployedAt: "2026-07-01T09:10:00.000Z",
     thumbnailColor: "#6366f1",
     description:
-      "Inventory reception app used as a live target when filming deterministic Scenario walkthroughs against a real backend.",
+      "Inventory reception app used as a live target when filming deterministic Diffender walkthroughs against a real backend.",
   },
 ];
 
@@ -68,7 +68,7 @@ const videos: Video[] = [
    * --------------------------------------------------------------------- */
   {
     id: "vid_submission",
-    title: "Scenario — 60-second submission",
+    title: "Diffender — 60-second submission",
     projectId: "prj_scenario_web",
     thumbnailColor: "#ff5a1f",
     thumbnailUrl: "/videos/submission.jpg",

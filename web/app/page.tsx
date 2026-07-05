@@ -24,7 +24,7 @@ const steps = [
   {
     icon: GitBranch,
     title: "Connect your app",
-    body: "Point Scenario at your repo or a live URL. It drives your real components in a headless browser — no mockups, no rebuilds.",
+    body: "Point Diffender at your repo or a live URL. It drives your real components in a headless browser — no mockups, no rebuilds.",
   },
   {
     icon: Wand2,
@@ -34,7 +34,7 @@ const steps = [
   {
     icon: Share2,
     title: "Get a shareable video",
-    body: "Scenario records a deterministic take with captions and voice-over, then hands you a polished, shareable link.",
+    body: "Diffender records a deterministic take with captions and voice-over, then hands you a polished, shareable link.",
   },
 ];
 
@@ -108,7 +108,7 @@ export default function Home() {
               </h1>
 
               <p className="mx-auto mt-5 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
-                Scenario auto-generates polished, deterministic demo videos of
+                Diffender auto-generates polished, deterministic demo videos of
                 your web app — with captions, voice-over and a shareable link —
                 straight from your real components.
               </p>
@@ -142,7 +142,7 @@ export default function Home() {
               From repo to shareable demo in three steps
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Scenario plans the flow, drives your real UI, and produces a
+              Diffender plans the flow, drives your real UI, and produces a
               share-ready video — no manual screen recording.
             </p>
           </div>

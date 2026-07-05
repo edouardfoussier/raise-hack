@@ -39,7 +39,7 @@ export function MobileNav() {
           <SheetTitle className="text-left">
             <Link
               href="/"
-              aria-label="Scenario home"
+              aria-label="Diffender home"
               onClick={() => setOpen(false)}
               className="inline-flex rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >

@@ -3,7 +3,7 @@ import { Captions, Eye } from "lucide-react";
 import { VideoPoster } from "@/components/video-poster";
 
 /**
- * Stylized "browser window" showing a Scenario-generated demo, used as the hero
+ * Stylized "browser window" showing a Diffender-generated demo, used as the hero
  * visual. Purely presentational.
  */
 export function HeroPreview() {
@@ -15,7 +15,7 @@ export function HeroPreview() {
         <span className="size-3 rounded-full bg-[#febc2e]" />
         <span className="size-3 rounded-full bg-[#28c840]" />
         <div className="ml-3 flex h-7 flex-1 items-center rounded-lg border border-border/70 bg-background/60 px-3 font-mono text-xs text-muted-foreground">
-          app.getscenar.io
+          app.diffender.com
         </div>
       </div>
 

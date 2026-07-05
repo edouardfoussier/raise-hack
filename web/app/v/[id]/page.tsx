@@ -31,7 +31,7 @@ export async function generateMetadata({
   if (!video) {
     return {
       title: "Demo not found",
-      description: "This Scenario demo link is unavailable.",
+      description: "This Diffender demo link is unavailable.",
       robots: { index: false, follow: false },
     };
   }
@@ -41,8 +41,8 @@ export async function generateMetadata({
     project ? `${project.name} — ` : ""
   }A deterministic ${formatDuration(
     video.durationSec,
-  )} product demo generated with Scenario.`;
-  const ogTitle = `${video.title} · Scenario`;
+  )} product demo generated with Diffender.`;
+  const ogTitle = `${video.title} · Diffender`;
 
   return {
     title: video.title,
@@ -53,7 +53,7 @@ export async function generateMetadata({
       description,
       type: "video.other",
       url: `/v/${id}`,
-      siteName: "Scenario",
+      siteName: "Diffender",
     },
     twitter: {
       card: "summary_large_image",
@@ -227,13 +227,13 @@ export default async function SharePage({ params }: PageProps) {
 
       <footer className="border-t border-border/70">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:px-6">
-          <p>© {new Date().getFullYear()} Scenario. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Diffender. All rights reserved.</p>
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
           >
             <span className="inline-block size-1.5 rounded-full bg-primary" />
-            Made with Scenario
+            Made with Diffender
           </Link>
         </div>
       </footer>

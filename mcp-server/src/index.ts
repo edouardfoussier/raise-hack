@@ -286,9 +286,9 @@ server.registerTool(
 server.registerTool(
   "extract_design_system",
   {
-    title: "Scenario — extract a live design system",
+    title: "Diffender — extract a live design system",
     description:
-      "Connect a running app to Scenario by extracting its LIVE design system from a URL. Drives a headless browser " +
+      "Connect a running app to Diffender by extracting its LIVE design system from a URL. Drives a headless browser " +
       "over the page (via dembrandt) and returns the design system a coding agent would show: brand colors (hex + role), " +
       "the typography scale (font families + sizes), the spacing scale, motion tokens, breakpoints, and a component count. " +
       "These are the same tokens Drift then reviews your edits against. Use to onboard an app (\"connect your app from your " +
@@ -305,7 +305,7 @@ server.registerTool(
     const cwd = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
     const result = await extractDesignSystem(url, { cwd, dark, slow });
     if (!result.ok) {
-      return { isError: true, content: [{ type: "text", text: `Scenario extract: ${result.error}` }] };
+      return { isError: true, content: [{ type: "text", text: `Diffender extract: ${result.error}` }] };
     }
     const content: Content[] = [
       { type: "text", text: result.summary! },
@@ -313,7 +313,7 @@ server.registerTool(
         type: "text",
         text:
           "Report this design-system summary to the user, framed as \"this is your app's live design system in " +
-          "Scenario — edit a component, then /drift to review your change against these tokens.\"",
+          "Diffender — edit a component, then /drift to review your change against these tokens.\"",
       },
     ];
     return { content };

@@ -105,7 +105,7 @@ const REVIEWS: Record<string, Review> = {
 };
 
 /**
- * Per-project commit history. The demo project "Scenario Web" carries the four
+ * Per-project commit history. The demo project "Diffender Web" carries the four
  * watched commits (interleaved with a couple of plain commits for realism) so
  * clicking it opens a real Design Guardrails timeline. Other projects have a
  * short plain history.

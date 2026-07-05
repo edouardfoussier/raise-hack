@@ -82,7 +82,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border/70 pt-6 text-xs text-muted-foreground sm:flex-row">
-          <p>© {new Date().getFullYear()} Scenario. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Diffender. All rights reserved.</p>
           <p>
             Internal code-name{" "}
             <span className="font-mono text-foreground/70">Drift</span> · built at

@@ -1,5 +1,5 @@
 /**
- * Design-system layer for the Scenario "Statement One" surface.
+ * Design-system layer for the Diffender "Statement One" surface.
  *
  * Each connected project has a design system EXTRACTED FROM ITS LIVE APP by
  * dembrandt (`npx dembrandt <url> --save-output`). The raw extractor JSON is a
@@ -390,10 +390,10 @@ const seedProjects: DsProject[] = [
   {
     id: "prj_deja_bu",
     name: "Déjà Bu",
-    url: "https://deja-bu.demo.getscenar.io",
+    url: "https://deja-bu.demo.diffender.com",
     thumbnailColor: "#6366f1",
     description:
-      "The inventory-reception app filmed in the Scenario demo video. Its dev deployment sits behind an SSO bypass that dembrandt can't pass.",
+      "The inventory-reception app filmed in the Diffender demo video. Its dev deployment sits behind an SSO bypass that dembrandt can't pass.",
     status: "pending",
     note: "Extraction pending — Déjà Bu's preview is gated by an SSO-bypass header dembrandt can't send. It's the demo-video target, not a design-system source.",
   },

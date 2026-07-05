@@ -1,5 +1,5 @@
 /**
- * Scenario — the GENERIC one-command demo-video generator.
+ * Diffender — the GENERIC one-command demo-video generator.
  *
  *   goal + URL  →  AI plan  →  per-step narrated replay  →  intro/outro  →  final.mp4
  *
@@ -14,8 +14,8 @@
  *   DEMO_DEVICE   — "mobile" (default) renders an iPhone 13 portrait frame with a
  *                   touch tap-circle + synthetic iOS keyboard; "desktop" uses a
  *                   landscape viewport with an arrow cursor.
- *   DEMO_TITLE    — brand word on the intro card (default "Scenario")
- *   DEMO_CTA      — outro call-to-action (default "Try it → getscenar.io")
+ *   DEMO_TITLE    — brand word on the intro card (default "Diffender")
+ *   DEMO_CTA      — outro call-to-action (default "Try it → diffender.com")
  *   DEMO_HEADERS  — JSON object of extra HTTP headers sent on every request
  *                   (e.g. a Vercel protection-bypass token to reach a protected preview)
  *   DEMO_INIT     — JS source run before each page loads (e.g. seed an auth token)
@@ -51,8 +51,8 @@ const URL = process.env.DEMO_URL || "file://" + path.resolve(process.cwd(), "../
 const GOAL =
   process.env.DEMO_GOAL ||
   "Sign up: start the onboarding, fill the name with 'Ada Lovelace' and the email with 'ada@example.com', then continue to finish.";
-const TITLE = process.env.DEMO_TITLE || "Scenario";
-const CTA = process.env.DEMO_CTA || "Try it → getscenar.io";
+const TITLE = process.env.DEMO_TITLE || "Diffender";
+const CTA = process.env.DEMO_CTA || "Try it → diffender.com";
 const BRAND = "#FF5A1F"; // flame orange
 
 // Device: mobile (default) → iPhone 13 portrait + touch + iOS keyboard.
@@ -219,7 +219,7 @@ async function main(): Promise<void> {
     title: TITLE,
     subtitle: "AI-generated product demo — deterministic replay",
     cta: CTA,
-    url: "getscenar.io",
+    url: "diffender.com",
     brand: BRAND,
     outDir: composedDir,
     subtitles: cues,
