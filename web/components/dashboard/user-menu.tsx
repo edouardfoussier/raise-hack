@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { CreditCard, LogOut, Settings, Sparkles } from "lucide-react";
+import { CreditCard, LogOut, Settings } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -83,10 +83,6 @@ export function UserMenu({ user }: { user: AppUser }) {
         <DropdownMenuItem render={<Link href="/dashboard/billing" />}>
           <CreditCard className="text-muted-foreground" />
           Billing
-        </DropdownMenuItem>
-        <DropdownMenuItem render={<Link href="/dashboard/billing" />}>
-          <Sparkles className="text-primary" />
-          Upgrade plan
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleDemoSignOut}>

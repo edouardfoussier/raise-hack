@@ -78,8 +78,8 @@ const videos: Video[] = [
     createdAt: "2026-07-05T02:10:00.000Z",
     shareId: "scenario-submission",
     analytics: {
-      views: 2417,
-      uniqueIps: 1863,
+      views: 34,
+      uniqueIps: 21,
       lastViewedAt: "2026-07-05T09:41:00.000Z",
     },
     hasCaptions: true,
@@ -97,8 +97,8 @@ const videos: Video[] = [
     createdAt: "2026-07-05T01:26:00.000Z",
     shareId: "deja-reception",
     analytics: {
-      views: 892,
-      uniqueIps: 674,
+      views: 12,
+      uniqueIps: 9,
       lastViewedAt: "2026-07-05T08:55:00.000Z",
     },
     hasCaptions: true,
@@ -116,8 +116,8 @@ const videos: Video[] = [
     createdAt: "2026-07-05T01:03:00.000Z",
     shareId: "onboarding-demo",
     analytics: {
-      views: 1284,
-      uniqueIps: 962,
+      views: 8,
+      uniqueIps: 7,
       lastViewedAt: "2026-07-05T07:12:00.000Z",
     },
     hasCaptions: true,
@@ -135,8 +135,8 @@ const videos: Video[] = [
     createdAt: "2026-07-05T02:17:00.000Z",
     shareId: "deja-new-reception",
     analytics: {
-      views: 431,
-      uniqueIps: 358,
+      views: 5,
+      uniqueIps: 4,
       lastViewedAt: "2026-07-05T09:02:00.000Z",
     },
     hasCaptions: true,
@@ -154,8 +154,8 @@ const videos: Video[] = [
     createdAt: "2026-07-05T02:29:00.000Z",
     shareId: "deja-resume-reception",
     analytics: {
-      views: 318,
-      uniqueIps: 271,
+      views: 3,
+      uniqueIps: 3,
       lastViewedAt: "2026-07-05T09:18:00.000Z",
     },
     hasCaptions: true,
@@ -173,8 +173,8 @@ const videos: Video[] = [
     createdAt: "2026-07-05T01:29:00.000Z",
     shareId: "deja-catalogue",
     analytics: {
-      views: 264,
-      uniqueIps: 219,
+      views: 2,
+      uniqueIps: 2,
       lastViewedAt: "2026-07-05T08:40:00.000Z",
     },
     hasCaptions: true,
@@ -190,9 +190,9 @@ const videos: Video[] = [
     createdAt: "2026-06-29T16:40:00.000Z",
     shareId: "onboarding-60s",
     analytics: {
-      views: 1284,
-      uniqueIps: 962,
-      lastViewedAt: "2026-07-04T11:12:00.000Z",
+      views: 0,
+      uniqueIps: 0,
+      lastViewedAt: null,
     },
     hasCaptions: true,
     hasVoiceover: true,
@@ -207,9 +207,9 @@ const videos: Video[] = [
     createdAt: "2026-06-30T10:05:00.000Z",
     shareId: "checkout-flow",
     analytics: {
-      views: 543,
-      uniqueIps: 401,
-      lastViewedAt: "2026-07-03T19:30:00.000Z",
+      views: 0,
+      uniqueIps: 0,
+      lastViewedAt: null,
     },
     hasCaptions: true,
     hasVoiceover: false,
@@ -224,9 +224,9 @@ const videos: Video[] = [
     createdAt: "2026-07-01T12:20:00.000Z",
     shareId: "reception-stock",
     analytics: {
-      views: 208,
-      uniqueIps: 173,
-      lastViewedAt: "2026-07-04T08:02:00.000Z",
+      views: 0,
+      uniqueIps: 0,
+      lastViewedAt: null,
     },
     hasCaptions: true,
     hasVoiceover: true,
@@ -257,18 +257,6 @@ const team: TeamMember[] = [
     avatarUrl: DEMO_USER.imageUrl,
     role: "Owner",
   },
-  {
-    id: "user_ada",
-    name: "Ada Lovelace",
-    avatarUrl: avatarDataUri("AL", "#8b5cf6", "#d946ef"),
-    role: "Admin",
-  },
-  {
-    id: "user_grace",
-    name: "Grace Hopper",
-    avatarUrl: avatarDataUri("GH", "#f59e0b", "#ef4444"),
-    role: "Member",
-  },
 ];
 
 const assets: Assets = {
@@ -286,7 +274,7 @@ const channels: Channels = {
 };
 
 const billing: Billing = {
-  plan: "pro",
+  plan: "free",
 };
 
 /* -------------------------------------------------------------------------- */

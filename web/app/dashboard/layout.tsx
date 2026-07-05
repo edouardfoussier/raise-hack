@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 import { Logo } from "@/components/logo";
 import { SidebarNav } from "@/components/dashboard/sidebar-nav";
@@ -10,27 +10,32 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
-import { DEMO_USER, getBilling } from "@/lib/mock-data";
+import { DEMO_USER } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
-function PlanCard({ plan }: { plan: string }) {
+/**
+ * Neutral workspace card. No plan tier is claimed — this is a demo account, so
+ * we surface the Design Guardrails promise instead of an inflated "Pro plan".
+ */
+function WorkspaceCard() {
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
       <div className="flex items-center gap-2">
-        <Sparkles className="size-4 text-primary" />
-        <p className="text-sm font-medium capitalize">{plan} plan</p>
+        <ShieldCheck className="size-4 text-primary" />
+        <p className="text-sm font-medium">Design Guardrails</p>
       </div>
       <p className="mt-1.5 text-xs text-muted-foreground">
-        Unlimited deterministic demos, captions, voice-over and share analytics.
+        Every commit is checked against your design system — regressions get
+        flagged before they ship.
       </p>
       <Link
-        href="/dashboard/billing"
+        href="/dashboard/design-system"
         className={cn(
           buttonVariants({ variant: "secondary" }),
           "mt-3 h-8 w-full text-xs",
         )}
       >
-        Manage plan
+        View projects
       </Link>
     </div>
   );
@@ -42,7 +47,6 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const user = (await getCurrentUser()) ?? DEMO_USER;
-  const billing = getBilling();
 
   return (
     <div className="min-h-dvh">
@@ -61,7 +65,7 @@ export default async function DashboardLayout({
           <SidebarNav />
         </div>
         <div className="space-y-2 p-3">
-          <PlanCard plan={billing.plan} />
+          <WorkspaceCard />
           <LogoutButton />
         </div>
       </aside>
@@ -74,11 +78,9 @@ export default async function DashboardLayout({
             <Logo showWordmark={false} />
           </Link>
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            <Badge
-              variant="outline"
-              className="hidden capitalize sm:inline-flex"
-            >
-              {billing.plan} plan
+            <Badge variant="outline" className="hidden gap-1.5 sm:inline-flex">
+              <ShieldCheck className="size-3.5 text-primary" />
+              Design Guardrails
             </Badge>
             <ThemeToggle />
             <UserMenu user={user} />
