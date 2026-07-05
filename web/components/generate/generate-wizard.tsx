@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { useAssets } from "@/lib/assets-store";
 import { cn } from "@/lib/utils";
 
+import { ShareToSlackButton } from "@/components/share/share-to-slack-button";
+
 import { AvatarStep } from "./avatar-step";
 import { OnBrandToggle } from "./on-brand-toggle";
 import { VoicePicker } from "./voice-picker";
@@ -748,7 +750,7 @@ function GenerateStep({
                 muted
                 className="mx-auto block h-auto max-h-[60vh] w-full rounded-xl bg-black object-contain ring-1 ring-white/10"
               />
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex flex-wrap items-center justify-center gap-2">
                 <Button variant="outline" size="sm" className="gap-1.5" onClick={onReset}>
                   <RotateCcw className="size-3.5" />
                   New demo
@@ -763,6 +765,10 @@ function GenerateStep({
                   <Download className="size-3.5" />
                   Download
                 </Button>
+                <ShareToSlackButton
+                  videoPath={result.videoUrl}
+                  title={goal.trim() ? `Scenario demo — ${goal.trim()}` : "Scenario demo"}
+                />
               </div>
             </div>
           ) : (

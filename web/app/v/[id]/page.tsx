@@ -10,6 +10,7 @@ import { GithubIcon } from "@/components/icons";
 import { SharePlayer } from "@/components/share/share-player";
 import { ShareCTA } from "@/components/share/share-cta";
 import { CopyLinkButton } from "@/components/share/copy-link-button";
+import { ShareToSlackButton } from "@/components/share/share-to-slack-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getProjectById, getVideoById, getVideoByShareId } from "@/lib/mock-data";
 import { formatDate, formatDuration, formatNumber } from "@/lib/format";
@@ -86,6 +87,16 @@ export default async function SharePage({ params }: PageProps) {
           </Link>
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            {video.videoUrl ? (
+              <ShareToSlackButton
+                videoPath={video.videoUrl}
+                title={video.title}
+                variant="outline"
+                size="lg"
+                label="Slack"
+                className="h-9 gap-2"
+              />
+            ) : null}
             <CopyLinkButton />
             <Link
               href="/sign-in"

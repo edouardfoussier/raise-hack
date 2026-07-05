@@ -7,9 +7,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { buttonVariants } from "@/components/ui/button";
+import { SlackIcon } from "@/components/icons";
 import type { Video } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +29,48 @@ export function VideoCardActions({ video }: { video: Video }) {
     } catch {
       toast.error("Couldn't copy link", {
         description: "Copy it manually from the share page.",
+      });
+    }
+  }
+
+  async function handleShareToSlack() {
+    if (!video.videoUrl) {
+      toast.error("Nothing to share yet", {
+        description: "This demo has no video file.",
+      });
+      return;
+    }
+    const toastId = toast.loading("Sharing to Slack…", {
+      description: video.title,
+    });
+    try {
+      const res = await fetch("/api/share-slack", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ videoPath: video.videoUrl, title: video.title }),
+      });
+      const data = (await res.json()) as {
+        ok?: boolean;
+        permalink?: string;
+        error?: string;
+      };
+      if (!res.ok || data.error || !data.ok) {
+        throw new Error(data.error || `Request failed (${res.status})`);
+      }
+      toast.success("Shared to Slack", {
+        id: toastId,
+        description: "Posted to #product-review.",
+        action: data.permalink
+          ? {
+              label: "Open",
+              onClick: () => window.open(data.permalink, "_blank", "noopener"),
+            }
+          : undefined,
+      });
+    } catch (e) {
+      toast.error("Couldn't share to Slack", {
+        id: toastId,
+        description: (e as Error).message.slice(0, 200),
       });
     }
   }
@@ -55,6 +99,15 @@ export function VideoCardActions({ video }: { video: Video }) {
           <Copy className="text-muted-foreground" />
           Copy share link
         </DropdownMenuItem>
+        {video.videoUrl ? (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleShareToSlack}>
+              <SlackIcon className="text-primary" />
+              Share to Slack
+            </DropdownMenuItem>
+          </>
+        ) : null}
       </DropdownMenuContent>
     </DropdownMenu>
   );
