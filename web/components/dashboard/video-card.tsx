@@ -48,7 +48,9 @@ export function VideoCard({
           <span className="inline-flex items-center gap-1">
             <Eye className="size-3.5" />
             <span className="tabular-nums">
-              {formatCompactNumber(video.analytics.views)}
+              {video.analytics.views > 0
+                ? formatCompactNumber(video.analytics.views)
+                : "New"}
             </span>
           </span>
           {video.hasCaptions ? (

@@ -152,7 +152,9 @@ export function VideoCard({
               Views
             </dt>
             <dd className="mt-0.5 text-sm font-medium tabular-nums">
-              {formatCompactNumber(video.analytics.views)}
+              {video.analytics.views > 0
+                ? formatCompactNumber(video.analytics.views)
+                : "New"}
             </dd>
           </div>
           <div className="min-w-0 border-x border-border/60">
@@ -161,7 +163,9 @@ export function VideoCard({
               Unique
             </dt>
             <dd className="mt-0.5 text-sm font-medium tabular-nums">
-              {formatCompactNumber(video.analytics.uniqueIps)}
+              {video.analytics.uniqueIps > 0
+                ? formatCompactNumber(video.analytics.uniqueIps)
+                : "—"}
             </dd>
           </div>
           <div className="min-w-0">

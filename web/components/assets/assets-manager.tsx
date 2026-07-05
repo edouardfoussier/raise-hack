@@ -1,14 +1,16 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AudioLines,
   Camera,
+  Circle,
   Images,
   Sparkles,
   Trash2,
   UploadCloud,
   UserRound,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -28,6 +30,7 @@ export function AssetsManager() {
     useAssets();
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const [capturing, setCapturing] = useState(false);
 
   function handleUpload(file: File | undefined) {
     if (!file) return;
@@ -141,7 +144,20 @@ export function AssetsManager() {
         </div>
 
         <div className="mt-4 flex-1">
-          {hydrated && photos.length > 0 ? (
+          {capturing ? (
+            <WebcamCapture
+              onCancel={() => setCapturing(false)}
+              onCapture={(dataUrl) => {
+                addPhoto({
+                  name: "Webcam capture",
+                  dataUrl,
+                  source: "webcam",
+                });
+                setCapturing(false);
+                toast.success("Photo saved to Assets");
+              }}
+            />
+          ) : hydrated && photos.length > 0 ? (
             <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4">
               {photos.map((p) => (
                 <div key={p.id} className="group relative">
@@ -191,25 +207,171 @@ export function AssetsManager() {
           )}
         </div>
 
-        <div className="mt-auto pt-4">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-1.5"
-            onClick={() => fileRef.current?.click()}
-          >
-            <UploadCloud className="size-3.5" />
-            Upload photo
-          </Button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            className="sr-only"
-            aria-label="Upload photo"
-            onChange={(e) => handleUpload(e.target.files?.[0])}
-          />
-        </div>
+        {!capturing && (
+          <div className="mt-auto flex flex-wrap gap-2 pt-4">
+            <Button
+              size="sm"
+              className="gap-1.5"
+              onClick={() => setCapturing(true)}
+            >
+              <Camera className="size-3.5" />
+              Take a photo (webcam)
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5"
+              onClick={() => fileRef.current?.click()}
+            >
+              <UploadCloud className="size-3.5" />
+              Upload photo
+            </Button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              aria-label="Upload photo"
+              onChange={(e) => handleUpload(e.target.files?.[0])}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── Webcam capture ─────────────────────────────────────────────────────── */
+
+/**
+ * getUserMedia webcam capture, ported from the Generate wizard's avatar step.
+ * Captures a mirrored, center-cropped square still and hands back a JPEG data
+ * URL. Stops all tracks on unmount/cancel so the camera light turns off.
+ */
+function WebcamCapture({
+  onCapture,
+  onCancel,
+}: {
+  onCapture: (dataUrl: string) => void;
+  onCancel: () => void;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const stop = useCallback(() => {
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function start() {
+      try {
+        if (!navigator.mediaDevices?.getUserMedia) {
+          throw new Error("Camera not supported in this browser.");
+        }
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user",
+            width: { ideal: 640 },
+            height: { ideal: 640 },
+          },
+          audio: false,
+        });
+        if (cancelled) {
+          stream.getTracks().forEach((t) => t.stop());
+          return;
+        }
+        streamRef.current = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          await videoRef.current.play().catch(() => {});
+        }
+        setReady(true);
+      } catch (e) {
+        setError(
+          (e as Error).name === "NotAllowedError"
+            ? "Camera permission denied. Allow access and try again."
+            : (e as Error).message || "Couldn't start the camera.",
+        );
+      }
+    }
+    start();
+    return () => {
+      cancelled = true;
+      stop();
+    };
+  }, [stop]);
+
+  function capture() {
+    const video = videoRef.current;
+    if (!video) return;
+    const size = Math.min(video.videoWidth, video.videoHeight) || 480;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    // Center-crop to a square, mirrored to match the live preview.
+    const sx = (video.videoWidth - size) / 2;
+    const sy = (video.videoHeight - size) / 2;
+    ctx.translate(size, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+    stop();
+    onCapture(dataUrl);
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="relative mx-auto aspect-square w-full max-w-[280px] overflow-hidden rounded-2xl border border-border bg-black">
+        {error ? (
+          <div className="grid size-full place-items-center px-6 text-center text-sm text-white/70">
+            {error}
+          </div>
+        ) : (
+          <>
+            {/* Mirror the preview so it feels natural. */}
+            <video
+              ref={videoRef}
+              playsInline
+              muted
+              className="size-full -scale-x-100 object-cover"
+            />
+            {!ready && (
+              <div className="absolute inset-0 grid place-items-center text-xs text-white/70">
+                Starting camera…
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      <div className="flex items-center justify-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-1.5"
+          onClick={() => {
+            stop();
+            onCancel();
+          }}
+        >
+          <X className="size-3.5" />
+          Cancel
+        </Button>
+        <Button
+          size="sm"
+          className="gap-1.5"
+          disabled={!ready || Boolean(error)}
+          onClick={capture}
+        >
+          <Circle className="size-3.5 fill-current" />
+          Capture
+        </Button>
       </div>
     </div>
   );

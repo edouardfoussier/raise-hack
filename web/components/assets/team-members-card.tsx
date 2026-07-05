@@ -1,9 +1,13 @@
-import { Users } from "lucide-react";
+"use client";
+
+import { Trash2, Users } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { toTeamMember, useTeamStore } from "@/lib/team-store";
 import type { TeamMember, TeamRole } from "@/lib/types";
-import { InviteMemberButton } from "./invite-member-button";
+import { AddMemberModal } from "./add-member-modal";
 
 function initialsOf(name: string): string {
   return (
@@ -35,6 +39,11 @@ function RoleBadge({ role }: { role: TeamRole }) {
   );
 }
 
+/**
+ * Team card. The seed `members` (the demo owner) are rendered as-is; teammates
+ * added through the "Add a team member" modal come from the local team store
+ * (localStorage) and can be removed. Real, working local add — no fake list.
+ */
 export function TeamMembersCard({
   members,
   currentUserId,
@@ -42,6 +51,12 @@ export function TeamMembersCard({
   members: TeamMember[];
   currentUserId?: string;
 }) {
+  const { hydrated, added, addMember, removeMember } = useTeamStore();
+
+  const addedAsMembers = hydrated ? added.map(toTeamMember) : [];
+  const all = [...members, ...addedAsMembers];
+  const addedIds = new Set(added.map((m) => m.id));
+
   return (
     <div className="rounded-2xl border border-border bg-card p-5">
       <div className="flex items-center justify-between gap-3">
@@ -52,34 +67,48 @@ export function TeamMembersCard({
           <div>
             <h2 className="font-heading text-base font-medium">Team</h2>
             <p className="text-xs text-muted-foreground">
-              {members.length} {members.length === 1 ? "member" : "members"} on
-              this workspace.
+              {all.length} {all.length === 1 ? "member" : "members"} on this
+              workspace.
             </p>
           </div>
         </div>
-        <InviteMemberButton />
+        <AddMemberModal onAdd={addMember} />
       </div>
 
       <ul className="mt-4 divide-y divide-border/70">
-        {members.map((member) => (
-          <li key={member.id} className="flex items-center gap-3 py-3">
-            <Avatar className="size-9">
-              <AvatarImage src={member.avatarUrl} alt={member.name} />
-              <AvatarFallback>{initialsOf(member.name)}</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">
-                {member.name}
-                {member.id === currentUserId ? (
-                  <span className="ml-1.5 text-xs font-normal text-muted-foreground">
-                    (you)
-                  </span>
-                ) : null}
-              </p>
-            </div>
-            <RoleBadge role={member.role} />
-          </li>
-        ))}
+        {all.map((member) => {
+          const removable = addedIds.has(member.id);
+          return (
+            <li key={member.id} className="flex items-center gap-3 py-3">
+              <Avatar className="size-9">
+                <AvatarImage src={member.avatarUrl} alt={member.name} />
+                <AvatarFallback>{initialsOf(member.name)}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">
+                  {member.name}
+                  {member.id === currentUserId ? (
+                    <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+                      (you)
+                    </span>
+                  ) : null}
+                </p>
+              </div>
+              <RoleBadge role={member.role} />
+              {removable ? (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label={`Remove ${member.name}`}
+                  onClick={() => removeMember(member.id)}
+                  className="text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="size-3.5" />
+                </Button>
+              ) : null}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
