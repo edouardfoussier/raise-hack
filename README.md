@@ -6,7 +6,7 @@
 
 An AI-native design system that *reasons* about consistency across your product's visual and interactive surface — detecting drift, proposing reconciliation, and keeping designers and engineers aligned without a synchronization meeting.
 
-[**diffender.studio**](https://diffender.studio) · [Live app](https://raise-hack.vercel.app) · Built at **RAISE Summit Hackathon 2026 · Cursor track** (remote)
+[**diffender.studio**](https://diffender.studio) · [Live app](https://raise-hack.vercel.app) · 🥇 **1st place · RAISE Hackathon 2026 · Cursor track** (remote edition, July 4-5)
 
 <img src="docs/media/homepage.png" alt="Diffender — Keep your product on-brand, every commit." width="820"/>
 
@@ -113,6 +113,12 @@ Key env knobs for `cli-demo`: `DEMO_URL`, `DEMO_GOAL`, `DEMO_DEVICE=mobile|deskt
 ## Built with
 
 Developed with **Cursor** · **NVIDIA Nemotron** via **Nebius Token Factory** (plans the demo flow) · **Gradium** (cloned voice-over) · **Cloudflare** Workers/R2/D1 (share + analytics) · **dembrandt** (design-system extraction) · Playwright · ffmpeg · Vercel AI SDK · Clerk · Next.js.
+
+## Result
+
+Diffender took 1st place on the Cursor track of the RAISE Hackathon 2026 (remote edition, July 4-5). Grateful to the RAISE and Cursor teams for the event, and to the jury for the read.
+
+<p align="center"><img src="docs/certificate-first-place.png" alt="RAISE Hackathon 2026 - Certificate of First Place, Cursor track" width="560"/></p>
 
 ---
 
