@@ -1,6 +1,6 @@
 # Découpage — plan de bataille 24 h
 
-> **Les modèles IA savent générer des plans. Aucun ne sait donner de la couverture.**
+> **La concurrence résout l'espace. Personne ne résout le temps.**
 
 **Découpage** — le terme français du découpage technique, utilisé tel quel dans le cinéma international.
 
@@ -8,6 +8,10 @@ Un réalisateur ne tourne pas des plans, il tourne des **scènes**. Il lui faut 
 le même moment en large, en plan moyen, en gros plan, en champ-contrechamp — c'est ce qui permet de
 monter. Aujourd'hui, refilmer le même beat sous un autre angle avec un modèle IA, c'est relancer la
 loterie : autre action, autre acteur, autre lumière.
+
+Aleph ré-angle un plan déjà tourné, Marble génère un décor où promener une caméra — les deux
+travaillent l'espace, sur un instant figé ou un lieu vide. La couverture est un problème de **temps** :
+les mêmes trois secondes de jeu, quatre fois, qui raccordent. Voir §4 pour la ligne de défense.
 
 Découpage définit la scène **une seule fois en 3D** — géométrie, timing, blocking — puis y pose N
 caméras. Le problème passe de « relancer la loterie » à « poser une deuxième caméra ».
