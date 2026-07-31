@@ -119,15 +119,32 @@ moment qui raccordent.
 
 ## 4. Le pitch (3 minutes)
 
+> ⚠️ **Révisé après dé-risquage.** La phrase « aucun outil ne sait donner de la couverture » a été
+> supprimée : elle est factuellement fausse. Runway Aleph vend explicitement *« endless coverage from
+> a single shot »*, et World Labs Marble fait blockout 3D → rendu vidéo à caméra contrôlée. Se faire
+> opposer l'un des deux en question de jury coûterait le prix. On les nomme nous-mêmes.
+
 1. **Le problème, montré pas dit** *(20 s)* — un montage de « films IA » : des plans magnifiques qui ne
    raccordent pas. *« Voilà le cinéma IA aujourd'hui. Des plans magnifiques. Aucun film. »*
-2. **Pourquoi** *(20 s)* — *« Parce qu'un réalisateur ne tourne pas des plans, il tourne des scènes. Il
-   lui faut de la couverture. Et aucun modèle ne sait donner deux fois le même moment sous deux angles. »*
-3. **Démo live** *(90 s)* — plan de plateau → tu poses 3 caméras → tu écris « contre-plongée, 85 mm,
-   dolly avant » → **la caméra bouge à l'écran** → générer → les 3 angles arrivent
-4. **Le film** *(30 s)* — la scène montée, plein écran, son
-5. **Close** *(20 s)* — *« Le découpage technique existe depuis 100 ans. On vient juste de le rendre
+2. **Pourquoi** *(20 s)* — *« Parce qu'un réalisateur ne tourne pas des plans, il tourne des scènes.
+   Il lui faut de la couverture : le même moment, sous plusieurs angles, qui se montent. »*
+3. **On nomme les concurrents** *(20 s)* — *« Aleph sait ré-angler un plan que vous avez déjà tourné.
+   Marble sait vous construire un décor où promener une caméra. Les deux résolvent l'espace.
+   Aucun ne résout le temps — les mêmes trois secondes de jeu, quatre fois, qui raccordent. »*
+4. **Démo live** *(80 s)* — plan de plateau → 3 caméras → « contre-plongée, 85 mm, dolly avant » →
+   **la caméra bouge à l'écran** → générer → les 3 angles arrivent. Puis **on déplace un acteur et on
+   régénère** : le geste qu'aucun des deux ne peut faire, et il se voit à l'écran.
+5. **Le film** *(30 s)* — la scène montée, plein écran, son
+6. **Close** *(15 s)* — *« Le découpage technique existe depuis 100 ans. On vient juste de le rendre
    exécutable. »*
+
+### La ligne de défense, à connaître par cœur
+
+| Si le jury dit… | Réponse |
+|---|---|
+| « Runway Aleph fait déjà ça » | *« Aleph part de rushes. Il ré-angle ce qui a été tourné — c'est de la post-production. Nous, rien n'a été tourné : on décide la couverture d'une scène qui n'existe pas encore. Aleph déplace la caméra, nous déplaçons l'acteur. »* |
+| « World Labs Marble fait déjà ça » | *« Marble génère un décor persistant — un lieu. Un décor n'est pas une scène : il n'y a personne dedans qui joue. Notre unité, c'est le beat, pas le lieu. »* |
+| « C'est juste ComfyUI avec une jolie UI » | *« ComfyUI vous demande de savoir ce qu'est une passe depth. Nous on vous demande où vous mettez la caméra. »* |
 
 ---
 
@@ -157,3 +174,26 @@ moment qui raccordent.
   est 10× plus rapide à construire, c'est le langage natif des réalisateurs, et ça se lit
   instantanément sur un écran de pitch. **Ne pas dériver vers un mini-Blender.**
 - **Risque n°4 — le wifi de l'event.** Tout enregistrer en vidéo dès que ça marche.
+
+---
+
+## 8. Arbitrage S5 — les trois rescapées du dé-risquage
+
+B, C et D sont mortes comme projets autonomes (rapports : [`derisk-B-motion.md`](derisk-B-motion.md),
+[`derisk-C-compiler.md`](derisk-C-compiler.md), [`derisk-D-ugc.md`](derisk-D-ugc.md)). Chacune laisse
+**une** feature qui vaut le coup — et elles atterrissent toutes dans le même créneau S5 de 3 h.
+Il faut en choisir une, deux au mieux. Par ordre de recommandation :
+
+| # | Feature | Coût | Risque | Ce qu'elle apporte |
+|---|---|---|---|---|
+| 1 | **Pose → mannequin** (de B) — MediaPipe Pose dans le navigateur pilote l'armature greybox | ~4 h | interne, débuggable | Supprime notre faiblesse assumée (acteurs statiques) et donne *« joue-le une fois, récupère-le sous quatre angles »* — impossible chez Act-Two, Kling, Luma, qui n'ont pas de scène |
+| 2 | **Vérificateur d'adhérence** (de C) — écart mesuré entre la vidéo générée et le rendu greybox | 2-3 h | interne, déterministe | On a la vérité terrain 3D, personne d'autre ne l'a. Transforme une affirmation de pitch en mesure |
+| 3 | **Export CapCut** (de D) — écriture d'un projet éditable via le format de draft | ~3 h | **externe, binaire** | Optimal côté sponsor sans rien sacrifier au positionnement. Bon *deuxième* moment de démo, jamais le premier |
+
+**Recommandation : 1 seule, la n°1.** Elle est la seule à changer ce que le produit *est*.
+
+Sur la n°3 : le format de draft CapCut n'est pas une API publique et les CGU comportent une clause
+anti-reverse-engineering. Utiliser une bibliothèque open source existante pour écrire un fichier de
+projet est défendable, mais ce n'est pas à décider dans la nuit, ni à présenter de façon ambiguë.
+Si on le fait : **test binaire de 30 min avant tout engagement**, cut-off dur à T-6 h, CapCut Desktop
+installé sur la machine de démo, et on dit ce qu'on fait sans le maquiller.
