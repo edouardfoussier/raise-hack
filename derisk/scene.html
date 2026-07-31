@@ -5,6 +5,7 @@
 <script type="importmap">{"imports":{"three":"/three/three.module.js"}}</script>
 <script type="module">
 import * as THREE from 'three'
+import { solveShot, checkCoverage, fovFromFocal } from '/shot_solver.mjs'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Greybox "plateau": a room, a table, two actors. Deliberately ugly — its only
@@ -121,32 +122,37 @@ function animate(t) {
   actorB.rotation.y = -Math.PI / 2 + 0.08 * e
 }
 
-// ── coverage: three cameras on that same beat ───────────────────────────────
-// The line of action runs along the A↔B axis (X). Every camera stays on the
-// +Z side of it — that is the 180° rule, and it is why these three cut together.
-const lerp = (a, b, t) => a + (b - a) * t
+// ── coverage: three shots, resolved by the grammar ──────────────────────────
+// These are ShotSpecs — film vocabulary, zero coordinates. The solver turns
+// them into cameras and guarantees all three stay on one side of the line of
+// action. Nothing below is hand-tuned: change a shotSize, the camera moves.
 const V = (x, y, z) => new THREE.Vector3(x, y, z)
 
-const CAMERAS = {
-  // master — 35mm, slow dolly in, both actors in frame
-  wide: { focal: 35, near: 0.8, far: 13, at: t => ({
-    pos: V(lerp(0.45, 0.32, t), lerp(1.64, 1.54, t), lerp(5.30, 4.35, t)),
-    look: V(0, 1.24, 0),
-  })},
-  // single on A — 85mm from camera right, slow push
-  close: { focal: 85, near: 1.2, far: 8.5, at: t => ({
-    pos: V(lerp(0.42, 0.34, t), lerp(1.60, 1.58, t), lerp(3.05, 2.78, t)),
-    look: V(-1.00, A_HEAD - 0.10, 0.46),
-  })},
-  // reverse on B — 85mm from camera left, the contrechamp
-  reverse: { focal: 85, near: 1.4, far: 9.0, at: t => ({
-    pos: V(lerp(-0.42, -0.34, t), lerp(1.58, 1.56, t), lerp(3.10, 2.86, t)),
-    look: V(1.00, B_HEAD - 0.09, -0.44),
-  })},
+const BLOCKING = {
+  actors: { A: { pos: [-1.05, 0, 0.48], height: 1.78 }, B: { pos: [1.05, 0, -0.42], height: 1.64 } },
+  line: ['A', 'B'],
+  side: +1,
 }
 
-// 35mm-equivalent focal → vertical FOV (24mm-tall full-frame sensor)
-const fovFromFocal = (mm) => 2 * Math.atan(12 / mm) * 180 / Math.PI
+const SHOTS = {
+  wide:    { subject: ['A', 'B'], shotSize: 'LS',  angle: 'eye', lens_mm: 35, move: { type: 'push', speed: 'slow' } },
+  close:   { subject: 'A',        shotSize: 'MCU', angle: 'eye', lens_mm: 85, move: { type: 'push', speed: 'slow' } },
+  reverse: { subject: 'B',        shotSize: 'MCU', angle: 'eye', lens_mm: 85, move: { type: 'push', speed: 'slow' } },
+}
+
+const SOLVED = Object.fromEntries(
+  Object.entries(SHOTS).map(([id, spec]) => [id, solveShot(spec, BLOCKING)]))
+
+const CAMERAS = Object.fromEntries(Object.entries(SOLVED).map(([id, s]) => [id, {
+  focal: s.focal_mm,
+  // Depth window derived from the solved distance, so the ramp uses its full
+  // range on every shot instead of being crushed into a few grey levels.
+  near: Math.max(0.4, s.distance_m - 1.7),
+  far: s.distance_m + 6.5,
+  at: (t) => { const { pos, target } = s.at(t); return { pos: V(...pos), look: V(...target) } },
+}]))
+
+const COVERAGE = checkCoverage(Object.values(SOLVED), BLOCKING)
 
 const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 200)
 
@@ -173,7 +179,13 @@ function renderFrame(camId, frame, pass) {
 
 Object.assign(window, {
   __render: renderFrame,
-  __meta: { W, H, FRAMES, FPS, cameras: Object.keys(CAMERAS) },
+  __meta: {
+    W, H, FRAMES, FPS,
+    cameras: Object.keys(CAMERAS),
+    coverage: COVERAGE,
+    solved: Object.fromEntries(Object.entries(SOLVED).map(([id, s]) =>
+      [id, { shotSize: s.shotSize, focal: s.focal_mm, distance_m: s.distance_m, fov: s.fov_deg }])),
+  },
   __ready: true,
 })
 </script>

@@ -51,7 +51,13 @@ await page.waitForFunction('window.__ready === true', null, { timeout: 60_000 })
 const meta = await page.evaluate('window.__meta')
 const cams = process.argv[2] ? [process.argv[2]] : meta.cameras
 console.log(`scene ready — ${meta.W}x${meta.H}, ${meta.FRAMES} frames @ ${meta.FPS}fps`)
-console.log(`cameras: ${cams.join(', ')}\n`)
+for (const [id, s] of Object.entries(meta.solved ?? {})) {
+  console.log(`  ${id.padEnd(8)} ${s.shotSize.padEnd(3)} ${String(s.focal).padStart(3)}mm  d=${s.distance_m}m  fov=${s.fov}°`)
+}
+if (meta.coverage) {
+  console.log(`  180°: ${meta.coverage.ok ? '✅ same side' : `❌ ${meta.coverage.crossed} camera(s) cross the line`}`)
+}
+console.log(`\nrendering: ${cams.join(', ')}\n`)
 
 await rm(OUT, { recursive: true, force: true })
 await mkdir(OUT, { recursive: true })

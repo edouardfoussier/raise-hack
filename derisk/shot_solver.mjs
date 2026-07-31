@@ -31,7 +31,9 @@ export const ANGLES = { low: 0.52, eye: 1.0, high: 1.28, overhead: 2.4 }
 export const AZIMUTH = { ots: 22, single: 38, profile: 90, master: 90 }
 
 const EYE_RATIO = 0.94          // hauteur des yeux ≈ 94 % de la taille
-const SENSOR_H = 24             // full-frame, 24 mm de haut
+const HEAD_TOP  = 1.015         // sommet du crâne, en fraction de la taille
+const HEADROOM  = 0.06          // air au-dessus de la tête, en fraction du cadre
+const SENSOR_H  = 24            // full-frame, 24 mm de haut
 
 // ── maths ───────────────────────────────────────────────────────────────────
 const rad = d => d * Math.PI / 180
@@ -84,10 +86,15 @@ export function solveShot(spec, scene) {
     const a = actors[spec.subject]
     eyeY = a.height * EYE_RATIO
     focusHeight = SHOT_SIZES[spec.shotSize]
-    // Sur un gros plan on vise les yeux ; plus le plan s'élargit, plus on
-    // descend vers le centre du corps.
-    const t = Math.min(1, focusHeight / SHOT_SIZES.FS)
-    target = [a.pos[0], eyeY - t * (eyeY - a.height * 0.5), a.pos[2]]
+    // Une taille de plan s'ancre par le HAUT : le sommet du crâne, plus un peu
+    // d'air, définit le bord supérieur du cadre ; la taille de plan définit où
+    // le bord inférieur coupe le corps. Interpoler vers le centre du corps
+    // (l'erreur naturelle) décapite les personnages dès le plan poitrine.
+    const headTop = a.height * HEAD_TOP
+    const headroom = focusHeight * HEADROOM
+    // …et on ne descend pas le cadre sous le sol sur les plans larges.
+    const y = Math.max(headTop + headroom - focusHeight / 2, focusHeight / 2 - 0.1)
+    target = [a.pos[0], y, a.pos[2]]
   }
 
   let distance = distanceFor(focusHeight, spec.lens_mm)
@@ -164,7 +171,7 @@ export function checkCoverage(shots, scene) {
 }
 
 // ── auto-test ───────────────────────────────────────────────────────────────
-if (import.meta.filename === process.argv[1]) {
+if (typeof process !== 'undefined' && import.meta.filename === process.argv[1]) {
   const scene = {
     actors: {
       A: { pos: [-1.05, 0, 0.48], height: 1.78 },
