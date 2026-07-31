@@ -71,6 +71,11 @@ Pour chaque caméra :
 > Pas de Blender dans le produit. Blender reste l'**import optionnel** pour les pros (argument de
 > roadmap dans le pitch, pas de code à écrire).
 
+> 🆕 **Couche décor Marble** — la World API (World Labs) exporte splat *et* collider mesh, et leur
+> renderer Three.js **Spark** (MIT) fusionne splats et meshes dans une même scène. Le collider mesh
+> alimente la passe depth, le splat la passe beauty, nos mannequins restent des meshes. Additif et
+> isolable, à brancher **après** que la boucle multi-caméras tourne. Voir [`MARBLE.md`](MARBLE.md).
+
 ### Le compilateur de direction
 
 **Input** : intention en français + état de la scène 3D
@@ -147,7 +152,7 @@ moment qui raccordent.
 | Si le jury dit… | Réponse |
 |---|---|
 | « Runway Aleph fait déjà ça » | *« Aleph part de rushes. Il ré-angle ce qui a été tourné — c'est de la post-production. Nous, rien n'a été tourné : on décide la couverture d'une scène qui n'existe pas encore. Aleph déplace la caméra, nous déplaçons l'acteur. »* |
-| « World Labs Marble fait déjà ça » | *« Marble génère un décor persistant — un lieu. Un décor n'est pas une scène : il n'y a personne dedans qui joue. Notre unité, c'est le beat, pas le lieu. »* |
+| « World Labs Marble fait déjà ça » | *« Marble fait le décor — on l'utilise, c'est notre couche de rendu. Un décor n'est pas une scène : il n'y a personne dedans qui joue. Notre unité, c'est le beat, pas le lieu. »* |
 | « C'est juste ComfyUI avec une jolie UI » | *« ComfyUI vous demande de savoir ce qu'est une passe depth. Nous on vous demande où vous mettez la caméra. »* |
 
 ---
