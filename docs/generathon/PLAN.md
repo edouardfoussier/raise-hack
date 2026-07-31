@@ -106,7 +106,7 @@ Kickoff samedi 10:00 · deadline dimanche **15:00 (dure)** = 29 h de mur, ~24 h 
 | **17:00–20:00** | **S3 — La couverture** | Multi-caméras, génération parallèle sur la queue fal, verrouillage seed/ref/style, timeline d'assemblage. |
 | **20:00–21:00** | *dîner gastronomique* | Profites-en, tu l'as mérité. |
 | **21:00–00:00** | **S4 — Le compilateur** | Chat « parle réal » → params caméra + prompt. Scène → layout 3D auto. **Le moment magique : tu écris, la caméra bouge.** |
-| **00:00–03:00** | **S5 — Polish** | Alerte franchissement d'axe (180°), UI dark cinéma, états de chargement soignés. |
+| **00:00–03:00** | **S5 — Polish** | **Décalage de timing acteur/caméra** (demandé nommément par un juré previz — voir [`JURY-SIGNALS.md`](JURY-SIGNALS.md)), alerte franchissement d'axe (180°), UI dark cinéma. |
 | **03:00–07:00** | **🛌 DORS** | Sérieusement. 4 h. Le pitch de dimanche vaut plus que 4 h de code à 4 h du mat. |
 | **07:00–11:00** | **S6 — LE FILM** | Produis une vraie scène de 30-45 s entièrement faite avec l'outil, montée depuis la couverture générée. **C'est ça qui gagne, pas le code.** |
 | **11:00–14:00** | **S7 — Pitch** | Deck 5 slides max. Répète 5×, chronomètre. **Enregistre TOUTE la démo en vidéo** (backup si le wifi meurt). |
@@ -123,6 +123,16 @@ Kickoff samedi 10:00 · deadline dimanche **15:00 (dure)** = 29 h de mur, ~24 h 
 
 **Le multi-caméras.** C'est le produit. S'il ne reste qu'une chose à la fin, c'est trois angles du même
 moment qui raccordent.
+
+### Doctrine de démo
+
+Deux jurés du hackathon fal × Sequoia ont récompensé spontanément une démo **live, dans l'éditeur,
+non cherry-pickée** — le gagnant a laissé à l'écran ses propres hésitations. On fait pareil : la
+démo se fait dans l'outil, la vidéo enregistrée n'est qu'un backup si le réseau lâche.
+
+Le test qui décide, formulé par un juré : *« on se surprend immédiatement à penser à ce qu'on
+ferait avec »*. Donc on montre **le geste**, pas le résultat. Un plan généré est un résultat ;
+poser une deuxième caméra est un geste.
 
 ---
 
