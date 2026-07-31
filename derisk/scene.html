@@ -1,0 +1,179 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Découpage — greybox control-pass harness</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/three/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three'
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Greybox "plateau": a room, a table, two actors. Deliberately ugly — its only
+// job is to carry geometry, silhouettes and camera motion to the video model.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const W = 832, H = 480          // 16:9, matches fal's cheap 480p tier
+const FRAMES = 48               // 3 s @ 16 fps
+const FPS = 16
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
+renderer.setPixelRatio(1)
+renderer.setSize(W, H)
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
+document.body.appendChild(renderer.domElement)
+
+const scene = new THREE.Scene()
+scene.background = new THREE.Color(0x000000)
+
+// ── materials ───────────────────────────────────────────────────────────────
+const grey = (c = 0x8a8a8a) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.95, metalness: 0 })
+
+// Linear view-space depth, normalised on a FIXED near/far and inverted so that
+// near = white. This is the MiDaS convention ControlNet/VACE depth expects.
+// Fixed (not per-frame auto) normalisation on purpose: auto-normalising per
+// frame makes the depth flicker, which the video model reads as motion.
+const depthMat = new THREE.ShaderMaterial({
+  uniforms: { uNear: { value: 0.6 }, uFar: { value: 14.0 } },
+  vertexShader: `
+    varying float vViewZ;
+    void main() {
+      vec4 mv = modelViewMatrix * vec4(position, 1.0);
+      vViewZ = -mv.z;
+      gl_Position = projectionMatrix * mv;
+    }`,
+  fragmentShader: `
+    uniform float uNear; uniform float uFar;
+    varying float vViewZ;
+    void main() {
+      float d = clamp((vViewZ - uNear) / (uFar - uNear), 0.0, 1.0);
+      gl_FragColor = vec4(vec3(1.0 - d), 1.0);
+    }`,
+})
+
+// ── set ─────────────────────────────────────────────────────────────────────
+// Walls are oversized on purpose: any black void in frame is depth "infinity",
+// and the video model happily hallucinates a sky into it.
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), grey(0x9a9a9a))
+ground.rotation.x = -Math.PI / 2
+ground.receiveShadow = true
+scene.add(ground)
+
+const backWall = new THREE.Mesh(new THREE.BoxGeometry(26, 7, 0.2), grey(0x7f7f7f))
+backWall.position.set(0, 3.5, -3.4)
+backWall.receiveShadow = true
+scene.add(backWall)
+
+const sideWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 7, 14), grey(0x757575))
+sideWall.position.set(-4.6, 3.5, 0.5)
+sideWall.receiveShadow = true
+scene.add(sideWall)
+
+const table = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.08, 0.95), grey(0x8f8f8f))
+table.position.set(0, 0.75, 0)
+table.castShadow = table.receiveShadow = true
+scene.add(table)
+for (const [x, z] of [[-0.75, -0.38], [0.75, -0.38], [-0.75, 0.38], [0.75, 0.38]]) {
+  const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.75), grey(0x8f8f8f))
+  leg.position.set(x, 0.375, z); leg.castShadow = true; scene.add(leg)
+}
+
+// ── actors ──────────────────────────────────────────────────────────────────
+// Legs + torso + arms + neck: the silhouette has to read as bipedal, otherwise
+// a depth-conditioned model renders exactly what it sees — a snowman.
+function makeActor(h, colour) {
+  const g = new THREE.Group()
+  const m = grey(colour)
+  const add = (mesh, x, y, z, rz = 0) => {
+    mesh.position.set(x, y, z); mesh.rotation.z = rz
+    mesh.castShadow = true; g.add(mesh); return mesh
+  }
+  for (const s of [-1, 1]) {
+    add(new THREE.Mesh(new THREE.CapsuleGeometry(h * 0.055, h * 0.36, 5, 10), m), s * h * 0.052, h * 0.26, 0)
+    add(new THREE.Mesh(new THREE.CapsuleGeometry(h * 0.040, h * 0.30, 5, 10), m), s * h * 0.150, h * 0.66, 0.02, s * 0.16)
+  }
+  add(new THREE.Mesh(new THREE.CapsuleGeometry(h * 0.115, h * 0.26, 6, 14), m), 0, h * 0.68, 0)
+  add(new THREE.Mesh(new THREE.CylinderGeometry(h * 0.038, h * 0.046, h * 0.07), m), 0, h * 0.845, 0)
+  add(new THREE.Mesh(new THREE.SphereGeometry(h * 0.090, 20, 16), m), 0, h * 0.925, 0)
+  return g
+}
+const actorA = makeActor(1.78, 0x8a8a8a)   // camera left
+const actorB = makeActor(1.64, 0x828282)   // camera right
+scene.add(actorA, actorB)
+
+// ── lights ──────────────────────────────────────────────────────────────────
+scene.add(new THREE.HemisphereLight(0xffffff, 0x505050, 1.0))
+const key = new THREE.DirectionalLight(0xffffff, 1.6)
+key.position.set(4, 6.5, 4.5)
+key.castShadow = true
+key.shadow.mapSize.set(1024, 1024)
+key.shadow.camera.left = -10; key.shadow.camera.right = 10
+key.shadow.camera.top = 10; key.shadow.camera.bottom = -10
+scene.add(key)
+
+// ── the beat: 3 seconds of action, identical for every camera ───────────────
+// A leans in across the table; B pulls back slightly. Same t → same world.
+const A_HEAD = 1.78 * 0.925, B_HEAD = 1.64 * 0.925
+function animate(t) {
+  const e = t * t * (3 - 2 * t)
+  actorA.position.set(-1.05 + 0.18 * e, 0, 0.48 - 0.10 * e)
+  actorA.rotation.y = Math.PI / 2 - 0.12 * e
+  actorB.position.set(1.05, 0, -0.42 - 0.09 * e)
+  actorB.rotation.y = -Math.PI / 2 + 0.08 * e
+}
+
+// ── coverage: three cameras on that same beat ───────────────────────────────
+// The line of action runs along the A↔B axis (X). Every camera stays on the
+// +Z side of it — that is the 180° rule, and it is why these three cut together.
+const lerp = (a, b, t) => a + (b - a) * t
+const V = (x, y, z) => new THREE.Vector3(x, y, z)
+
+const CAMERAS = {
+  // master — 35mm, slow dolly in, both actors in frame
+  wide: { focal: 35, near: 0.8, far: 13, at: t => ({
+    pos: V(lerp(0.45, 0.32, t), lerp(1.64, 1.54, t), lerp(5.30, 4.35, t)),
+    look: V(0, 1.24, 0),
+  })},
+  // single on A — 85mm from camera right, slow push
+  close: { focal: 85, near: 1.2, far: 8.5, at: t => ({
+    pos: V(lerp(0.42, 0.34, t), lerp(1.60, 1.58, t), lerp(3.05, 2.78, t)),
+    look: V(-1.00, A_HEAD - 0.10, 0.46),
+  })},
+  // reverse on B — 85mm from camera left, the contrechamp
+  reverse: { focal: 85, near: 1.4, far: 9.0, at: t => ({
+    pos: V(lerp(-0.42, -0.34, t), lerp(1.58, 1.56, t), lerp(3.10, 2.86, t)),
+    look: V(1.00, B_HEAD - 0.09, -0.44),
+  })},
+}
+
+// 35mm-equivalent focal → vertical FOV (24mm-tall full-frame sensor)
+const fovFromFocal = (mm) => 2 * Math.atan(12 / mm) * 180 / Math.PI
+
+const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 200)
+
+function renderFrame(camId, frame, pass) {
+  const spec = CAMERAS[camId]
+  const t = FRAMES > 1 ? frame / (FRAMES - 1) : 0
+  animate(t)
+  const { pos, look } = spec.at(t)
+  camera.fov = fovFromFocal(spec.focal)
+  camera.position.copy(pos)
+  camera.lookAt(look)
+  camera.updateProjectionMatrix()
+
+  if (pass === 'depth') {
+    depthMat.uniforms.uNear.value = spec.near
+    depthMat.uniforms.uFar.value = spec.far
+    scene.overrideMaterial = depthMat
+  } else {
+    scene.overrideMaterial = null
+  }
+  renderer.render(scene, camera)
+  return renderer.domElement.toDataURL('image/png')
+}
+
+Object.assign(window, {
+  __render: renderFrame,
+  __meta: { W, H, FRAMES, FPS, cameras: Object.keys(CAMERAS) },
+  __ready: true,
+})
+</script>
